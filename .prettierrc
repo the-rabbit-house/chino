@@ -1,0 +1,7 @@
+{
+  "useTabs": false,
+  "tabWidth": 2,
+  "printWidth": 65,
+  "proseWrap": "always",
+  "svelteSortOrder": "options-scripts-markup-styles"
+}
