@@ -1,5 +1,6 @@
 <script>
   import "./ui/tailwindcss.svelte";
+  import "remixicon/fonts/remixicon.css";
 
   import { setContext } from "svelte";
   import { writable } from "svelte/store";
@@ -30,15 +31,15 @@
   <svelte:component this={$screen?.COMPONENT} />
 </main>
 
-<style lang="postcss">
+<style lang="scss">
   @import url("https://fonts.googleapis.com/css2?family=KoHo:wght@200;300;400;500&display=swap");
 
   :global(html) {
     background: linear-gradient(
-      135deg,
+      150deg,
       #8093da,
-      #adb4e1,
-      #d6d7ed
+      #ea83db,
+      #e5ac6f
     );
   }
 
@@ -54,6 +55,7 @@
   main {
     height: 100vh;
 
-    @apply pt-2 pb-6;
+    @apply pt-2;
+    @apply pb-6;
   }
 </style>

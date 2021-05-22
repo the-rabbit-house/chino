@@ -5,7 +5,7 @@ class Emitter extends EventEmitter {
     if (process.env.NODE_ENV !== "production") {
       console.log(type + " emitted");
     }
-    super.emit(type, ...args);
+    return super.emit(type, ...args);
   }
 }
 

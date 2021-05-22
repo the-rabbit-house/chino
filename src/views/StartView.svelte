@@ -1,8 +1,7 @@
 <script>
   import { getContext } from "svelte";
 
-  import { slide } from "svelte/transition";
-  import { cubicOut, quintOut } from "svelte/easing";
+  import { cubicOut } from "svelte/easing";
 
   import logo from "../assets/logo-sm.png";
   import tippy from "../assets/tippy.png";
@@ -13,7 +12,7 @@
   function spin(node, params) {
     return {
       delay: 0,
-      duration: 5000,
+      duration: 1500,
       easing: cubicOut,
       css: (t, u) => `transform: rotate(${t * 360}deg);`,
     };
@@ -22,6 +21,8 @@
   var showTippy = false;
   setTimeout(() => {
     showTippy = true;
+
+    setTimeout(() => navigate("Gallery"), 1500);
   }, 500);
 </script>
 
@@ -41,7 +42,7 @@
     class="self-center w-40 h-32"
     src={tippy}
     alt="tippy"
-    transition:spin
+    in:spin
   />
 {:else}
   <img class="hidden" src={tippy} alt="tippy-hidden" />
