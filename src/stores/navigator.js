@@ -33,10 +33,8 @@ export function navigate(nextScreen, reset) {
   }
 
   if (reset) get(history).push("StartView");
-  console.log(nextScreen);
 
   const screens = get(SCREENS);
-  console.log(screens);
   screen.set(screens[nextScreen]);
 }
 
@@ -54,7 +52,6 @@ export class ViewEmitter {
   }
 
   clear() {
-    console.log("clear");
     const listeners = this.listeners;
     for (const [event, listener] of listeners) {
       this.emitter.removeListener(event, listener);
