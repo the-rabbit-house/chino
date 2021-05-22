@@ -1,6 +1,7 @@
 <script>
   import { getContext } from "svelte";
   import { crossfade, scale } from "svelte/transition";
+  import * as R from "ramda";
   import ZingTouch from "zingtouch";
 
   const { navigate } = getContext("navigator");
@@ -18,16 +19,27 @@
   var imageRef = null;
 
   var region = null;
+  function bindRegion(ref) {
+    if (!ref || region) return;
+
+    region = ZingTouch.Region(ref);
+  }
 
   function hideImage() {
     region.unbind(imageRef, "swipe");
+    region = null;
 
     selectedImage = null;
   }
 
-  function bindRegion(ref) {
-    if (!ref) return;
-    region = ZingTouch.Region(ref);
+  function previousImage() {
+    const at = R.findIndex(R.equals(selectedImage))(posts);
+    selectedImage = posts[R.max(at + -1, 0)];
+  }
+
+  function nextImage() {
+    const at = R.findIndex(R.equals(selectedImage))(posts);
+    selectedImage = posts[R.min(at + 1, posts.length)];
   }
 
   $: bindGestures(imageRef);
@@ -37,7 +49,13 @@
     region.bind(imageRef, "swipe", function (event) {
       const angle = event.detail.data[0].currentDirection;
 
-      if (angle > 200 && angle < 320) hideImage();
+      if (angle > 200 && angle < 315) hideImage();
+      if (angle > 90 && angle < 200) previousImage();
+      if (
+        (angle > 0 && angle < 90) ||
+        (angle > 315 && angle <= 360)
+      )
+        nextImage();
     });
   }
 
@@ -101,7 +119,7 @@
     <img
       bind:this={imageRef}
       class="w-screen h-screen object-contain bg-black"
-      src={selectedImage["@preview_url"]}
+      src={selectedImage?.["@preview_url"]}
     />
   </div>
 {/if}
