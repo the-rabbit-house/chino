@@ -1,5 +1,6 @@
 <script>
   import "./ui/tailwindcss.svelte";
+  import "./ui/common.scss";
   import "remixicon/fonts/remixicon.css";
 
   import { setContext } from "svelte";
