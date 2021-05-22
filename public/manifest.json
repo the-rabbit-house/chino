@@ -1,0 +1,11 @@
+{
+	"short_name": "chino",
+	"name": "chino",
+	"start_url": "/",
+	"backgorund-color": "#FFFFFF",
+	"display": "fullscreen",
+	"scopt": "/",
+	"theme_color": "#FFFFFF",
+	"description": "Booru client"
+
+}
