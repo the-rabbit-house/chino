@@ -1,6 +1,7 @@
 <script>
   import { getContext } from "svelte";
   import { crossfade, scale } from "svelte/transition";
+  import ZingTouch from "zingtouch";
 
   const { navigate } = getContext("navigator");
   const events = getContext("events");
@@ -14,6 +15,31 @@
   });
 
   var selectedImage = null;
+  var imageRef = null;
+
+  var region = null;
+
+  function hideImage() {
+    region.unbind(imageRef, "swipe");
+
+    selectedImage = null;
+  }
+
+  function bindRegion(ref) {
+    if (!ref) return;
+    region = ZingTouch.Region(ref);
+  }
+
+  $: bindGestures(imageRef);
+  function bindGestures(child) {
+    if (!region || !child) return;
+
+    region.bind(imageRef, "swipe", function (event) {
+      const angle = event.detail.data[0].currentDirection;
+
+      if (angle > 200 && angle < 320) hideImage();
+    });
+  }
 
   var showSearch = false;
   $: document.body.classList.toggle(
@@ -67,13 +93,13 @@
 {#if selectedImage}
   <div
     class="fixed top-0 left-0"
-    on:click={() => {
-      selectedImage = null;
-    }}
+    on:click={hideImage}
+    use:bindRegion
     in:send={{ key: selectedImage?.["@id"] }}
     out:receive={{ key: selectedImage?.["@id"] }}
   >
     <img
+      bind:this={imageRef}
       class="w-screen h-screen object-contain bg-black"
       src={selectedImage["@preview_url"]}
     />
@@ -86,7 +112,7 @@
   </div>
 {/if}
 
-{#if showBackButton && !showSearch}
+{#if showBackButton && !showSearch && !selectedImage}
   <div
     class="fixed bottom-0 right-0 mr-8 mb-7 px-6 py-5 bg-white rounded-lg"
     on:click={() => {
