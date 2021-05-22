@@ -27,7 +27,7 @@
   _navigate("Start");
 </script>
 
-<main class="flex flex-col">
+<main class="relative flex flex-col">
   <svelte:component this={$screen?.COMPONENT} />
 </main>
 
