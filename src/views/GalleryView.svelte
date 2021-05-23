@@ -9,7 +9,7 @@
   import { getContext } from "svelte";
   import { writable } from "svelte/store";
   import { crossfade, scale } from "svelte/transition";
-  import { spring, tweened } from "svelte/motion";
+  import { tweened } from "svelte/motion";
 
   import * as R from "ramda";
 
@@ -27,15 +27,20 @@
   });
 
   var selectedImage = null;
+  var imageRef = null;
   $: selectedIndex = R.findIndex(R.equals(selectedImage))(posts);
 
   $: previousImage = posts[R.max(selectedIndex - 1, 0)];
   $: nextImage = posts[R.min(selectedIndex + 1, posts.length)];
 
-  var imageRef = null;
-
+  var region = null;
   const direction = writable(null);
   const delta = tweened(0, { duration: 50 });
+
+  function hideImage() {
+    $delta = 0;
+    selectedImage = null;
+  }
 
   $: dx =
     $direction === "RIGHT"
@@ -45,7 +50,20 @@
       : 0;
   $: dy = $direction === "DOWN" ? $delta : 0;
 
-  var region = null;
+  function handleSwipe() {
+    if ($delta > 60) {
+      if ($direction === "DOWN") hideImage();
+      else if ($direction === "RIGHT") {
+        selectedImage = previousImage;
+      } else if ($direction === "LEFT") {
+        selectedImage = nextImage;
+      }
+    }
+
+    $direction = null;
+    $delta = 0;
+  }
+
   function bindRegion(ref) {
     if (!ref || region) return;
 
@@ -60,25 +78,6 @@
         region = null;
       },
     };
-  }
-
-  function hideImage() {
-    $delta = 0;
-    selectedImage = null;
-  }
-
-  function handleSwipe() {
-    if ($delta > 60) {
-      if ($direction === "DOWN") hideImage();
-      else if ($direction === "RIGHT") {
-        selectedImage = previousImage;
-      } else if ($direction === "LEFT") {
-        selectedImage = nextImage;
-      }
-    }
-
-    $direction = null;
-    $delta = 0;
   }
 
   $: bindGestures(imageRef);
@@ -137,7 +136,7 @@
 <div
   id="posts"
   class="mt-8 flex flex-row justify-center flex-wrap"
-  style={showSearch && "filter: blur(20px)"}
+  style={showSearch ? "filter: blur(20px)" : null}
 >
   {#each posts as post}
     <img
@@ -200,7 +199,7 @@
   </div>
 {/if}
 
-<style lang="scss">
+<style>
   #search-icon {
     background-color: rgba(0, 0, 0, 0.5);
   }
@@ -213,7 +212,7 @@
     transition: 0.5s filter linear;
 
     img {
-      width: calc(33vw);
+      width: calc(33.3vw);
       height: 20vh;
     }
   }

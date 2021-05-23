@@ -32,7 +32,7 @@
   <svelte:component this={$screen?.COMPONENT} />
 </main>
 
-<style lang="scss">
+<style>
   @import url("https://fonts.googleapis.com/css2?family=KoHo:wght@200;300;400;500&display=swap");
 
   :global(html) {

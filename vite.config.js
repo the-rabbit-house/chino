@@ -6,7 +6,11 @@ import sass from "sass";
 export default defineConfig({
   plugins: [
     svelte({
-      preprocess: preprocess({ sass }),
+      preprocess: preprocess({
+        defaults: { style: "scss" },
+        postcss: true,
+        sass,
+      }),
     }),
   ],
 });
