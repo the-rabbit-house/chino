@@ -1,7 +1,18 @@
 <script>
+  const IsDirection = {
+    DOWN: (angle) => angle > 200 && angle < 315,
+    LEFT: (angle) => angle > 90 && angle < 200,
+    RIGHT: (angle) =>
+      (angle > 0 && angle < 90) || (angle > 315 && angle <= 360),
+  };
+
   import { getContext } from "svelte";
+  import { writable } from "svelte/store";
   import { crossfade, scale } from "svelte/transition";
+  import { spring, tweened } from "svelte/motion";
+
   import * as R from "ramda";
+
   import ZingTouch from "zingtouch";
 
   const { navigate } = getContext("navigator");
@@ -16,47 +27,81 @@
   });
 
   var selectedImage = null;
+  $: selectedIndex = R.findIndex(R.equals(selectedImage))(posts);
+
+  $: previousImage = posts[R.max(selectedIndex - 1, 0)];
+  $: nextImage = posts[R.min(selectedIndex + 1, posts.length)];
+
   var imageRef = null;
+
+  const direction = writable(null);
+  const delta = tweened(0, { duration: 50 });
+
+  $: dx =
+    $direction === "RIGHT"
+      ? $delta
+      : $direction === "LEFT"
+      ? -$delta
+      : 0;
+  $: dy = $direction === "DOWN" ? $delta : 0;
 
   var region = null;
   function bindRegion(ref) {
     if (!ref || region) return;
 
     region = ZingTouch.Region(ref);
+
+    return {
+      destroy() {
+        region.unbind(imageRef, "swipe");
+        region.unbind(imageRef, "pan");
+        window.removeEventListener("touchend", handleSwipe);
+
+        region = null;
+      },
+    };
   }
 
   function hideImage() {
-    region.unbind(imageRef, "swipe");
-    region = null;
-
+    $delta = 0;
     selectedImage = null;
   }
 
-  function previousImage() {
-    const at = R.findIndex(R.equals(selectedImage))(posts);
-    selectedImage = posts[R.max(at + -1, 0)];
-  }
+  function handleSwipe() {
+    if ($delta > 60) {
+      if ($direction === "DOWN") hideImage();
+      else if ($direction === "RIGHT") {
+        selectedImage = previousImage;
+      } else if ($direction === "LEFT") {
+        selectedImage = nextImage;
+      }
+    }
 
-  function nextImage() {
-    const at = R.findIndex(R.equals(selectedImage))(posts);
-    selectedImage = posts[R.min(at + 1, posts.length)];
+    $direction = null;
+    $delta = 0;
   }
 
   $: bindGestures(imageRef);
   function bindGestures(child) {
     if (!region || !child) return;
 
-    region.bind(imageRef, "swipe", function (event) {
-      const angle = event.detail.data[0].currentDirection;
+    region.bind(imageRef, "pan", function (event) {
+      const angle = event.detail.data[0].directionFromOrigin;
+      const distance = event.detail.data[0].distanceFromOrigin;
 
-      if (angle > 200 && angle < 315) hideImage();
-      if (angle > 90 && angle < 200) previousImage();
-      if (
-        (angle > 0 && angle < 90) ||
-        (angle > 315 && angle <= 360)
-      )
-        nextImage();
+      let nextDirection = null;
+
+      if (IsDirection.DOWN(angle)) nextDirection = "DOWN";
+      else if (IsDirection.LEFT(angle)) nextDirection = "LEFT";
+      else if (IsDirection.RIGHT(angle)) nextDirection = "RIGHT";
+
+      if (nextDirection !== $direction) {
+        $direction = nextDirection;
+        $delta = 0;
+      } else $delta = distance;
     });
+
+    window.addEventListener("touchend", handleSwipe);
   }
 
   var showSearch = false;
@@ -111,16 +156,30 @@
 {#if selectedImage}
   <div
     class="fixed top-0 left-0"
-    on:click={hideImage}
     use:bindRegion
     in:send={{ key: selectedImage?.["@id"] }}
     out:receive={{ key: selectedImage?.["@id"] }}
   >
-    <img
-      bind:this={imageRef}
-      class="w-screen h-screen object-contain bg-black"
-      src={selectedImage?.["@preview_url"]}
-    />
+    <div class="relative flex flex-row w-screen h-screen">
+      <img
+        class="absolute w-screen h-screen object-contain bg-black"
+        src={previousImage?.["@preview_url"]}
+        style="transform:translate({-window.innerWidth +
+          dx}px,{dy}px)"
+      />
+      <img
+        bind:this={imageRef}
+        class="absolute w-screen h-screen object-contain bg-black"
+        src={selectedImage?.["@preview_url"]}
+        style="transform:translate({dx}px,{dy}px)"
+      />
+      <img
+        class="absolute w-screen h-screen object-contain bg-black"
+        src={nextImage?.["@preview_url"]}
+        style="transform:translate({window.innerWidth +
+          dx}px,{dy}px)"
+      />
+    </div>
   </div>
 {/if}
 
