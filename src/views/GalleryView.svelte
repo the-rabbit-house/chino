@@ -12,14 +12,14 @@
   import { tweened } from "svelte/motion";
 
   import * as R from "ramda";
-
   import ZingTouch from "zingtouch";
+
+  import { images, image } from "../stores";
+
+  import SearchMenu from "../components/SearchMenu.svelte";
 
   const { navigate } = getContext("navigator");
   const events = getContext("events");
-
-  import allPosts from "../assets/posts.json";
-  const posts = allPosts.posts.post;
 
   const [send, receive] = crossfade({
     duration: 200,
@@ -28,10 +28,18 @@
 
   var selectedImage = null;
   var imageRef = null;
-  $: selectedIndex = R.findIndex(R.equals(selectedImage))(posts);
 
-  $: previousImage = posts[R.max(selectedIndex - 1, 0)];
-  $: nextImage = posts[R.min(selectedIndex + 1, posts.length)];
+  var previousImage = null;
+  var nextImage = null;
+
+  function handleImageChange(image) {
+    const index = R.findIndex(R.equals(image))($images);
+
+    previousImage = $images[R.max(index - 1, 0)];
+    nextImage = $images[R.min(index + 1, R.length($images))];
+  }
+
+  $: handleImageChange(selectedImage);
 
   var region = null;
   const direction = writable(null);
@@ -103,6 +111,22 @@
     window.addEventListener("touchend", handleSwipe);
   }
 
+  function invisible(ref) {
+    setTimeout(() => {
+      ref.classList.remove("invisible");
+    }, 300);
+  }
+
+  function lazy(ref, image) {
+    ref.src = image?.["file_url"];
+
+    return {
+      update(image) {
+        ref.src = image?.["file_url"];
+      },
+    };
+  }
+
   var showSearch = false;
   $: document.body.classList.toggle(
     "noscroll",
@@ -134,20 +158,20 @@
 </div>
 
 <div
-  id="posts"
+  id="images"
   class="mt-8 flex flex-row justify-center flex-wrap"
   style={showSearch ? "filter: blur(20px)" : null}
 >
-  {#each posts as post}
+  {#each $images as image}
     <img
       class="object-cover"
-      src={post["@preview_url"]}
+      src={image["preview_file_url"]}
       alt=""
       on:click={() => {
-        selectedImage = post;
+        selectedImage = image;
       }}
-      in:receive={{ key: post["@id"] }}
-      out:send={{ key: post["@id"] }}
+      in:receive={{ key: image["@id"] }}
+      out:send={{ key: image["@id"] }}
     />
   {/each}
 </div>
@@ -162,19 +186,22 @@
     <div class="relative flex flex-row w-screen h-screen">
       <img
         class="absolute w-screen h-screen object-contain bg-black"
-        src={previousImage?.["@preview_url"]}
+        use:invisible
+        src={previousImage?.["preview_file_url"]}
         style="transform:translate({-window.innerWidth +
           dx}px,{dy}px)"
       />
       <img
         bind:this={imageRef}
+        use:lazy={selectedImage}
         class="absolute w-screen h-screen object-contain bg-black"
-        src={selectedImage?.["@preview_url"]}
+        src={selectedImage?.["preview_file_url"]}
         style="transform:translate({dx}px,{dy}px)"
       />
       <img
         class="absolute w-screen h-screen object-contain bg-black"
-        src={nextImage?.["@preview_url"]}
+        use:invisible
+        src={nextImage?.["preview_file_url"]}
         style="transform:translate({window.innerWidth +
           dx}px,{dy}px)"
       />
@@ -184,7 +211,11 @@
 
 {#if showSearch}
   <div id="search-menu" class="fixed left-0">
-    <div class="w-screen h-screen" />
+    <SearchMenu
+      on:searchend={() => {
+        showSearch = false;
+      }}
+    />
   </div>
 {/if}
 
@@ -206,9 +237,10 @@
 
   #search-menu {
     top: 6rem;
+    height: calc(100vh - 6rem);
   }
 
-  #posts {
+  #images {
     transition: 0.5s filter linear;
 
     img {

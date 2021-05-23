@@ -119,6 +119,11 @@ acorn@^7.0.0:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.4.1.tgz#feaed255973d2e77555b83dbc08851a6c63520fa"
   integrity sha512-nQyp0o1/mNdbTO1PO6kHkwSrmgZ0MT/jCCpNiwbUjGoRN4dlBhqJtoQuCnEOKzgTVwg0ZWiCoQy6SxMebQVh8A==
 
+acorn@^8.1.1:
+  version "8.2.4"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.2.4.tgz#caba24b08185c3b56e3168e97d15ed17f4d31fd0"
+  integrity sha512-Ibt84YwBDDA890eDiDCEqcbwvHlBvzzDkU2cGBBDDI1QWT12jTiXIOn2CIw5KK4i6N5Z2HUxwYjzriDyqaqqZg==
+
 ansi-styles@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-3.2.1.tgz#41fbb20243e50b12be0f04b8dedbf07520ce841d"
@@ -1380,6 +1385,13 @@ svelte-preprocess@^4.7.3:
     "@types/sass" "^1.16.0"
     detect-indent "^6.0.0"
     strip-indent "^3.0.0"
+
+svelte-tags-input@^2.7.1:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/svelte-tags-input/-/svelte-tags-input-2.7.1.tgz#e3599301d68597f06ebde423a35a20e617fc5837"
+  integrity sha512-chxpj/ZCnbCSI+f6Sbqd+51FAUK7MwftKsuwHQCoJf5vBhz0vbcNsDIUs5Wyf9qX35xG/amZ1Nc3CTOK14qRtA==
+  dependencies:
+    acorn "^8.1.1"
 
 svelte@^3.37.0:
   version "3.38.2"
