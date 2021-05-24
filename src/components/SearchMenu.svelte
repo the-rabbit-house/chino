@@ -77,7 +77,7 @@
       class="rating-button"
       style={rating === "SAFE" ? ACTIVE_STYLE : null}
       on:click={() => {
-        rating = "SAFE";
+        rating = rating !== "SAFE" ? "SAFE" : "";
       }}
     >
       SAFE
@@ -86,7 +86,7 @@
       class="rating-button"
       style={rating === "UNSAFE" ? ACTIVE_STYLE : null}
       on:click={() => {
-        rating = "UNSAFE";
+        rating = rating !== "UNSAFE" ? "UNSAFE" : "";
       }}
     >
       UNSAFE
@@ -95,7 +95,7 @@
       class="rating-button"
       style={rating === "EXPLICIT" ? ACTIVE_STYLE : null}
       on:click={() => {
-        rating = "EXPLICIT";
+        rating = rating !== "EXPLICIT" ? "EXPLICIT" : "";
       }}
     >
       EXPLICIT
