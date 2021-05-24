@@ -44,7 +44,11 @@
   out:fade={{ delay: 0, duration: 100 }}
 >
   <div id="tags-input">
-    <TagsInput tags={tagsBuffer} onlyUnique={true} />
+    <TagsInput
+      tags={tagsBuffer}
+      onlyUnique={true}
+      allowBlur={true}
+    />
   </div>
 
   <div class="mt-4 flex-1">
