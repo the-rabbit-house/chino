@@ -24,6 +24,7 @@
     "events": "^3.3.0",
     "ramda": "^0.27.1",
     "remixicon": "^2.5.0",
+    "simplebar": "^5.3.3",
     "svelte-tags-input": "^2.7.1",
     "zingtouch": "^1.0.6"
   }

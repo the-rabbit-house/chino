@@ -6,6 +6,8 @@
 
   import * as R from "ramda";
   import ZingTouch from "zingtouch";
+  import SimpleBar from "simplebar";
+  import "simplebar/dist/simplebar.css";
 
   import { images, image } from "../stores";
 
@@ -31,6 +33,11 @@
   var innerWidth;
   $: isMobile = innerWidth <= 768;
 
+  function customScrollbar(ref) {
+    var bar = new SimpleBar(ref);
+    images.subscribe(() => bar.recalculate());
+  }
+
   var scrollY = 0;
   $: showBackButton = scrollY > window.innerHeight;
 </script>
@@ -55,23 +62,25 @@
   </div>
 </div>
 
-<div
-  id="images"
-  class="mt-8 flex flex-row justify-center flex-wrap"
-  style={showSearch ? "filter: blur(20px)" : null}
->
-  {#each $images as image}
-    <img
-      class="object-cover"
-      src={image["preview_file_url"]}
-      alt=""
-      on:click={() => {
-        selectedImage = image;
-      }}
-      in:receive={{ key: image["id"] }}
-      out:send={{ key: image["id"] }}
-    />
-  {/each}
+<div id="images-container" class="mt-4" use:customScrollbar>
+  <div
+    id="images"
+    class="flex flex-rown flex-wrap justify-center md:px-5 md:justify-between"
+    style={showSearch ? "filter: blur(20px)" : null}
+  >
+    {#each $images as image}
+      <img
+        class="object-cover"
+        src={image["preview_file_url"]}
+        alt=""
+        on:click={() => {
+          selectedImage = image;
+        }}
+        in:receive={{ key: image["id"] }}
+        out:send={{ key: image["id"] }}
+      />
+    {/each}
+  </div>
 </div>
 
 {#if isMobile && selectedImage}
@@ -120,11 +129,15 @@
     height: calc(100vh - 6rem);
   }
 
-  #images {
-    transition: 0.5s filter linear;
-
-    max-height: calc(100vh - 6rem);
+  #images-container {
+    max-height: calc(100vh - 7rem);
     overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  #images {
+    flex: 1;
+    transition: 0.5s filter linear;
 
     img {
       width: calc(33.3vw);
@@ -135,16 +148,16 @@
   @screen md {
     #images {
       @apply space-y-2;
-      @apply space-x-4;
+      @apply space-x-1;
 
       img {
         @apply rounded-lg;
 
-        width: 12rem;
+        width: 14rem;
         height: 20rem;
 
         &:first-child {
-          @apply ml-4;
+          @apply ml-1;
           @apply mt-2;
         }
       }
