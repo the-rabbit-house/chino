@@ -39,24 +39,29 @@
     showSearch || selectedImage !== null
   );
 
+  var scrollbar;
+  var scrollY = 0;
+
   // Custom scrollbar needs to recalculate when images change
   function customScrollbar(ref) {
-    var bar = new SimpleBar(ref);
+    scrollbar = new SimpleBar(ref);
 
-    bar.getScrollElement().scrollTop = $lastScrollY;
+    scrollbar.getScrollElement().scrollTop = $lastScrollY;
 
-    bar
+    scrollbar
       .getScrollElement()
       .addEventListener("scroll", (event) => {
-        $lastScrollY = bar.getScrollElement().scrollTop;
+        scrollY = scrollbar.getScrollElement().scrollTop;
+        $lastScrollY = scrollY;
       });
 
-    images.subscribe(() => bar.recalculate());
+    images.subscribe(() => scrollbar.recalculate());
   }
 
   // Scroll up button
   var scrollY = 0;
-  $: showBackButton = scrollY > window.innerHeight;
+  var innerHeight = 0;
+  $: showBackButton = scrollY > innerHeight;
 
   var innerWidth;
   $: isMobile = innerWidth <= 768;
@@ -68,7 +73,7 @@
   });
 </script>
 
-<svelte:window bind:scrollY bind:innerWidth />
+<svelte:window bind:innerWidth bind:innerHeight />
 
 <nav class="px-6 pt-2 h-20 flex flex-row items-center">
   <button class="flex flex-row items-center" on:click={back}>
@@ -142,7 +147,7 @@
   <div
     class="fixed bottom-0 right-0 mr-8 mb-7 px-6 py-5 bg-white rounded-lg"
     on:click={() => {
-      scrollY = 0;
+      scrollbar.getScrollElement().scrollTo(0, 0);
     }}
   >
     <i class="ri-arrow-up-line text-2xl text-black" />
