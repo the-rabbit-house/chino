@@ -2,9 +2,9 @@
   import "./ui/tailwindcss.svelte";
   import "./ui/common.scss";
   import "remixicon/fonts/remixicon.css";
+  import "simplebar/dist/simplebar.css";
 
   import { setContext } from "svelte";
-  import { writable } from "svelte/store";
 
   import * as Events from "./events";
   import Screens from "./views";

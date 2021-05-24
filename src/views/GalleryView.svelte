@@ -1,25 +1,23 @@
 <script>
   const CROSSFADE_TIME = 200;
 
-  import { getContext } from "svelte";
-  import { writable } from "svelte/store";
+  import { getContext, onMount } from "svelte";
   import { crossfade, scale } from "svelte/transition";
-  import { tweened } from "svelte/motion";
-
-  import * as R from "ramda";
-  import ZingTouch from "zingtouch";
-  import SimpleBar from "simplebar";
-  import "simplebar/dist/simplebar.css";
 
   import { images, image, lastScrollY } from "../stores";
 
   import SearchMenu from "../components/SearchMenu.svelte";
   import ImageCarousel from "../components/ImageCarousel.svelte";
 
+  import SimpleBar from "simplebar";
+
   const { navigate } = getContext("navigator");
   const events = getContext("events");
 
   var selectedImage = null;
+  $: $image = selectedImage;
+
+  var showImages = true;
 
   var exiting = false;
   async function back() {
@@ -97,26 +95,36 @@
   </div>
 </nav>
 
-<div id="images-container" class="mt-4" use:customScrollbar>
-  <div
-    id="images"
-    class="flex flex-rown flex-wrap justify-center pb-2 md:px-5 md:justify-between"
-    style={showSearch ? "filter: blur(20px)" : null}
-  >
-    {#each $images as image}
-      <img
-        class="object-cover"
-        src={image["preview_file_url"]}
-        alt=""
-        on:click={() => {
-          selectedImage = image;
-        }}
-        in:receive={{ key: image["id"] }}
-        out:send={{ key: image["id"] }}
-      />
-    {/each}
+{#if showImages}
+  <div id="images-container" class="mt-4" use:customScrollbar>
+    <div
+      id="images"
+      class="flex flex-rown flex-wrap justify-center pb-2 md:px-5 md:justify-between"
+      style={showSearch ? "filter: blur(20px)" : null}
+    >
+      {#each $images as image}
+        <img
+          class="object-cover"
+          src={image["preview_file_url"]}
+          alt=""
+          on:click={() => {
+            selectedImage = image;
+            if (!isMobile) {
+              showImages = false;
+
+              setTimeout(
+                () => navigate("Image"),
+                CROSSFADE_TIME + 10
+              );
+            }
+          }}
+          in:receive={{ key: image["id"] }}
+          out:send={{ key: image["id"] }}
+        />
+      {/each}
+    </div>
   </div>
-</div>
+{/if}
 
 {#if isMobile && selectedImage}
   <ImageCarousel
