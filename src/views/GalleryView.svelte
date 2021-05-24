@@ -1,4 +1,6 @@
 <script>
+  const CROSSFADE_TIME = 200;
+
   import { getContext } from "svelte";
   import { writable } from "svelte/store";
   import { crossfade, scale } from "svelte/transition";
@@ -9,7 +11,7 @@
   import SimpleBar from "simplebar";
   import "simplebar/dist/simplebar.css";
 
-  import { images, image } from "../stores";
+  import { images, image, lastScrollY } from "../stores";
 
   import SearchMenu from "../components/SearchMenu.svelte";
   import ImageCarousel from "../components/ImageCarousel.svelte";
@@ -19,33 +21,61 @@
 
   var selectedImage = null;
 
-  const [send, receive] = crossfade({
-    duration: 200,
-    fallback: scale,
-  });
+  var exiting = false;
+  async function back() {
+    if (exiting) return;
 
+    exiting = true;
+    $images = [];
+
+    // Let the images crossfade before changing screen
+    setTimeout(() => navigate("Start"), CROSSFADE_TIME + 10);
+  }
+
+  // Search menu
   var showSearch = false;
   $: document.body.classList.toggle(
     "noscroll",
     showSearch || selectedImage !== null
   );
 
-  var innerWidth;
-  $: isMobile = innerWidth <= 768;
-
+  // Custom scrollbar needs to recalculate when images change
   function customScrollbar(ref) {
     var bar = new SimpleBar(ref);
+
+    bar.getScrollElement().scrollTop = $lastScrollY;
+
+    bar
+      .getScrollElement()
+      .addEventListener("scroll", (event) => {
+        $lastScrollY = bar.getScrollElement().scrollTop;
+      });
+
     images.subscribe(() => bar.recalculate());
   }
 
+  // Scroll up button
   var scrollY = 0;
   $: showBackButton = scrollY > window.innerHeight;
+
+  var innerWidth;
+  $: isMobile = innerWidth <= 768;
+
+  // Mobile
+  const [send, receive] = crossfade({
+    duration: CROSSFADE_TIME,
+    fallback: scale,
+  });
 </script>
 
 <svelte:window bind:scrollY bind:innerWidth />
 
-<div class="px-6 pt-2 flex flex-row">
-  <p class="flex-1 text-5xl font-light">gallery</p>
+<nav class="px-6 pt-2 h-20 flex flex-row items-center">
+  <button class="flex flex-row items-center" on:click={back}>
+    <i class="ri-arrow-left-s-line text-5xl" />
+    <p class="text-5xl font-light">gallery</p>
+  </button>
+  <div class="flex-1" />
   <div
     id="search-icon"
     class="py-2 px-4 rounded-xl pointer"
@@ -60,12 +90,12 @@
       <i class="ri-search-line text-3xl" />
     {/if}
   </div>
-</div>
+</nav>
 
 <div id="images-container" class="mt-4" use:customScrollbar>
   <div
     id="images"
-    class="flex flex-rown flex-wrap justify-center md:px-5 md:justify-between"
+    class="flex flex-rown flex-wrap justify-center pb-2 md:px-5 md:justify-between"
     style={showSearch ? "filter: blur(20px)" : null}
   >
     {#each $images as image}
@@ -130,7 +160,7 @@
   }
 
   #images-container {
-    max-height: calc(100vh - 7rem);
+    max-height: calc(100vh - 6.5rem);
     overflow-y: auto;
     overflow-x: hidden;
   }

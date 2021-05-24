@@ -24,9 +24,9 @@
   }, 500);
 </script>
 
-<div class="px-6 pt-2 flex flex-row items-center">
+<nav class="px-6 pt-2 h-20 flex flex-row items-center">
   <p class="flex-1 text-5xl font-light">chino</p>
-</div>
+</nav>
 
 <div class="flex-1" />
 
@@ -43,7 +43,7 @@
 
 <div class="flex-1" />
 
-<p class="text-2xl font-light text-center">
+<p class="pb-6 text-2xl font-light text-center">
   Brewing the coffee..
 </p>
 

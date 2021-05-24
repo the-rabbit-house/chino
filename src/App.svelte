@@ -57,6 +57,5 @@
     height: 100vh;
 
     @apply pt-2;
-    @apply pb-6;
   }
 </style>
