@@ -43,7 +43,8 @@
     await tick();
 
     $images = await response.json();
-    $images = R.filter(IsImage, $images);
+    // Filtering was gelbooru specific
+    // $images = R.filter(IsImage, $images);
 
     dispatch("searchend", tagsBuffer);
   }
