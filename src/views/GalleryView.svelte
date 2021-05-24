@@ -72,8 +72,8 @@
 
 <nav class="px-6 pt-2 h-20 flex flex-row items-center">
   <button class="flex flex-row items-center" on:click={back}>
-    <i class="ri-arrow-left-s-line text-5xl" />
-    <p class="text-5xl font-light">gallery</p>
+    <i class="ri-arrow-left-s-line text-4xl md:text-5xl" />
+    <p class="text-4xl font-light md:text-5xl">gallery</p>
   </button>
   <div class="flex-1" />
   <div
