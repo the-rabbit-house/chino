@@ -5,6 +5,13 @@
     R.propEq("file_ext", "jpeg"),
   ]);
 
+  const RATINGS = {
+    SAFE: "rating:safe",
+    UNSAFE: "rating:questionable",
+    EXPLICIT: "rating:explicit",
+  };
+  const ACTIVE_STYLE = "background-color: rgba(200, 0, 60, 0.5)";
+
   import { tick, createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
 
@@ -16,16 +23,20 @@
   const dispatch = createEventDispatcher();
 
   var tagsBuffer = R.clone($tags);
+  var rating = "";
 
   async function search() {
     $tags = tagsBuffer;
 
     $images = [];
 
+    const ratingTag = rating ? "+" + RATINGS?.[rating] : "";
+
     const response = await fetch(
       "https://danbooru.donmai.us/posts.json" +
         "?tags=" +
         $tags.join("+") +
+        ratingTag +
         "&limit=100"
     );
 
@@ -39,7 +50,7 @@
 </script>
 
 <div
-  class="flex flex-col w-screen h-full pb-4"
+  class="flex flex-col items-stretch w-screen h-full pb-4 space-y-2"
   in:fade={{ delay: 200 }}
   out:fade={{ delay: 0, duration: 100 }}
 >
@@ -57,9 +68,43 @@
       <p class="text-4xl font-light">Favorite</p>
     </div>
   </div>
+
+  <div
+    id="rating-buttons"
+    class="mx-4 flex flex-row items-center justify-between space-x-4"
+  >
+    <button
+      class="rating-button"
+      style={rating === "SAFE" ? ACTIVE_STYLE : null}
+      on:click={() => {
+        rating = "SAFE";
+      }}
+    >
+      SAFE
+    </button>
+    <button
+      class="rating-button"
+      style={rating === "UNSAFE" ? ACTIVE_STYLE : null}
+      on:click={() => {
+        rating = "UNSAFE";
+      }}
+    >
+      UNSAFE
+    </button>
+    <button
+      class="rating-button"
+      style={rating === "EXPLICIT" ? ACTIVE_STYLE : null}
+      on:click={() => {
+        rating = "EXPLICIT";
+      }}
+    >
+      EXPLICIT
+    </button>
+  </div>
+
   <button
     id="search-button"
-    class="self-center px-24 py-2 text-4xl rounded-lg"
+    class="mx-4 py-2 text-4xl rounded-lg"
     on:click={search}
   >
     Search
@@ -87,6 +132,11 @@
     :global(.svelte-tags-input-tag-remove) {
       @apply text-2xl;
     }
+  }
+
+  .rating-button {
+    @apply flex-1 py-4 px-4 rounded-lg;
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   #search-button {
