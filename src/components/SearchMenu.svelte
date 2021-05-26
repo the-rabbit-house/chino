@@ -20,29 +20,28 @@
 
   import TagsInput from "svelte-tags-input";
 
+  import { requestImages } from "../stores/images";
+
   const dispatch = createEventDispatcher();
 
   var tagsBuffer = R.clone($tags);
   var rating = "";
+
+  var fetching = false;
 
   async function search() {
     $tags = tagsBuffer;
 
     $images = [];
 
-    const ratingTag = rating ? "+" + RATINGS?.[rating] : "";
+    const ratingTag = rating ? RATINGS?.[rating] : "";
 
-    const response = await fetch(
-      "https://danbooru.donmai.us/posts.json" +
-        "?tags=" +
-        $tags.join("+") +
-        ratingTag +
-        "&limit=30"
-    );
+    fetching = true;
+    await requestImages([...$tags, ratingTag]);
+    fetching = false;
 
     await tick();
 
-    $images = await response.json();
     // Filtering was gelbooru specific
     // $images = R.filter(IsImage, $images);
 
@@ -112,7 +111,7 @@
     class="mx-4 py-2 text-4xl rounded-lg"
     on:click={search}
   >
-    Search
+    {!fetching ? "Search" : "Searching..."}
   </button>
 </div>
 
