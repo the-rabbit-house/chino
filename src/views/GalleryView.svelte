@@ -14,7 +14,7 @@
   const { navigate } = getContext("navigator");
   const events = getContext("events");
 
-  var selectedImage = null;
+  var selectedImage = $image;
   $: $image = selectedImage;
 
   var showImages = true;
@@ -69,9 +69,24 @@
     duration: CROSSFADE_TIME,
     fallback: scale,
   });
+
+  function handleShortcuts(event) {
+    const key = event.key;
+
+    if (key === "Escape") {
+      if (showSearch) showSearch = false;
+      else back();
+    }
+
+    if (key === "F" || key === "f") showSearch = true;
+  }
 </script>
 
-<svelte:window bind:innerWidth bind:innerHeight />
+<svelte:window
+  bind:innerWidth
+  bind:innerHeight
+  on:keyup={handleShortcuts}
+/>
 
 <nav class="px-6 pt-2 h-20 flex flex-row items-center">
   <button class="flex flex-row items-center" on:click={back}>

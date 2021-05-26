@@ -12,7 +12,7 @@
   };
   const ACTIVE_STYLE = "background-color: rgba(200, 0, 60, 0.5)";
 
-  import { tick, createEventDispatcher } from "svelte";
+  import { onMount, tick, createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
 
   import { images, tags } from "../stores";
@@ -37,7 +37,7 @@
         "?tags=" +
         $tags.join("+") +
         ratingTag +
-        "&limit=100"
+        "&limit=30"
     );
 
     await tick();
@@ -48,6 +48,10 @@
 
     dispatch("searchend", tagsBuffer);
   }
+
+  onMount(() => {
+    document.querySelector(".svelte-tags-input").focus();
+  });
 </script>
 
 <div
