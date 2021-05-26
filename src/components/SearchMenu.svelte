@@ -5,6 +5,12 @@
     R.propEq("file_ext", "jpeg"),
   ]);
 
+  const stripRatings = R.without([
+    "rating:safe",
+    "rating:questionable",
+    "rating:explicit",
+  ]);
+
   const RATINGS = {
     SAFE: "rating:safe",
     UNSAFE: "rating:questionable",
@@ -24,7 +30,7 @@
 
   const dispatch = createEventDispatcher();
 
-  var tagsBuffer = R.clone($tags);
+  var tagsBuffer = stripRatings($tags);
   var rating = "";
 
   var fetching = false;
