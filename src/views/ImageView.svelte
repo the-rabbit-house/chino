@@ -46,7 +46,6 @@
   var scrollbar;
   function customScrollbar(ref, tags) {
     scrollbar = new SimpleBar(ref);
-    console.log("update");
 
     return {
       update(tags) {
