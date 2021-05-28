@@ -8,7 +8,7 @@
 <script>
   import { getContext } from "svelte";
   import { writable } from "svelte/store";
-  import { fade, fly } from "svelte/transition";
+  import { fade, fly, scale } from "svelte/transition";
 
   import * as R from "ramda";
   import SimpleBar from "simplebar";
@@ -22,7 +22,10 @@
   const events = getContext("events");
 
   async function back() {
-    navigate("Gallery");
+    showInfo = false;
+    showAdjacentImages = false;
+
+    setTimeout(() => navigate("Gallery"), QUEUE_FLY_TIME);
   }
 
   const tags = writable([]);
@@ -106,6 +109,7 @@
       id="images-queue"
       transition:fly={{
         delay: 0,
+        duration: QUEUE_FLY_TIME,
         y: 300,
       }}
     >
@@ -120,7 +124,11 @@
   {#if showInfo}
     <div
       id="image-info"
-      in:fly={{ delay: INFO_DELAY_TIME, y: 1000 }}
+      in:fly={{
+        delay: INFO_DELAY_TIME,
+        duration: INFO_FLY_TIME,
+        y: 1000,
+      }}
       out:fly={{ delay: 0, duration: INFO_FLY_TIME, y: 1000 }}
     >
       <ImageInfo />
