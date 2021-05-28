@@ -1,3 +1,13 @@
+<script context="module">
+  function active(ref, test) {
+    return {
+      update(test) {
+        ref.classList.toggle("active-queue-image", test);
+      },
+    };
+  }
+</script>
+
 <script>
   import { createEventDispatcher } from "svelte";
   import { images, image } from "../../stores";
@@ -49,11 +59,9 @@
     <img
       class="h-40 w-full p-1 object-contain transform hover:scale-110"
       src={adjacentImage?.["preview_file_url"]}
-      style={adjacentImage === $image
-        ? "background-color: lightblue"
-        : ""}
-      alt="adjacent"
+      use:active={adjacentImage === $image}
       on:click={() => dispatch("imagechange", adjacentImage)}
+      alt="adjacent"
     />
   {/each}
 </div>
@@ -81,5 +89,9 @@
 
       transform: translateX(1.75rem);
     }
+  }
+
+  :global(.active-queue-image) {
+    background-color: lightblue;
   }
 </style>
