@@ -6,10 +6,10 @@
   import { getContext } from "svelte";
   import { crossfade, scale } from "svelte/transition";
 
-  import { images, image, lastScrollY } from "../stores";
+  import { images, image, lastScrollY } from "@Stores";
 
-  import SearchMenu from "../components/GalleryView/SearchMenu.svelte";
-  import ImageCarousel from "../components/ImageView/ImageCarousel.svelte";
+  import SearchMenu from "@Components/GalleryView/SearchMenu.svelte";
+  import ImageCarousel from "@Components/ImageView/ImageCarousel.svelte";
 
   import SimpleBar from "simplebar";
 

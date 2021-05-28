@@ -6,15 +6,15 @@
 
   import { setContext } from "svelte";
 
-  import * as Events from "./events";
-  import Screens from "./views";
+  import * as Events from "@Events";
+  import Screens from "@Views";
 
   import {
     init as initNavigator,
     navigate as _navigate,
     screen,
     screenEvents,
-  } from "./stores/navigator";
+  } from "@Stores/navigator";
 
   function navigate(screen, reset) {
     _navigate(screen, reset);

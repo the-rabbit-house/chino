@@ -1,6 +1,6 @@
 import { writable, get } from "svelte/store";
 
-import { tags, images } from "./";
+import { tags, images } from "@Stores";
 
 export const fetching = writable(false);
 

@@ -8,9 +8,9 @@
   import * as R from "ramda";
   import SimpleBar from "simplebar";
 
-  import { images, image } from "../stores";
+  import { images, image } from "@Stores";
 
-  import ImagesQueue from "../components/ImageView/ImagesQueue.svelte";
+  import ImagesQueue from "@Components/ImageView/ImagesQueue.svelte";
 
   const { navigate } = getContext("navigator");
   const events = getContext("events");

@@ -21,12 +21,12 @@
   import { onMount, tick, createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
 
-  import { images, tags } from "../../stores";
+  import { images, tags } from "@Stores";
+  import { requestImages } from "@Stores/images";
+
   import * as R from "ramda";
 
   import TagsInput from "svelte-tags-input";
-
-  import { requestImages } from "../../stores/images";
 
   const dispatch = createEventDispatcher();
 

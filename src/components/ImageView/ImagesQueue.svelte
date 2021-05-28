@@ -10,7 +10,7 @@
 
 <script>
   import { createEventDispatcher } from "svelte";
-  import { images, image } from "../../stores";
+  import { images, image } from "@Stores";
 
   import * as R from "ramda";
 

@@ -2,7 +2,7 @@
   import { getContext } from "svelte";
   import { cubicOut } from "svelte/easing";
 
-  import tippy from "../assets/tippy.png";
+  import tippy from "@Assets/tippy.png";
 
   const { navigate } = getContext("navigator");
   const events = getContext("events");

@@ -31,7 +31,7 @@
   import * as R from "ramda";
   import ZingTouch from "zingtouch";
 
-  import { images } from "../../stores";
+  import { images } from "@Stores";
 
   const dispatch = createEventDispatcher();
 
