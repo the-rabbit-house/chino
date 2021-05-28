@@ -1,37 +1,41 @@
-<script>
-  const IsImage = R.anyPass([
-    R.propEq("file_ext", "png"),
-    R.propEq("file_ext", "jpg"),
-    R.propEq("file_ext", "jpeg"),
-  ]);
-
-  const stripRatings = R.without([
-    "rating:safe",
-    "rating:questionable",
-    "rating:explicit",
-  ]);
+<script context="module">
+  const IN_FADE_DELAY = 200;
+  const OUT_FADE_DURATION = 100;
 
   const RATINGS = {
     SAFE: "rating:safe",
     UNSAFE: "rating:questionable",
     EXPLICIT: "rating:explicit",
   };
-  const ACTIVE_STYLE = "background-color: rgba(200, 0, 60, 0.5)";
 
+  // Utility functions
+  const stripTags = R.without([
+    "",
+    "rating:safe",
+    "rating:questionable",
+    "rating:explicit",
+  ]);
+</script>
+
+<script>
   import { onMount, tick, createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
 
-  import { images, tags } from "../stores";
+  import { images, tags } from "../../stores";
   import * as R from "ramda";
 
   import TagsInput from "svelte-tags-input";
 
-  import { requestImages } from "../stores/images";
+  import { requestImages } from "../../stores/images";
 
   const dispatch = createEventDispatcher();
 
-  var tagsBuffer = stripRatings($tags);
+  var tagsBuffer = stripTags($tags);
+
   var rating = "";
+  function toggleRating(value) {
+    rating = rating !== value ? value : "";
+  }
 
   var fetching = false;
 
@@ -48,10 +52,15 @@
 
     await tick();
 
-    // Filtering was gelbooru specific
-    // $images = R.filter(IsImage, $images);
-
     dispatch("searchend", tagsBuffer);
+  }
+
+  function active(ref, test) {
+    return {
+      update(test) {
+        ref.classList.toggle("active-rating-button", test);
+      },
+    };
   }
 
   onMount(() => {
@@ -59,10 +68,10 @@
   });
 </script>
 
-<div
-  class="flex flex-col items-stretch w-screen h-full pb-4 space-y-2"
-  in:fade={{ delay: 200 }}
-  out:fade={{ delay: 0, duration: 100 }}
+<main
+  class="flex flex-col items-stretch"
+  in:fade={{ delay: IN_FADE_DELAY }}
+  out:fade={{ delay: 0, duration: OUT_FADE_DURATION }}
 >
   <div id="tags-input">
     <TagsInput
@@ -72,41 +81,27 @@
     />
   </div>
 
-  <div class="mt-4 flex-1">
-    <div class="flex flex-col px-4">
-      <hr class="border-t-2" />
-      <p class="text-4xl font-light">Favorite</p>
-    </div>
-  </div>
+  <div class="flex-1" />
 
   <div
     id="rating-buttons"
-    class="mx-4 flex flex-row items-center justify-between space-x-4"
+    class="flex flex-row items-center justify-between"
   >
     <button
-      class="rating-button"
-      style={rating === "SAFE" ? ACTIVE_STYLE : null}
-      on:click={() => {
-        rating = rating !== "SAFE" ? "SAFE" : "";
-      }}
+      use:active={rating === "SAFE"}
+      on:click={() => toggleRating("SAFE")}
     >
       SAFE
     </button>
     <button
-      class="rating-button"
-      style={rating === "UNSAFE" ? ACTIVE_STYLE : null}
-      on:click={() => {
-        rating = rating !== "UNSAFE" ? "UNSAFE" : "";
-      }}
+      use:active={rating === "UNSAFE"}
+      on:click={() => toggleRating("UNSAFE")}
     >
       UNSAFE
     </button>
     <button
-      class="rating-button"
-      style={rating === "EXPLICIT" ? ACTIVE_STYLE : null}
-      on:click={() => {
-        rating = rating !== "EXPLICIT" ? "EXPLICIT" : "";
-      }}
+      use:active={rating === "EXPLICIT"}
+      on:click={() => toggleRating("EXPLICIT")}
     >
       EXPLICIT
     </button>
@@ -119,9 +114,13 @@
   >
     {!fetching ? "Search" : "Searching..."}
   </button>
-</div>
+</main>
 
 <style lang="scss">
+  main {
+    @apply w-screen h-full pb-4 space-y-2;
+  }
+
   #tags-input {
     @apply px-2;
 
@@ -144,9 +143,17 @@
     }
   }
 
-  .rating-button {
-    @apply flex-1 py-4 px-4 rounded-lg;
-    background-color: rgba(0, 0, 0, 0.5);
+  #rating-buttons {
+    @apply mx-4 space-x-4;
+
+    & > button {
+      @apply flex-1 py-4 px-4 rounded-lg;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  :global(.active-rating-button) {
+    background-color: rgba(200, 0, 60, 0.8) !important;
   }
 
   #search-button {

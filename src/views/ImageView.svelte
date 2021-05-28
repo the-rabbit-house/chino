@@ -5,10 +5,12 @@
   import { writable } from "svelte/store";
   import { fade, fly } from "svelte/transition";
 
-  import { images, image } from "../stores";
-
   import * as R from "ramda";
   import SimpleBar from "simplebar";
+
+  import { images, image } from "../stores";
+
+  import ImagesQueue from "../components/ImageView/ImagesQueue.svelte";
 
   const { navigate } = getContext("navigator");
   const events = getContext("events");
@@ -21,19 +23,12 @@
   $: $tags = $image?.["tag_string"]?.split(" ") || [];
 
   var innerWidth;
+  var innerHeight;
   $: if (innerWidth < 768) back();
 
-  // Queue
-  var showQueue = false;
+  var showAdjacentImages = true;
 
   $: index = R.findIndex(R.equals($image))($images);
-  $: indexMax = R.min($images.length, index + 7);
-  $: indexMin = R.max(
-    0,
-    index - ($images.length - index <= 2 ? 4 : 2)
-  );
-
-  $: adjacentImages = R.slice(indexMin, indexMax, $images);
 
   function nextImage() {
     $image = $images[R.min(index + 1, $images.length - 1)];
@@ -41,18 +36,6 @@
 
   function previousImage() {
     $image = $images[R.max(index - 1, 0)];
-  }
-
-  var scrollbar;
-  function customScrollbar(ref, tags) {
-    scrollbar = new SimpleBar(ref);
-
-    return {
-      update(tags) {
-        scrollbar.recalculate();
-        // scrollbar = new SimpleBar(ref);
-      },
-    };
   }
 
   function lazy(ref, img) {
@@ -77,7 +60,11 @@
   }
 </script>
 
-<svelte:window bind:innerWidth on:keyup={handleShortcuts} />
+<svelte:window
+  bind:innerWidth
+  bind:innerHeight
+  on:keyup={handleShortcuts}
+/>
 
 <nav class="px-6 pt-2 h-20 flex flex-row items-center">
   <button class="flex flex-row items-center" on:click={back}>
@@ -91,92 +78,78 @@
   <button id="next-image-button" on:click={nextImage}>
     <i class="ri-arrow-right-s-line text-4xl md:text-5xl" />
   </button>
-  <p class="ml-4 text-3xl">{index + 1} / {$images.length}</p>
+  <p id="index-indicator" class="ml-4 text-3xl text-center">
+    {index + 1} / {$images.length}
+  </p>
 </nav>
 
-<main
-  class="flex-1 mt-2 flex flex-col md:flex-row items-stretch overflow-hidden"
->
-  <div
-    id="tags"
-    class="relative pl-4 pt-8 pb-2 overflow-y-auto overflow-x-hidden"
-    in:fly={{ duration: SLIDE_TIME, x: -300 }}
-    use:customScrollbar={$tags}
-  >
-    <p class="fixed top-0 right-0 pr-2">Tags</p>
-    {#each $tags as tag}
-      <div>{tag}</div>
-    {/each}
-  </div>
-  <div class="flex-1 pr-2 flex flex-col items-center">
-    <img
-      id="main-image"
-      use:lazy={$image}
-      class="py-2"
-      width={$image?.["image_width"]}
-      height={$image?.["image_height"]}
-      src={$image?.["preview_file_url"]}
-      in:fade
-      alt="main"
+<main class="flex flex-col lg:flex-row px-4 overflow-hidden">
+  <img
+    id="main-image"
+    use:lazy={$image}
+    width={$image?.["image_width"]}
+    height={$image?.["image_height"]}
+    src={$image?.["preview_file_url"]}
+    in:fade
+    alt="main"
+  />
+
+  {#if showAdjacentImages}
+    <ImagesQueue
+      on:imagechange={(event) => {
+        $image = event.detail;
+      }}
     />
-    {#if showQueue}
-      <div
-        id="adjacent-images"
-        class="relative flex flex-row items-center justify-between space-x-4"
-        in:fly={{ duration: SLIDE_TIME, y: 300 }}
-      >
-        <div
-          class="absolute top-0 left-0 text-sm transform translate-y-1 translate-x-2"
-        >
-          Queue
-        </div>
-        {#each adjacentImages as adjacentImage}
-          <img
-            class="h-32 w-32 p-1 object-contain"
-            src={adjacentImage?.["preview_file_url"]}
-            style={adjacentImage === $image
-              ? "background-color: lightblue"
-              : ""}
-            alt="adjacent"
-          />
-        {/each}
-      </div>
-    {/if}
-  </div>
+  {/if}
+
+  <button
+    id="favorite-button"
+    class="absolute bottom-0 left-0 ml-6 mb-6 py-6 px-8 rounded-3xl"
+  >
+    <i class="ri-star-line text-3xl" />
+  </button>
+
+  <button
+    id="info-button"
+    class="absolute bottom-0 right-0 mr-6 mb-6 py-6 px-8 rounded-3xl"
+  >
+    <i class="ri-information-line text-3xl" />
+  </button>
 </main>
 
-<style>
-  #tags {
-    @apply self-stretch rounded-lg;
+<style lang="scss">
+  main {
+    @apply flex-1;
+    height: calc(100vh - 6rem);
 
-    max-height: calc(100vh - 6rem);
-    width: 25vw;
-
-    background-color: rgba(0, 0, 0, 0.5);
-    transform: translate(-10px, 5px);
+    @apply flex-1 justify-center;
+    @screen md {
+      @apply items-center;
+    }
   }
 
-  main {
-    height: calc(100vh - 6rem);
+  #index-indicator {
+    flex-basis: 7.5rem;
   }
 
   #main-image {
     @apply flex-1;
 
-    height: calc(100vh - 20rem);
-
     object-fit: contain;
+
+    min-width: 0;
+
+    @screen md {
+      max-height: calc(100vh - 18rem);
+    }
+
+    @screen lg {
+      max-height: calc(100vh - 8rem);
+    }
   }
 
-  #adjacent-images {
-    @apply self-end;
-    @apply p-6;
-    @apply rounded-lg;
-
-    max-width: 60vw;
-
+  #favorite-button,
+  #info-button {
     background-color: rgba(0, 0, 0, 0.5);
-
-    transform: translate(10px, 5px);
   }
 </style>

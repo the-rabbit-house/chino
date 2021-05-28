@@ -1,0 +1,85 @@
+<script>
+  import { createEventDispatcher } from "svelte";
+  import { images, image } from "../../stores";
+
+  import * as R from "ramda";
+
+  const dispatch = createEventDispatcher();
+
+  var adjacentImages = [];
+
+  var innerWidth;
+  var innerHeight;
+  $: visibleAdjacentImages = innerHeight < 1050 ? 4 : 5;
+
+  $: {
+    const index = R.findIndex(R.equals($image))($images);
+    let round = 1;
+
+    let min = 0;
+    let max = 0;
+
+    while (
+      round < $images.length &&
+      min + max < visibleAdjacentImages
+    ) {
+      if (R.defaultTo(null, $images?.[index + round])) ++max;
+      if (min + max === visibleAdjacentImages) break;
+
+      if (R.defaultTo(null, $images?.[index - round])) ++min;
+
+      ++round;
+    }
+
+    if (max <= 2) {
+      --min;
+      ++max;
+    }
+
+    const indexMin = R.max(0, index - min);
+    const indexMax = R.min($images.length, index + max);
+    adjacentImages = R.slice(indexMin, indexMax, $images);
+  }
+</script>
+
+<svelte:window bind:innerWidth bind:innerHeight />
+
+<div id="images" class="flex flex-row lg:flex-col rounded-lg">
+  {#each adjacentImages as adjacentImage}
+    <img
+      class="h-40 w-full p-1 object-contain transform hover:scale-110"
+      src={adjacentImage?.["preview_file_url"]}
+      style={adjacentImage === $image
+        ? "background-color: lightblue"
+        : ""}
+      alt="adjacent"
+      on:click={() => dispatch("imagechange", adjacentImage)}
+    />
+  {/each}
+</div>
+
+<style lang="scss">
+  #images {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+
+    @screen md {
+      @apply self-center px-6 py-2;
+
+      & > img {
+        @apply w-24;
+      }
+
+      transform: translateY(2.5rem);
+    }
+
+    @screen lg {
+      @apply self-start w-48 p-6;
+
+      & > img {
+        @apply w-40;
+      }
+
+      transform: translateX(1.75rem);
+    }
+  }
+</style>
