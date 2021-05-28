@@ -57,7 +57,7 @@
 <div id="images" class="flex flex-row lg:flex-col rounded-lg">
   {#each adjacentImages as adjacentImage}
     <img
-      class="h-40 w-full p-1 object-contain transform hover:scale-110"
+      class="object-contain transform hover:scale-110"
       src={adjacentImage?.["preview_file_url"]}
       use:active={adjacentImage === $image}
       on:click={() => dispatch("imagechange", adjacentImage)}
@@ -69,6 +69,10 @@
 <style lang="scss">
   #images {
     background-color: rgba(0, 0, 0, 0.5) !important;
+
+    img {
+      @apply h-40 p-1 w-full;
+    }
 
     @screen md {
       @apply self-center px-6 py-2;
