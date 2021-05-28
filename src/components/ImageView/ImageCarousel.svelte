@@ -128,7 +128,6 @@
 >
   <div class="relative flex flex-row w-screen h-screen">
     <img
-      class="absolute w-screen h-screen object-contain bg-black"
       use:invisible
       src={previousImage?.["preview_file_url"]}
       style="transform:translate({-window.innerWidth +
@@ -138,13 +137,11 @@
     <img
       bind:this={imageRef}
       use:lazy={image}
-      class="absolute w-screen h-screen object-contain bg-black"
       src={image?.["preview_file_url"]}
       style="transform:translate({dx}px,{dy}px)"
       alt="current"
     />
     <img
-      class="absolute w-screen h-screen object-contain bg-black"
       use:invisible
       src={nextImage?.["preview_file_url"]}
       style="transform:translate({window.innerWidth +
@@ -153,3 +150,9 @@
     />
   </div>
 </div>
+
+<style lang="scss">
+  img {
+    @apply absolute w-screen h-screen object-contain bg-black;
+  }
+</style>
