@@ -96,6 +96,7 @@
 <main class="flex flex-col lg:flex-row px-4 overflow-hidden">
   <img
     id="main-image"
+    style={showInfo ? "filter: blur(12px)" : ""}
     use:lazy={$image}
     width={$image?.["image_width"]}
     height={$image?.["image_height"]}
@@ -178,6 +179,8 @@
     object-fit: contain;
 
     min-width: 0;
+
+    transition: filter 1s;
 
     @screen md {
       max-height: calc(100vh - 18rem);
