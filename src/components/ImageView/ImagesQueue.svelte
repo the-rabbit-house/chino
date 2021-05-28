@@ -1,5 +1,7 @@
 <script context="module">
   function active(ref, test) {
+    ref.classList.toggle("active-queue-image", test);
+
     return {
       update(test) {
         ref.classList.toggle("active-queue-image", test);
@@ -75,7 +77,7 @@
     }
 
     @screen md {
-      @apply self-center px-6 py-2;
+      @apply px-6 py-2;
 
       & > img {
         @apply w-24;
@@ -85,7 +87,7 @@
     }
 
     @screen lg {
-      @apply self-start w-48 p-6;
+      @apply w-48 p-6;
 
       & > img {
         @apply w-40;

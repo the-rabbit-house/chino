@@ -1,6 +1,11 @@
-<script>
-  const SLIDE_TIME = 200;
+<script context="module">
+  const QUEUE_FLY_TIME = 200;
 
+  const INFO_DELAY_TIME = 300;
+  const INFO_FLY_TIME = 200;
+</script>
+
+<script>
   import { getContext } from "svelte";
   import { writable } from "svelte/store";
   import { fade, fly } from "svelte/transition";
@@ -11,6 +16,7 @@
   import { images, image } from "@Stores";
 
   import ImagesQueue from "@Components/ImageView/ImagesQueue.svelte";
+  import ImageInfo from "@Components/ImageView/ImageInfo.svelte";
 
   const { navigate } = getContext("navigator");
   const events = getContext("events");
@@ -27,6 +33,7 @@
   $: if (innerWidth < 768) back();
 
   var showAdjacentImages = true;
+  var showInfo = false;
 
   $: index = R.findIndex(R.equals($image))($images);
 
@@ -94,12 +101,30 @@
     alt="main"
   />
 
-  {#if showAdjacentImages}
-    <ImagesQueue
-      on:imagechange={(event) => {
-        $image = event.detail;
+  {#if showAdjacentImages && !showInfo}
+    <div
+      id="images-queue"
+      transition:fly={{
+        delay: 0,
+        y: 300,
       }}
-    />
+    >
+      <ImagesQueue
+        on:imagechange={(event) => {
+          $image = event.detail;
+        }}
+      />
+    </div>
+  {/if}
+
+  {#if showInfo}
+    <div
+      id="image-info"
+      in:fly={{ delay: INFO_DELAY_TIME, y: 1000 }}
+      out:fly={{ delay: 0, duration: INFO_FLY_TIME, y: 1000 }}
+    >
+      <ImageInfo />
+    </div>
   {/if}
 
   <button
@@ -112,8 +137,15 @@
   <button
     id="info-button"
     class="absolute bottom-0 right-0 mr-6 mb-6 py-6 px-8 rounded-3xl"
+    on:click={() => {
+      showInfo = !showInfo;
+    }}
   >
-    <i class="ri-information-line text-3xl" />
+    {#if showInfo}
+      <i class="ri-close-line text-3xl" />
+    {:else}
+      <i class="ri-information-line text-3xl" />
+    {/if}
   </button>
 </main>
 
@@ -148,8 +180,23 @@
     }
   }
 
+  #images-queue {
+    @apply self-center;
+
+    @screen lg {
+      @apply self-start;
+    }
+  }
+
   #favorite-button,
   #info-button {
     background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  #image-info {
+    @apply fixed left-0;
+
+    top: 6rem;
+    height: calc(100vh - 6rem);
   }
 </style>
