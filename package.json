@@ -21,11 +21,14 @@
     "vite": "^2.3.3"
   },
   "dependencies": {
+    "booru": "^2.4.0",
     "events": "^3.3.0",
+    "isomorphic-fetch": "^3.0.0",
     "ramda": "^0.27.1",
     "remixicon": "^2.5.0",
     "simplebar": "^5.3.3",
     "svelte-tags-input": "^2.7.1",
+    "util": "^0.12.4",
     "zingtouch": "^1.0.6"
   }
 }

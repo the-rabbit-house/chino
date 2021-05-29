@@ -2,6 +2,8 @@ import { writable, get } from "svelte/store";
 
 import { tags, images } from "@Stores";
 
+import * as Booru from "booru";
+
 export const fetching = writable(false);
 
 var page = 1;
@@ -13,19 +15,15 @@ export async function requestImages(_tags) {
 
   page = 1;
 
-  const response = await fetch(
-    "https://danbooru.donmai.us/posts.json" +
-      "?tags=" +
-      _tags.join("+") +
-      "&page=" +
-      page +
-      "&limit=30"
-  );
+  const posts = await Booru.search("danbooru", _tags, {
+    page,
+    limit: 30,
+  });
 
   fetching.set(false);
 
   tags.set(_tags);
-  images.set(await response.json());
+  images.set(posts);
 
   return true;
 }
