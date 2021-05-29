@@ -3,3 +3,5 @@
 /.vscode/
 .DS_Store
 src/assets/posts.json
+/docs/
+docs
