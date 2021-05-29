@@ -42,20 +42,28 @@
       #ea83db,
       #e5ac6f
     );
+
+    overscroll-behavior: none;
   }
 
   :global(body) {
     min-height: 100vh;
 
-    overscroll-behavior-y: contain;
+    background: linear-gradient(
+      150deg,
+      #8093da,
+      #ea83db,
+      #e5ac6f
+    );
 
+    overscroll-behavior: none;
     font-family: "KoHo", sans-serif;
     color: white;
   }
 
   main {
-    height: 100vh;
-
     @apply pt-2;
+
+    height: 100vh;
   }
 </style>
