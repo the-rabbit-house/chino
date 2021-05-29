@@ -88,15 +88,17 @@
   </div>
 
   <div class="flex-1 overflow-y-auto">
-    <section>
-      <p class="text-4xl font-medium">Favorites</p>
+    {#if !R.isEmpty($favorites)}
+      <section>
+        <p class="text-4xl font-medium">Favorites</p>
 
-      <div id="favorites" class="flex flex-row flex-wrap">
-        {#each $favorites as tag}
-          <button on:click={() => addTag(tag)}>{tag}</button>
-        {/each}
-      </div>
-    </section>
+        <div id="favorites" class="flex flex-row flex-wrap">
+          {#each $favorites as tag}
+            <button on:click={() => addTag(tag)}>{tag}</button>
+          {/each}
+        </div>
+      </section>
+    {/if}
   </div>
 
   <div
