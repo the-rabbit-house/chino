@@ -2,7 +2,20 @@
 </script>
 
 <script>
-  import { image } from "@Stores";
+  import { image, tags } from "@Stores";
+  import * as R from "ramda";
+
+  $: imageTags = $image?.["tag_string"].split(" ");
+
+  const isInTags = (tag) => R.contains(tag, $tags);
+
+  function addOrRemoveTag(tag) {
+    if (isInTags(tag)) $tags = R.without([tag], $tags);
+    else $tags = R.append(tag, $tags);
+
+    // Force tags re-render
+    imageTags = imageTags;
+  }
 </script>
 
 <article class="flex flex-col space-y-2">
@@ -21,21 +34,29 @@
   </section>
 
   <div id="tags" class="flex flex-col">
-    {#each $image?.["tag_string"].split(" ") as tag}
+    {#each imageTags as tag}
       <div class="p-4 flex flex-row rounded-lg items-center">
         <p class="flex-1 text-lg font-light">
           {tag}
         </p>
 
-        <button class="tag-button">
-          Add
-          <i class="ri-add-line text-5xl ml-4" />
-        </button>
-
-        <button class="tag-button">
-          Search
-          <i class="ri-search-line text-5xl ml-4" />
-        </button>
+        {#if isInTags(tag)}
+          <button
+            class="tag-button"
+            on:click={() => addOrRemoveTag(tag)}
+          >
+            Remove
+            <i class="ri-subtract-line text-5xl ml-4" />
+          </button>
+        {:else}
+          <button
+            class="tag-button"
+            on:click={() => addOrRemoveTag(tag)}
+          >
+            Add
+            <i class="ri-add-line text-5xl ml-4" />
+          </button>
+        {/if}
 
         <button class="tag-button">
           <i class="ri-star-line text-5xl" />
