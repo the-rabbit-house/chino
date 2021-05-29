@@ -26,6 +26,9 @@
 
 <nav class="px-6 pt-2 h-20 flex flex-row items-center">
   <p class="flex-1 text-5xl font-light">chino</p>
+  <a href="https://github.com/the-rabbit-house/chino">
+    <i class="ri-github-fill text-5xl" />
+  </a>
 </nav>
 
 <div class="flex-1" />
