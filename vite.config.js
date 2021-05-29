@@ -26,4 +26,7 @@ export default defineConfig({
       "@Events": rootDir + "/src/events",
     },
   },
+  build: {
+    outDir: "docs",
+  },
 });
