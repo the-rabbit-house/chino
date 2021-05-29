@@ -2,16 +2,26 @@
 </script>
 
 <script>
-  import { image, tags } from "@Stores";
+  import { image, tags, favorites } from "@Stores";
   import * as R from "ramda";
 
   $: imageTags = $image?.["tag_string"].split(" ");
 
   const isInTags = (tag) => R.contains(tag, $tags);
+  const isInFavorites = (tag) => R.contains(tag, $favorites);
 
   function addOrRemoveTag(tag) {
     if (isInTags(tag)) $tags = R.without([tag], $tags);
     else $tags = R.append(tag, $tags);
+
+    // Force tags re-render
+    imageTags = imageTags;
+  }
+
+  function addOrRemoveFavorite(tag) {
+    if (isInFavorites(tag))
+      $favorites = R.without([tag], $favorites);
+    else $favorites = R.append(tag, $favorites);
 
     // Force tags re-render
     imageTags = imageTags;
@@ -58,8 +68,15 @@
           </button>
         {/if}
 
-        <button class="tag-button">
-          <i class="ri-star-line text-5xl" />
+        <button
+          class="tag-button"
+          on:click={() => addOrRemoveFavorite(tag)}
+        >
+          {#if isInFavorites(tag)}
+            <i class="ri-star-fill text-5xl text-yellow-300" />
+          {:else}
+            <i class="ri-star-line text-5xl" />
+          {/if}
         </button>
       </div>
     {/each}

@@ -15,13 +15,21 @@
     "rating:questionable",
     "rating:explicit",
   ]);
+
+  function active(ref, test) {
+    return {
+      update(test) {
+        ref.classList.toggle("active-rating-button", test);
+      },
+    };
+  }
 </script>
 
 <script>
   import { onMount, tick, createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
 
-  import { images, tags } from "@Stores";
+  import { images, tags, favorites } from "@Stores";
   import { requestImages } from "@Stores/images";
 
   import * as R from "ramda";
@@ -55,12 +63,10 @@
     dispatch("searchend", tagsBuffer);
   }
 
-  function active(ref, test) {
-    return {
-      update(test) {
-        ref.classList.toggle("active-rating-button", test);
-      },
-    };
+  function addTag(tag) {
+    if (R.contains(tag, tagsBuffer)) return;
+
+    tagsBuffer = R.append(tag, tagsBuffer);
   }
 
   onMount(() => {
@@ -81,7 +87,17 @@
     />
   </div>
 
-  <div class="flex-1" />
+  <div class="flex-1 overflow-y-auto">
+    <section>
+      <p class="text-4xl font-medium">Favorites</p>
+
+      <div id="favorites" class="flex flex-row flex-wrap">
+        {#each $favorites as tag}
+          <button on:click={() => addTag(tag)}>{tag}</button>
+        {/each}
+      </div>
+    </section>
+  </div>
 
   <div
     id="rating-buttons"
@@ -136,10 +152,31 @@
       background-color: rgba(0, 0, 0, 0.5);
     }
     :global(.svelte-tags-input-tag) {
-      @apply text-2xl;
+      @apply text-xl;
     }
     :global(.svelte-tags-input-tag-remove) {
       @apply text-2xl;
+    }
+  }
+
+  section {
+    @apply px-4 pt-4 pb-6;
+
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  #favorites {
+    @apply pt-2 md:pt-4 space-x-4 space-y-2;
+
+    & > button {
+      @apply p-4 text-sm md:text-base;
+      background-color: rgba(0, 0, 0, 0.3);
+
+      transform: translateX(-1rem);
+
+      &:first-child {
+        @apply mt-2 ml-4;
+      }
     }
   }
 
