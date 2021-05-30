@@ -127,7 +127,7 @@
       {#each $images as image}
         <img
           class="object-cover"
-          src={image["previewUrl"]}
+          src={image["preview_file_url"]}
           alt=""
           on:click={() => openImage(image)}
           in:receive={{ key: image["id"] }}

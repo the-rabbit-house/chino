@@ -5,7 +5,7 @@
   import { image, tags, favorites } from "@Stores";
   import * as R from "ramda";
 
-  $: imageTags = R.defaultTo([], $image?.tags);
+  $: imageTags = $image?.["tag_string"].split(" ");
 
   const isInTags = (tag) => R.contains(tag, $tags);
   const isInFavorites = (tag) => R.contains(tag, $favorites);
@@ -14,6 +14,7 @@
     if (isInTags(tag)) $tags = R.without([tag], $tags);
     else $tags = R.append(tag, $tags);
 
+    // Force tags re-render
     imageTags = imageTags;
   }
 
@@ -22,6 +23,7 @@
       $favorites = R.without([tag], $favorites);
     else $favorites = R.append(tag, $favorites);
 
+    // Force tags re-render
     imageTags = imageTags;
   }
 </script>
@@ -37,7 +39,7 @@
   <section class="p-4">
     <p class="text-lg">Artist:</p>
     <p class="text-xl font-light">
-      {$image?.data?.["tag_string_artist"]}
+      {$image?.["tag_string_artist"]}
     </p>
   </section>
 

@@ -28,6 +28,9 @@
     setTimeout(() => navigate("Gallery"), QUEUE_FLY_TIME);
   }
 
+  const tags = writable([]);
+  $: $tags = $image?.["tag_string"]?.split(" ") || [];
+
   var innerWidth;
   var innerHeight;
   $: if (innerWidth < 768) back();
@@ -95,9 +98,9 @@
     id="main-image"
     style={showInfo ? "filter: blur(12px)" : ""}
     use:lazy={$image}
-    width={$image?.["width"]}
-    height={$image?.["height"]}
-    src={$image?.["previewUrl"]}
+    width={$image?.["image_width"]}
+    height={$image?.["image_height"]}
+    src={$image?.["preview_file_url"]}
     in:fade
     alt="main"
   />

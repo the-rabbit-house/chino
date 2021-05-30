@@ -13,11 +13,11 @@
   }
 
   function lazy(ref, image) {
-    ref.src = image?.["fileUrl"];
+    ref.src = image?.["file_url"];
 
     return {
       update(image) {
-        ref.src = image?.["fileUrl"];
+        ref.src = image?.["file_url"];
       },
     };
   }
@@ -129,7 +129,7 @@
   <div class="relative flex flex-row w-screen h-screen">
     <img
       use:invisible
-      src={previousImage?.["previewUrl"]}
+      src={previousImage?.["preview_file_url"]}
       style="transform:translate({-window.innerWidth +
         dx}px,{dy}px)"
       alt="previous"
@@ -137,13 +137,13 @@
     <img
       bind:this={imageRef}
       use:lazy={image}
-      src={image?.["previewUrl"]}
+      src={image?.["preview_file_url"]}
       style="transform:translate({dx}px,{dy}px)"
       alt="current"
     />
     <img
       use:invisible
-      src={nextImage?.["previewUrl"]}
+      src={nextImage?.["preview_file_url"]}
       style="transform:translate({window.innerWidth +
         dx}px,{dy}px)"
       alt="next"

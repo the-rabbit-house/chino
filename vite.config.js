@@ -24,12 +24,7 @@ export default defineConfig({
       "@Components": rootDir + "/src/components",
       "@Views": rootDir + "/src/views",
       "@Events": rootDir + "/src/events",
-
-      "node-fetch": "isomorphic-fetch"
     },
-  },
-  define: {
-      "process.env": JSON.stringify("import.meta.env"),
   },
   build: {
     outDir: "docs",

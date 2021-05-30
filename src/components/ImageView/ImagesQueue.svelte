@@ -60,7 +60,7 @@
   {#each adjacentImages as adjacentImage}
     <img
       class="object-contain transform hover:scale-110"
-      src={adjacentImage?.["previewUrl"]}
+      src={adjacentImage?.["preview_file_url"]}
       use:active={adjacentImage === $image}
       on:click={() => dispatch("imagechange", adjacentImage)}
       alt="adjacent"
