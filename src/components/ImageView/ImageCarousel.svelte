@@ -33,6 +33,8 @@
 
   import { images } from "@Stores";
 
+  import { remote } from "@Components/Image.svelte";
+
   const dispatch = createEventDispatcher();
 
   export let image = null;
@@ -136,7 +138,7 @@
     />
     <img
       bind:this={imageRef}
-      use:lazy={image}
+      use:remote={image}
       src={image?.["preview_file_url"]}
       style="transform:translate({dx}px,{dy}px)"
       alt="current"

@@ -1,35 +1,28 @@
 import { writable, get } from "svelte/store";
 
-import { tags, images } from "@Stores";
-
-import { Http } from "@capacitor-community/http";
+import { backend, tags, images } from "@Stores";
 
 export const fetching = writable(false);
 
 var page = 1;
 
-export async function requestImages(_tags) {
+export async function requestImages(targetTags) {
   if (get(fetching)) return false;
+
+  page = 1;
+  images.set([]);
 
   fetching.set(true);
 
-  page = 1;
-
-  const response = await Http.request({
-    method: "GET",
-    url:
-      "https://danbooru.donmai.us/posts.json" +
-      "?tags=" +
-      _tags.join("+") +
-      "&page=" +
-      page +
-      "&limit=30",
-  });
+  const targetImages = await get(backend).fetchImages(
+    targetTags,
+    page
+  );
 
   fetching.set(false);
 
-  tags.set(_tags);
-  images.set(response.data);
+  tags.set(targetTags);
+  images.set(targetImages);
 
   return true;
 }
@@ -37,18 +30,11 @@ export async function requestImages(_tags) {
 export async function requestMoreImages() {
   if (get(fetching)) return;
 
-  const _tags = get(tags);
-
   ++page;
+  const nextImages = await get(backend).fetchImages(
+    get(tags),
+    page
+  );
 
-  const response = await Http.request({
-    method: "GET",
-    url:
-      "https://danbooru.donmai.us/posts.json" +
-      "?tags=" +
-      _tags.join("+") +
-      "&page=" +
-      page +
-      "&limit=30",
-  });
+  images.set([...get(images), ...nextImages]);
 }

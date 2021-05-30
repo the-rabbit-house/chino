@@ -15,6 +15,8 @@
 
   import { images, image } from "@Stores";
 
+  import { remote } from "@Components/Image.svelte";
+
   import ImagesQueue from "@Components/ImageView/ImagesQueue.svelte";
   import ImageInfo from "@Components/ImageView/ImageInfo.svelte";
 
@@ -46,15 +48,6 @@
 
   function previousImage() {
     $image = $images[R.max(index - 1, 0)];
-  }
-
-  function lazy(ref, img) {
-    ref.src = img?.["file_url"];
-    return {
-      update(img) {
-        ref.src = img?.["file_url"];
-      },
-    };
   }
 
   function handleShortcuts(event) {
@@ -97,7 +90,7 @@
   <img
     id="main-image"
     style={showInfo ? "filter: blur(12px)" : ""}
-    use:lazy={$image}
+    use:remote={$image}
     width={$image?.["image_width"]}
     height={$image?.["image_height"]}
     src={$image?.["preview_file_url"]}
