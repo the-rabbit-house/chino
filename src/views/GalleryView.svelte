@@ -7,12 +7,14 @@
   import { crossfade, scale } from "svelte/transition";
 
   import { images, image, lastScrollY } from "@Stores";
+  import { requestMoreImages } from "@Stores/images";
 
   import { remote } from "@Components/Image.svelte";
 
   import SearchMenu from "@Components/GalleryView/SearchMenu.svelte";
   import ImageCarousel from "@Components/ImageView/ImageCarousel.svelte";
 
+  import * as R from "ramda";
   import SimpleBar from "simplebar";
 
   const { navigate } = getContext("navigator");
@@ -120,7 +122,11 @@
 </nav>
 
 {#if showImages}
-  <div id="images-container" use:customScrollbar>
+  <div
+    id="images-container"
+    class="flex-1 flex flex-col items-stretch"
+    use:customScrollbar
+  >
     <div
       id="images"
       class="flex flex-row flex-wrap justify-center md:justify-between"
@@ -136,6 +142,16 @@
           out:send={{ key: image["id"] }}
         />
       {/each}
+
+      {#if R.length($images) > 29}
+        <button
+          id="more-button"
+          class="mb-2"
+          on:click={requestMoreImages}
+        >
+          More
+        </button>
+      {/if}
     </div>
   </div>
 {/if}
@@ -228,5 +244,11 @@
     @apply fixed bottom-0 right-0;
     @apply mr-8 mb-7 px-6 py-5;
     @apply bg-white rounded-lg;
+  }
+
+  #more-button {
+    @apply w-full mx-4 mt-3 py-2 text-3xl rounded-lg;
+
+    background-color: rgba(0, 0, 0, 0.5);
   }
 </style>

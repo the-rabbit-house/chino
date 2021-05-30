@@ -11,7 +11,7 @@ export async function fetchImages(tags, page) {
       tags.join("+") +
       "&page=" +
       page +
-      "&limit=5",
+      "&limit=30",
   });
 
   return parseResponse(response.data);

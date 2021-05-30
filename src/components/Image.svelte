@@ -4,6 +4,7 @@
   import { Http } from "@capacitor-community/http";
 
   const cached = {};
+  var current = { image: null };
 
   async function loadAndCache(
     image,
@@ -31,6 +32,7 @@
 
       const path = Capacitor.convertFileSrc(file.uri);
       cached[prefix + image[key]] = path;
+
       return path;
     }
 
@@ -47,6 +49,8 @@
   }
 
   export function remote(ref, [image, full = false]) {
+    if (full) current.image = image;
+
     if (image) {
       loadThumbnail(image).then((thumbnail) => {
         ref.src = thumbnail;
@@ -54,6 +58,8 @@
         if (!full) return;
 
         loadFullImage(image).then((original) => {
+          if (current.image !== image) return;
+
           ref.src = original;
         });
       });
@@ -61,6 +67,8 @@
 
     return {
       update([image, full = false]) {
+        if (full) current.image = image;
+
         if (image) {
           loadThumbnail(image).then((thumbnail) => {
             ref.src = thumbnail;
@@ -68,6 +76,8 @@
             if (!full) return;
 
             loadFullImage(image).then((original) => {
+              if (current.image !== image) return;
+
               ref.src = original;
             });
           });
