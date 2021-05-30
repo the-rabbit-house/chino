@@ -2,6 +2,8 @@ import { writable, get } from "svelte/store";
 
 import { tags, images } from "@Stores";
 
+import { Http } from "@capacitor-community/http";
+
 export const fetching = writable(false);
 
 var page = 1;
@@ -13,19 +15,21 @@ export async function requestImages(_tags) {
 
   page = 1;
 
-  const response = await fetch(
-    "https://danbooru.donmai.us/posts.json" +
+  const response = await Http.request({
+    method: "GET",
+    url:
+      "https://danbooru.donmai.us/posts.json" +
       "?tags=" +
       _tags.join("+") +
       "&page=" +
       page +
-      "&limit=30"
-  );
+      "&limit=30",
+  });
 
   fetching.set(false);
 
   tags.set(_tags);
-  images.set(await response.json());
+  images.set(response.data);
 
   return true;
 }
@@ -37,12 +41,14 @@ export async function requestMoreImages() {
 
   ++page;
 
-  const response = await fetch(
-    "https://danbooru.donmai.us/posts.json" +
+  const response = await Http.request({
+    method: "GET",
+    url:
+      "https://danbooru.donmai.us/posts.json" +
       "?tags=" +
       _tags.join("+") +
       "&page=" +
       page +
-      "&limit=30"
-  );
+      "&limit=30",
+  });
 }

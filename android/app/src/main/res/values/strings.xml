@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">chino</string>
+    <string name="title_activity_main">chino</string>
+    <string name="package_name">com.therabbithouse.chino</string>
+    <string name="custom_url_scheme">com.therabbithouse.chino</string>
+</resources>

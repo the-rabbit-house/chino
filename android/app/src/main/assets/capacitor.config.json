@@ -1,0 +1,6 @@
+{
+	"appId": "com.therabbithouse.chino",
+	"appName": "chino",
+	"webDir": "docs",
+	"bundledWebRuntime": false
+}
