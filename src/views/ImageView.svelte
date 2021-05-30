@@ -90,10 +90,10 @@
   <img
     id="main-image"
     style={showInfo ? "filter: blur(12px)" : ""}
-    use:remote={$image}
-    width={$image?.["image_width"]}
-    height={$image?.["image_height"]}
-    src={$image?.["preview_file_url"]}
+    use:remote={[$image, true]}
+    width={$image?.["width"]}
+    height={$image?.["height"]}
+    src={$image?.["thumbnail_url"]}
     in:fade
     alt="main"
   />

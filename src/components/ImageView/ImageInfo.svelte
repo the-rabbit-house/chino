@@ -5,7 +5,7 @@
   import { image, tags, favorites } from "@Stores";
   import * as R from "ramda";
 
-  $: imageTags = $image?.["tag_string"].split(" ");
+  $: imageTags = $image?.["tags"];
 
   const isInTags = (tag) => R.contains(tag, $tags);
   const isInFavorites = (tag) => R.contains(tag, $favorites);
@@ -39,7 +39,7 @@
   <section class="p-4">
     <p class="text-lg">Artist:</p>
     <p class="text-xl font-light">
-      {$image?.["tag_string_artist"]}
+      {$image?.["artist"]}
     </p>
   </section>
 

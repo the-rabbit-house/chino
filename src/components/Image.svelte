@@ -1,27 +1,75 @@
 <script context="module">
+  import { Capacitor } from "@capacitor/core";
+  import { Filesystem } from "@capacitor/filesystem";
   import { Http } from "@capacitor-community/http";
 
-  async function loadFullImage(image) {
+  const cached = {};
+
+  async function loadAndCache(
+    image,
+    key = "file_url",
+    prefix = ""
+  ) {
+    if (cached?.[prefix + image?.[key]])
+      return cached?.[prefix + image?.[key]];
+
     const response = await Http.downloadFile({
-      url: image?.["file_url"],
-      filePath: image?.["id"],
+      url: image?.[key],
+      filePath: prefix + image?.["file_name"],
+      fileDirectory: "CACHE",
+      method: "GET",
     });
 
-    return URL.createObjectURL(response.blob);
+    let blob = null;
+
+    if (response?.blob) blob = response.blob;
+
+    if (response?.path) {
+      const file = await Filesystem.getUri({
+        path: response.path,
+      });
+
+      const path = Capacitor.convertFileSrc(file.uri);
+      cached[prefix + image[key]] = path;
+      return path;
+    }
+
+    if (!blob) return;
+    return URL.createObjectURL(blob);
   }
 
-  export function remote(ref, image) {
+  function loadThumbnail(image) {
+    return loadAndCache(image, "thumbnail_url", "thumbnail_");
+  }
+
+  function loadFullImage(image) {
+    return loadAndCache(image);
+  }
+
+  export function remote(ref, [image, full = false]) {
     if (image) {
-      loadFullImage(image).then((url) => {
-        ref.src = url;
+      loadThumbnail(image).then((thumbnail) => {
+        ref.src = thumbnail;
+
+        if (!full) return;
+
+        loadFullImage(image).then((original) => {
+          ref.src = original;
+        });
       });
     }
 
     return {
-      update(image) {
+      update([image, full = false]) {
         if (image) {
-          loadFullImage(image).then((url) => {
-            ref.src = url;
+          loadThumbnail(image).then((thumbnail) => {
+            ref.src = thumbnail;
+
+            if (!full) return;
+
+            loadFullImage(image).then((original) => {
+              ref.src = original;
+            });
           });
         }
       },

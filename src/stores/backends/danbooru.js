@@ -14,5 +14,28 @@ export async function fetchImages(tags, page) {
       "&limit=5",
   });
 
-  return response.data;
+  return parseResponse(response.data);
+}
+
+function parseResponse(data) {
+  const images = [];
+
+  for (const post of data) {
+    const image = {
+      id: post?.["id"],
+      file_name: post?.["md5"] + post?.["file_ext"] || "",
+      source: post?.["source"],
+      artist: post?.["tag_string_artist"],
+      thumbnail_url: post?.["preview_file_url"],
+      file_url: post?.["file_url"],
+      width: post?.["image_width"],
+      height: post?.["image_height"],
+      tags: post?.["tag_string"].split(" "),
+      data: post,
+    };
+
+    images.push(image);
+  }
+
+  return images;
 }

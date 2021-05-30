@@ -8,6 +8,8 @@
 
   import { images, image, lastScrollY } from "@Stores";
 
+  import { remote } from "@Components/Image.svelte";
+
   import SearchMenu from "@Components/GalleryView/SearchMenu.svelte";
   import ImageCarousel from "@Components/ImageView/ImageCarousel.svelte";
 
@@ -126,8 +128,8 @@
     >
       {#each $images as image}
         <img
+          use:remote={[image, false]}
           class="object-cover"
-          src={image["preview_file_url"]}
           alt=""
           on:click={() => openImage(image)}
           in:receive={{ key: image["id"] }}
