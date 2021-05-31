@@ -50,6 +50,8 @@
   var fetching = false;
 
   async function search() {
+    if (fetching) return;
+
     $tags = tagsBuffer;
 
     $images = [];
