@@ -32,6 +32,8 @@
 
   const [send, receive] = handles; // crossfade handles
 
+  var touchareaRef = null;
+
   var imageRef = null;
   var previousImage = null;
   var nextImage = null;
@@ -87,10 +89,10 @@
     };
   }
 
-  function bindGestures(child) {
+  function bindGestures(child, area) {
     if (!region || !child) return;
 
-    region.bind(imageRef, "pan", function (event) {
+    region.bind(area, "pan", function (event) {
       const angle = event.detail.data[0].directionFromOrigin;
       const distance = event.detail.data[0].distanceFromOrigin;
 
@@ -109,7 +111,7 @@
     window.addEventListener("touchend", handleSwipe);
   }
 
-  $: bindGestures(imageRef);
+  $: bindGestures(imageRef, touchareaRef);
 </script>
 
 <div
@@ -118,7 +120,10 @@
   in:send={{ key: image?.["id"] }}
   out:receive={{ key: image?.["id"] }}
 >
-  <div class="relative flex flex-row w-screen h-screen">
+  <div
+    bind:this={touchareaRef}
+    class="relative flex flex-row w-screen h-screen"
+  >
     <img
       use:invisible
       src={previousImage?.["thumbnail_url"]}
