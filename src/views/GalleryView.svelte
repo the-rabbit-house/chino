@@ -7,6 +7,12 @@
     LARGE: { width: "16rem", height: "24rem" },
   };
 
+  const imageSizeOrDefault = (size) =>
+    R.defaultTo(
+      IMAGE_SIZES["BASE"],
+      size ? IMAGE_SIZES[size] : null
+    );
+
   // Last scroll position in case navigating back from image
   export const lastScrollY = writable(0);
 </script>
@@ -44,10 +50,10 @@
 
   $: imageWidth = isMobile
     ? (1 / mobileCols) * 100 + "vw"
-    : IMAGE_SIZES[$settings?.galleryImageSize].width;
+    : imageSizeOrDefault($settings?.galleryImageSize).width;
   $: imageHeight = isMobile
     ? Math.max(20, 20 * (4 / mobileCols)) + "vh"
-    : IMAGE_SIZES[$settings?.galleryImageSize].height;
+    : imageSizeOrDefault($settings?.galleryImageSize).height;
 
   var scrollbar;
   var scrollY = 0;
