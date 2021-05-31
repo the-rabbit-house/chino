@@ -1,6 +1,12 @@
 <script context="module">
   const CROSSFADE_TIME = 200;
 
+  const IMAGE_SIZES = {
+    SMALL: { width: "12rem", height: "16rem" },
+    BASE: { width: "14rem", height: "20rem" },
+    LARGE: { width: "16rem", height: "24rem" },
+  };
+
   // Last scroll position in case navigating back from image
   export const lastScrollY = writable(0);
 </script>
@@ -38,10 +44,10 @@
 
   $: imageWidth = isMobile
     ? (1 / mobileCols) * 100 + "vw"
-    : "14rem";
+    : IMAGE_SIZES[$settings?.galleryImageSize].width;
   $: imageHeight = isMobile
     ? Math.max(20, 20 * (4 / mobileCols)) + "vh"
-    : "20rem";
+    : IMAGE_SIZES[$settings?.galleryImageSize].height;
 
   var scrollbar;
   var scrollY = 0;

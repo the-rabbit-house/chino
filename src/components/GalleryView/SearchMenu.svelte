@@ -17,9 +17,11 @@
   ]);
 
   function active(ref, test) {
+    ref.classList.toggle("active-button", test);
+
     return {
       update(test) {
-        ref.classList.toggle("active-rating-button", test);
+        ref.classList.toggle("active-button", test);
       },
     };
   }
@@ -189,10 +191,6 @@
       @apply flex-1 py-4 px-4 rounded-lg;
       background-color: rgba(0, 0, 0, 0.5);
     }
-  }
-
-  :global(.active-rating-button) {
-    background-color: rgba(200, 0, 60, 0.8) !important;
   }
 
   #search-button {

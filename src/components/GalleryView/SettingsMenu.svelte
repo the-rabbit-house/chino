@@ -1,6 +1,16 @@
 <script context="module">
   export const IN_FADE_DELAY = 200;
   export const OUT_FADE_DURATION = 100;
+
+  function active(ref, test) {
+    ref.classList.toggle("active-button", test);
+
+    return {
+      update(test) {
+        ref.classList.toggle("active-button", test);
+      },
+    };
+  }
 </script>
 
 <script>
@@ -10,8 +20,15 @@
 
   import * as R from "ramda";
 
+  var innerHeight;
+  var innerWidth;
+  $: isMobile = innerWidth <= 768;
+
   $: galleryCols = $settings?.galleryCols;
+  $: galleryImageSize = $settings.galleryImageSize;
 </script>
+
+<svelte:window bind:innerHeight bind:innerWidth />
 
 <main
   class="flex flex-col items-stretch"
@@ -45,6 +62,42 @@
       }}
     >
       +
+    </button>
+  </section>
+
+  <section
+    class="relative flex flex-row items-center text-2xl md:text-3xl"
+  >
+    <p class="absolute top-0 left-0 pl-2 pt-1 text-base">
+      TABLET+ ONLY
+    </p>
+    <p class="flex-1">Image size</p>
+    <button
+      class="mr-1"
+      use:active={galleryImageSize === "SMALL"}
+      on:click={() => {
+        $settings.galleryImageSize = "SMALL";
+      }}
+    >
+      {isMobile ? "SM" : "SMALL"}
+    </button>
+
+    <button
+      class="mr-1"
+      use:active={galleryImageSize === "BASE"}
+      on:click={() => {
+        $settings.galleryImageSize = "BASE";
+      }}
+    >
+      BASE
+    </button>
+    <button
+      use:active={galleryImageSize === "LARGE"}
+      on:click={() => {
+        $settings.galleryImageSize = "LARGE";
+      }}
+    >
+      {isMobile ? "LG" : "LARGE"}
     </button>
   </section>
 </main>
