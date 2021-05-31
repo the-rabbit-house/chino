@@ -1,9 +1,10 @@
 <script context="module">
   const isDirection = {
     DOWN: (angle) => angle > 200 && angle < 315,
-    LEFT: (angle) => angle > 90 && angle < 200,
+    LEFT: (angle) => angle > 120 && angle < 200,
     RIGHT: (angle) =>
-      (angle > 0 && angle < 90) || (angle > 315 && angle <= 360),
+      (angle > 0 && angle < 60) || (angle > 315 && angle <= 360),
+    UP: (angle) => angle > 60 && angle < 120,
   };
 
   function invisible(ref) {
@@ -24,6 +25,7 @@
   import { images } from "@Stores";
 
   import { remote } from "@Components/Image.svelte";
+  import ImageInfo from "@Components/ImageView/ImageInfo.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -31,6 +33,8 @@
   export let handles;
 
   const [send, receive] = handles; // crossfade handles
+
+  var innerHeight = 0;
 
   var touchareaRef = null;
 
@@ -45,6 +49,8 @@
     nextImage = $images[R.min(index + 1, R.length($images))];
   }
 
+  var showInfo = false;
+
   const direction = writable(null);
   const delta = tweened(0, { duration: 50 });
 
@@ -54,11 +60,20 @@
       : $direction === "LEFT"
       ? -$delta
       : 0;
-  $: dy = $direction === "DOWN" ? $delta : 0;
+  $: dy =
+    $direction === "DOWN"
+      ? $delta
+      : $direction === "UP"
+      ? -$delta
+      : 0;
 
   function handleSwipe() {
-    if ($delta > 60) {
+    if ($delta > 150) {
       if ($direction === "DOWN") $delta = 0;
+      if ($direction === "UP") {
+        $delta = 0;
+        showInfo = true;
+      }
       if ($direction === "LEFT")
         dispatch("imagechange", nextImage);
       if ($direction === "RIGHT")
@@ -101,11 +116,14 @@
       if (isDirection.DOWN(angle)) nextDirection = "DOWN";
       else if (isDirection.LEFT(angle)) nextDirection = "LEFT";
       else if (isDirection.RIGHT(angle)) nextDirection = "RIGHT";
+      else if (isDirection.UP(angle)) nextDirection = "UP";
 
       if (nextDirection !== $direction) {
         $direction = nextDirection;
         $delta = 0;
       } else $delta = distance;
+
+      if (distance > 500) handleSwipe();
     });
 
     window.addEventListener("touchend", handleSwipe);
@@ -113,6 +131,8 @@
 
   $: bindGestures(imageRef, touchareaRef);
 </script>
+
+<svelte:window bind:innerHeight />
 
 <div
   class="fixed top-0 left-0"
@@ -148,8 +168,26 @@
   </div>
 </div>
 
+<div
+  id="info-container"
+  style={!showInfo
+    ? `transform:translateY(${innerHeight + dy * 2}px`
+    : ""}
+>
+  <ImageInfo
+    closable={true}
+    on:close={() => {
+      showInfo = false;
+    }}
+  />
+</div>
+
 <style lang="scss">
   img {
     @apply absolute w-screen h-screen object-contain bg-black;
+  }
+
+  #info-container {
+    @apply absolute top-0 left-0 h-screen w-screen bg-black;
   }
 </style>

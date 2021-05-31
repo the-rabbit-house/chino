@@ -118,6 +118,7 @@
   {#if showInfo}
     <div
       id="image-info"
+      class="pb-40"
       in:fly={{
         delay: INFO_DELAY_TIME,
         duration: INFO_FLY_TIME,

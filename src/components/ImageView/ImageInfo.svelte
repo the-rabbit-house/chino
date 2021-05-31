@@ -2,8 +2,13 @@
 </script>
 
 <script>
+  import { createEventDispatcher } from "svelte";
   import { image, tags, favorites } from "@Stores";
   import * as R from "ramda";
+
+  const dispatch = createEventDispatcher();
+
+  export let closable = false;
 
   $: imageTags = R.defaultTo([], $image?.["tags"]);
 
@@ -81,11 +86,17 @@
       </div>
     {/each}
   </div>
+
+  {#if closable}
+    <button id="close-button" on:click={() => dispatch("close")}>
+      Close
+    </button>
+  {/if}
 </article>
 
 <style lang="scss">
   article {
-    @apply w-screen h-full p-4 pb-40 space-y-2 bg-black rounded-2xl;
+    @apply w-screen h-full p-4 space-y-2 bg-black rounded-2xl;
 
     transform: translateY(1rem);
 
@@ -114,5 +125,10 @@
   .tag-button {
     @apply px-4 py-2 flex flex-row items-center;
     background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  #close-button {
+    @apply py-6 mb-4 rounded;
+    background-color: rgba(255, 0, 0, 0.3);
   }
 </style>
