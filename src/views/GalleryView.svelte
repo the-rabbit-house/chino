@@ -1,12 +1,16 @@
 <script context="module">
   const CROSSFADE_TIME = 200;
+
+  // Last scroll position in case navigating back from image
+  export const lastScrollY = writable(0);
 </script>
 
 <script>
   import { getContext } from "svelte";
+  import { writable } from "svelte/store";
   import { crossfade, scale } from "svelte/transition";
 
-  import { images, image, lastScrollY } from "@Stores";
+  import { images, image } from "@Stores";
   import { requestMoreImages } from "@Stores/images";
 
   import { remote } from "@Components/Image.svelte";
