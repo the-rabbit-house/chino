@@ -14,6 +14,8 @@
   import { createEventDispatcher } from "svelte";
   import { images, image } from "@Stores";
 
+  import { remote } from "@Components/Image.svelte";
+
   import * as R from "ramda";
 
   const dispatch = createEventDispatcher();
@@ -60,7 +62,7 @@
   {#each adjacentImages as adjacentImage}
     <img
       class="object-contain transform hover:scale-110"
-      src={adjacentImage?.["thumbnail_url"]}
+      use:remote={[adjacentImage]}
       use:active={adjacentImage === $image}
       on:click={() => dispatch("imagechange", adjacentImage)}
       alt="adjacent"
