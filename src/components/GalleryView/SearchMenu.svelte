@@ -1,6 +1,6 @@
 <script context="module">
-  const IN_FADE_DELAY = 200;
-  const OUT_FADE_DURATION = 100;
+  export const IN_FADE_DELAY = 200;
+  export const OUT_FADE_DURATION = 100;
 
   const RATINGS = {
     SAFE: "rating:safe",

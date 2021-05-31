@@ -10,12 +10,17 @@
   import { writable } from "svelte/store";
   import { crossfade, scale } from "svelte/transition";
 
-  import { images, image } from "@Stores";
+  import { settings, images, image } from "@Stores";
   import { requestMoreImages } from "@Stores/images";
 
   import { remote } from "@Components/Image.svelte";
 
-  import SearchMenu from "@Components/GalleryView/SearchMenu.svelte";
+  import SettingsMenu, {
+    OUT_FADE_DURATION as SETTINGS_FADE_OUT,
+  } from "@Components/GalleryView/SettingsMenu.svelte";
+  import SearchMenu, {
+    OUT_FADE_DURATION as SEARCH_FADE_OUT,
+  } from "@Components/GalleryView/SearchMenu.svelte";
   import ImageCarousel from "@Components/ImageView/ImageCarousel.svelte";
 
   import * as R from "ramda";
@@ -27,7 +32,16 @@
 
   var innerHeight;
   var innerWidth;
+
   $: isMobile = innerWidth <= 768;
+  $: mobileCols = $settings?.galleryCols;
+
+  $: imageWidth = isMobile
+    ? (1 / mobileCols) * 100 + "vw"
+    : "14rem";
+  $: imageHeight = isMobile
+    ? Math.max(20, 20 * (4 / mobileCols)) + "vh"
+    : "20rem";
 
   var scrollbar;
   var scrollY = 0;
@@ -36,6 +50,7 @@
   $: $image = selectedImage;
 
   var showImages = true;
+  var showSettings = false;
   var showSearch = false;
 
   $: showBackButton = scrollY > innerHeight;
@@ -60,14 +75,39 @@
     }
   }
 
+  function toggleSettings() {
+    showSearch = false;
+    setTimeout(() => {
+      showSettings = !showSettings;
+    }, SETTINGS_FADE_OUT);
+  }
+
+  function toggleSearch() {
+    window.scrollTo(0, 0);
+
+    showSettings = false;
+    setTimeout(() => {
+      showSearch = !showSearch;
+    }, SETTINGS_FADE_OUT);
+  }
+
   async function back() {
     if (exiting) return;
 
     exiting = true;
     $images = [];
 
-    // Let the images crossfade before changing screen
-    setTimeout(() => navigate("Start"), CROSSFADE_TIME + 10);
+    showSettings = false;
+    showSearch = false;
+
+    // Let the images crossfade and settings/search disappear
+    const DELAY_TIME = Math.max(
+      CROSSFADE_TIME,
+      showSettings ? CROSSFADE_TIME + SETTINGS_FADE_OUT : 0,
+      showSearch ? CROSSFADE_TIME + SEARCH_FADE_OUT : 0
+    );
+
+    setTimeout(() => navigate("Start"), DELAY_TIME + 10);
   }
 
   // Custom scrollbar needs to recalculate when images change
@@ -106,17 +146,20 @@
 
 <nav class="flex flex-row items-center">
   <button class="flex flex-row items-center" on:click={back}>
-    <i class="ri-arrow-left-s-line text-4xl md:text-5xl" />
-    <p class="text-4xl font-light md:text-5xl">gallery</p>
+    <i class="ri-arrow-left-s-line text-5xl md:text-6xl" />
+    <p class="hidden md:block text-4xl font-light md:text-5xl">
+      gallery
+    </p>
   </button>
   <div class="flex-1" />
-  <div
-    id="search-icon"
-    on:click={() => {
-      window.scrollTo(0, 0);
-      showSearch = !showSearch;
-    }}
-  >
+  <div id="settings-icon" class="mr-3" on:click={toggleSettings}>
+    {#if showSettings}
+      <i class="ri-close-line text-3xl" />
+    {:else}
+      <i class="ri-settings-2-line text-3xl" />
+    {/if}
+  </div>
+  <div id="search-icon" on:click={toggleSearch}>
     {#if showSearch}
       <i class="ri-close-line text-3xl" />
     {:else}
@@ -134,7 +177,9 @@
     <div
       id="images"
       class="flex flex-row flex-wrap justify-center md:justify-between"
-      style={showSearch ? "filter: blur(20px)" : null}
+      style={showSearch || showSettings
+        ? "filter: blur(20px)"
+        : null}
     >
       {#each $images as image}
         <img
@@ -144,6 +189,7 @@
           on:click={() => openImage(image)}
           in:receive={{ key: image["id"] }}
           out:send={{ key: image["id"] }}
+          style={`width:${imageWidth}; height:${imageHeight}`}
         />
       {/each}
 
@@ -175,6 +221,12 @@
   />
 {/if}
 
+{#if showSettings}
+  <div id="settings-menu">
+    <SettingsMenu />
+  </div>
+{/if}
+
 {#if showSearch}
   <div id="search-menu">
     <SearchMenu
@@ -202,11 +254,13 @@
     @apply px-6 pt-2 h-20;
   }
 
+  #settings-icon,
   #search-icon {
     @apply py-2 px-4 rounded-xl cursor-pointer;
     background-color: rgba(0, 0, 0, 0.5);
   }
 
+  #settings-menu,
   #search-menu {
     @apply fixed left-0;
 
@@ -224,19 +278,11 @@
     @apply flex-1 pb-2;
     transition: 0.5s filter linear;
 
-    & > img {
-      width: calc(33.3vw);
-      height: 20vh;
-    }
-
     @screen md {
       @apply space-x-1 space-y-2 px-5;
 
       & > img {
         @apply rounded-lg;
-
-        width: 14rem;
-        height: 20rem;
 
         &:first-child {
           @apply ml-1 mt-2;
