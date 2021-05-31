@@ -5,7 +5,7 @@
   import { image, tags, favorites } from "@Stores";
   import * as R from "ramda";
 
-  $: imageTags = $image?.["tags"];
+  $: imageTags = R.defaultTo([], $image?.["tags"]);
 
   const isInTags = (tag) => R.contains(tag, $tags);
   const isInFavorites = (tag) => R.contains(tag, $favorites);
