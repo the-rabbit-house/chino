@@ -65,5 +65,14 @@
     @apply pt-2;
 
     height: 100vh;
+
+    background: linear-gradient(
+      150deg,
+      #8093da,
+      #ea83db,
+      #e5ac6f
+    );
+
+    overscroll-behavior: none;
   }
 </style>
