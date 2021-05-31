@@ -180,6 +180,7 @@
     <SearchMenu
       on:searchend={() => {
         showSearch = false;
+        scrollbar.recalculate();
       }}
     />
   </div>
