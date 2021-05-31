@@ -28,7 +28,7 @@ function parseResponse(data) {
       file_name: post?.["image"],
       source: post?.["source"],
       artist: post?.["owner"],
-      thumbnail_url: `${baseUrl}/thumbnails/${post?.["directory"]}/thumbnail_${post?.["image"]}`,
+      thumbnail_url: `${baseUrl}/thumbnails/${post?.["directory"]}/thumbnail_${post?.["hash"]}.jpg`,
       file_url: post?.["file_url"],
       width: post?.["width"],
       height: post?.["height"],
