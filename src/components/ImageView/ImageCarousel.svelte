@@ -1,4 +1,9 @@
 <script context="module">
+  const DEFAULT_SOFT_SWIPE_DISTANCE = 120;
+  const DEFAULT_HARD_SWIPE_DISTANCE = 450;
+
+  const nonZeroOrNull = R.when(R.equals(0), () => null);
+
   const isDirection = {
     DOWN: (angle) => angle > 200 && angle < 315,
     LEFT: (angle) => angle > 120 && angle < 200,
@@ -23,7 +28,7 @@
   import * as R from "ramda";
   import ZingTouch from "zingtouch";
 
-  import { images } from "@Stores";
+  import { settings, images } from "@Stores";
 
   import { remote } from "@Components/Image.svelte";
   import ImageInfo from "@Components/ImageView/ImageInfo.svelte";
@@ -36,6 +41,16 @@
   var innerWidth = 0;
 
   var touchareaRef = null;
+
+  $: softSwipeDistance = R.defaultTo(
+    DEFAULT_SOFT_SWIPE_DISTANCE,
+    nonZeroOrNull(innerWidth * $settings?.swipeDistance)
+  );
+
+  $: hardSwipeDistance = R.defaultTo(
+    DEFAULT_SOFT_SWIPE_DISTANCE,
+    nonZeroOrNull(innerWidth * $settings?.swipeDistance * 3)
+  );
 
   var imageRef = null;
   var previousImage = null;
@@ -67,7 +82,7 @@
       : 0;
 
   function handleSwipe() {
-    if ($delta > 150) {
+    if ($delta > softSwipeDistance) {
       if ($direction === "DOWN") $delta = 0;
       if ($direction === "UP") {
         $delta = 0;
@@ -126,7 +141,7 @@
         $delta = 0;
       } else $delta = distance;
 
-      if (distance > 500) handleSwipe();
+      if (distance > hardSwipeDistance) handleSwipe();
     }
 
     region.bind(area, "pan", handlePan);
@@ -140,12 +155,12 @@
 
 <div
   class="fixed top-0 left-0"
-  in:fly={{ y: 1000 }}
   use:bindRegion
+  in:fly={{ y: 1000 }}
 >
   <div
     bind:this={touchareaRef}
-    class="flex flex-row h-screen"
+    class="flex flex-row"
     style="width:300vw;transform:translate({-innerWidth +
       dx}px,{dy}px)"
   >
@@ -173,7 +188,7 @@
 <div
   id="info-container"
   style={!showInfo
-    ? `transform:translateY(${innerHeight + dy * 1.25}px`
+    ? `transform:translateY(${innerHeight + dy * 1.75}px`
     : ""}
 >
   <ImageInfo

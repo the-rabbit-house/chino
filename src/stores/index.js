@@ -6,6 +6,7 @@ import BACKENDS from "./backends";
 export const settings = persistent("settings", {
   galleryCols: 3,
   galleryImageSize: "BASE",
+  swipeDistance: 0.2,
 });
 
 // Default to danbooru since its cors-free

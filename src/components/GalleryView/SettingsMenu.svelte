@@ -25,7 +25,8 @@
   $: isMobile = innerWidth <= 768;
 
   $: galleryCols = $settings?.galleryCols;
-  $: galleryImageSize = $settings.galleryImageSize;
+  $: galleryImageSize = $settings?.galleryImageSize;
+  $: swipeDistance = $settings?.swipeDistance;
 </script>
 
 <svelte:window bind:innerHeight bind:innerWidth />
@@ -62,6 +63,42 @@
       }}
     >
       +
+    </button>
+  </section>
+
+  <section
+    class="relative flex flex-row items-center text-xl md:text-2xl"
+  >
+    <p class="absolute top-0 left-0 pl-2 pt-1 text-base">
+      MOBILE ONLY
+    </p>
+    <p class="flex-1 text-wrap">Swipe <br />distance</p>
+    <button
+      class="mr-1"
+      use:active={swipeDistance === 0.2}
+      on:click={() => {
+        $settings.swipeDistance = 0.2;
+      }}
+    >
+      20%
+    </button>
+
+    <button
+      class="mr-1"
+      use:active={swipeDistance === 0.25}
+      on:click={() => {
+        $settings.swipeDistance = 0.25;
+      }}
+    >
+      25%
+    </button>
+    <button
+      use:active={swipeDistance === 0.35}
+      on:click={() => {
+        $settings.swipeDistance = 0.35;
+      }}
+    >
+      35%
     </button>
   </section>
 
