@@ -221,7 +221,6 @@
 {#if isMobile && selectedImage}
   <ImageCarousel
     image={selectedImage}
-    handles={[send, receive]}
     on:imagechange={(event) => {
       const image = event.detail;
       selectedImage = image;

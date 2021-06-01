@@ -10,6 +10,9 @@
 
   export let closable = false;
 
+  var innerWidth;
+  $: isMobile = innerWidth <= 768;
+
   $: imageTags = R.defaultTo([], $image?.["tags"]);
 
   const isInTags = (tag) => R.contains(tag, $tags);
@@ -33,11 +36,13 @@
   }
 </script>
 
+<svelte:window bind:innerWidth />
+
 <article class="flex flex-col space-y-2">
-  <section class="p-4">
+  <section class="p-4 flex flex-col">
     <p class="text-lg">Source:</p>
     <a
-      class="text-xl font-light text-blue-400"
+      class="truncate text-xl font-light text-blue-400"
       href={$image?.["source"]}>{$image?.["source"]}</a
     >
   </section>
@@ -51,7 +56,7 @@
   <div id="tags" class="flex flex-col">
     {#each imageTags as tag}
       <div class="p-4 flex flex-row rounded-lg items-center">
-        <p class="flex-1 text-lg font-light">
+        <p class="truncate flex-1 md:text-lg font-light">
           {tag}
         </p>
 
@@ -60,16 +65,16 @@
             class="tag-button"
             on:click={() => addOrRemoveTag(tag)}
           >
-            Remove
-            <i class="ri-subtract-line text-5xl ml-4" />
+            {!isMobile ? "Remove" : ""}
+            <i class="ri-subtract-line text-4xl md:text-5xl" />
           </button>
         {:else}
           <button
             class="tag-button"
             on:click={() => addOrRemoveTag(tag)}
           >
-            Add
-            <i class="ri-add-line text-5xl ml-4" />
+            {!isMobile ? "Add" : ""}
+            <i class="ri-add-line text-4xl md:text-5xl" />
           </button>
         {/if}
 
@@ -78,9 +83,9 @@
           on:click={() => addOrRemoveFavorite(tag)}
         >
           {#if isInFavorites(tag)}
-            <i class="ri-star-fill text-5xl text-yellow-300" />
+            <i class="ri-star-fill text-4xl text-yellow-300" />
           {:else}
-            <i class="ri-star-line text-5xl" />
+            <i class="ri-star-line text-4xl md:text-5xl" />
           {/if}
         </button>
       </div>
@@ -88,8 +93,12 @@
   </div>
 
   {#if closable}
-    <button id="close-button" on:click={() => dispatch("close")}>
-      Close
+    <button
+      id="close-button"
+      class="tracking-wider"
+      on:click={() => dispatch("close")}
+    >
+      CLOSE
     </button>
   {/if}
 </article>

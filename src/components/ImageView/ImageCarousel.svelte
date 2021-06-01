@@ -18,6 +18,7 @@
   import { createEventDispatcher } from "svelte";
   import { writable } from "svelte/store";
   import { tweened } from "svelte/motion";
+  import { fly } from "svelte/transition";
 
   import * as R from "ramda";
   import ZingTouch from "zingtouch";
@@ -30,11 +31,9 @@
   const dispatch = createEventDispatcher();
 
   export let image = null;
-  export let handles;
-
-  const [send, receive] = handles; // crossfade handles
 
   var innerHeight = 0;
+  var innerWidth = 0;
 
   var touchareaRef = null;
 
@@ -95,8 +94,7 @@
 
     return {
       destroy() {
-        region.unbind(imageRef, "swipe");
-        region.unbind(imageRef, "pan");
+        region.unbind(touchareaRef, "pan");
         window.removeEventListener("touchend", handleSwipe);
 
         region = null;
@@ -104,10 +102,10 @@
     };
   }
 
-  function bindGestures(child, area) {
+  function bindGestures(child, area, disabled) {
     if (!region || !child) return;
 
-    region.bind(area, "pan", function (event) {
+    function handlePan(event) {
       const angle = event.detail.data[0].directionFromOrigin;
       const distance = event.detail.data[0].distanceFromOrigin;
 
@@ -124,26 +122,34 @@
       } else $delta = distance;
 
       if (distance > 500) handleSwipe();
-    });
+    }
 
+    region.bind(area, "pan", handlePan);
     window.addEventListener("touchend", handleSwipe);
+
+    return {
+      update(child, area, disabled) {
+        console.log(disabled);
+        if (disabled) region.unbind(area, "pan");
+        else region.bind(area, "pan", handlePan);
+      },
+    };
   }
 
-  $: bindGestures(imageRef, touchareaRef);
+  $: bindGestures(imageRef, touchareaRef, showInfo);
 </script>
 
-<svelte:window bind:innerHeight />
+<svelte:window bind:innerHeight bind:innerWidth />
 
 <div
   class="fixed top-0 left-0"
+  in:fly={{ y: 1000 }}
   use:bindRegion
-  bind:this={touchareaRef}
-  in:send={{ key: image?.["id"] }}
-  out:receive={{ key: image?.["id"] }}
 >
   <div
+    bind:this={touchareaRef}
     class="flex flex-row h-screen"
-    style="width:300vw;transform:translate({-window.innerWidth +
+    style="width:300vw;transform:translate({-innerWidth +
       dx}px,{dy}px)"
   >
     <img
@@ -170,7 +176,7 @@
 <div
   id="info-container"
   style={!showInfo
-    ? `transform:translateY(${innerHeight + dy * 2}px`
+    ? `transform:translateY(${innerHeight + dy * 1.25}px`
     : ""}
 >
   <ImageInfo
@@ -187,6 +193,6 @@
   }
 
   #info-container {
-    @apply absolute top-0 left-0 h-screen w-screen bg-black;
+    @apply fixed top-0 left-0 h-screen w-screen bg-black;
   }
 </style>
