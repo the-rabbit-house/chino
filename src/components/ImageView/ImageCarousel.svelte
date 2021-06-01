@@ -105,6 +105,11 @@
   function bindGestures(child, area, disabled) {
     if (!region || !child) return;
 
+    if (disabled) {
+      region.unbind(area, "pan");
+      return;
+    }
+
     function handlePan(event) {
       const angle = event.detail.data[0].directionFromOrigin;
       const distance = event.detail.data[0].distanceFromOrigin;
@@ -126,14 +131,6 @@
 
     region.bind(area, "pan", handlePan);
     window.addEventListener("touchend", handleSwipe);
-
-    return {
-      update(child, area, disabled) {
-        console.log(disabled);
-        if (disabled) region.unbind(area, "pan");
-        else region.bind(area, "pan", handlePan);
-      },
-    };
   }
 
   $: bindGestures(imageRef, touchareaRef, showInfo);
