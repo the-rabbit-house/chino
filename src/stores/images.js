@@ -4,7 +4,7 @@ import { backend, tags, images } from "@Stores";
 
 export const fetching = writable(false);
 
-var page = 1;
+var page = 0;
 
 export async function requestImages(targetTags) {
   if (get(fetching)) return false;
