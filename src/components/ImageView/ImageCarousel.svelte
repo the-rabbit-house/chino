@@ -162,7 +162,7 @@
     bind:this={touchareaRef}
     class="flex flex-row"
     style="width:300vw;transform:translate({-innerWidth +
-      dx}px,{dy}px)"
+      dx}px,{dy}px);will-change:transform"
   >
     <img
       use:invisible
@@ -206,5 +206,6 @@
 
   #info-container {
     @apply fixed top-0 left-0 h-screen w-screen bg-black;
+    will-change: transform;
   }
 </style>

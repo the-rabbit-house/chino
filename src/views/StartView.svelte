@@ -1,8 +1,10 @@
 <script>
-  import { getContext } from "svelte";
+  import { getContext, onMount } from "svelte";
   import { cubicOut } from "svelte/easing";
 
   import tippy from "@Assets/tippy.png";
+
+  import { Device } from "@capacitor/device";
 
   const { navigate } = getContext("navigator");
   const events = getContext("events");
@@ -17,11 +19,19 @@
   }
 
   var showTippy = false;
-  setTimeout(() => {
-    showTippy = true;
 
+  onMount(async () => {
+    showTippy = true;
+    const info = await Device.getInfo();
+    if (info?.operatingSystem === "android") {
+      const meta = document.querySelector("meta[name=viewport]");
+      meta.setAttribute(
+        "content",
+        `width=device-width, height=${window.innerHeight}, initial-scale=1.0`
+      );
+    }
     setTimeout(() => navigate("Gallery"), 1500);
-  }, 500);
+  });
 </script>
 
 <nav class="px-6 pt-2 h-20 flex flex-row items-center">

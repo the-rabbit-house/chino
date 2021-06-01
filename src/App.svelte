@@ -36,6 +36,14 @@
   @import url("https://fonts.googleapis.com/css2?family=KoHo:wght@200;300;400;500&display=swap");
 
   :global(html) {
+    /* Android keyboard background */
+    background-color: rgba(0, 0, 0, 0.8);
+    overscroll-behavior: none;
+  }
+
+  :global(body),
+  :global(#app),
+  main {
     background: linear-gradient(
       150deg,
       #8093da,
@@ -49,30 +57,11 @@
   :global(body) {
     min-height: 100vh;
 
-    background: linear-gradient(
-      150deg,
-      #8093da,
-      #ea83db,
-      #e5ac6f
-    );
-
-    overscroll-behavior: none;
     font-family: "KoHo", sans-serif;
     color: white;
   }
 
   main {
-    @apply pt-2;
-
-    height: 100vh;
-
-    background: linear-gradient(
-      150deg,
-      #8093da,
-      #ea83db,
-      #e5ac6f
-    );
-
-    overscroll-behavior: none;
+    @apply pt-2 h-screen;
   }
 </style>
