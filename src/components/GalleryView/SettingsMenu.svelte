@@ -75,6 +75,16 @@
     <p class="flex-1 text-wrap">Swipe <br />distance</p>
     <button
       class="mr-1"
+      use:active={swipeDistance === 0.161}
+      on:click={() => {
+        $settings.swipeDistance = 0.161;
+      }}
+    >
+      16.1%
+    </button>
+
+    <button
+      class="mr-1"
       use:active={swipeDistance === 0.2}
       on:click={() => {
         $settings.swipeDistance = 0.2;
@@ -82,23 +92,13 @@
     >
       20%
     </button>
-
     <button
-      class="mr-1"
       use:active={swipeDistance === 0.25}
       on:click={() => {
         $settings.swipeDistance = 0.25;
       }}
     >
       25%
-    </button>
-    <button
-      use:active={swipeDistance === 0.35}
-      on:click={() => {
-        $settings.swipeDistance = 0.35;
-      }}
-    >
-      35%
     </button>
   </section>
 
