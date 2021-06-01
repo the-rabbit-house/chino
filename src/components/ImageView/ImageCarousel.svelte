@@ -137,32 +137,31 @@
 <div
   class="fixed top-0 left-0"
   use:bindRegion
+  bind:this={touchareaRef}
   in:send={{ key: image?.["id"] }}
   out:receive={{ key: image?.["id"] }}
 >
   <div
-    bind:this={touchareaRef}
-    class="relative flex flex-row w-screen h-screen"
+    class="flex flex-row h-screen"
+    style="width:300vw;transform:translate({-window.innerWidth +
+      dx}px,{dy}px)"
   >
     <img
       use:invisible
+      class="invisible"
       src={previousImage?.["thumbnail_url"]}
-      style="transform:translate({-window.innerWidth +
-        dx}px,{dy}px)"
       alt="previous"
     />
     <img
       bind:this={imageRef}
       use:remote={[image, true]}
       src={image?.["thumbnail_url"]}
-      style="transform:translate({dx}px,{dy}px)"
       alt="current"
     />
     <img
       use:invisible
+      class="invisible"
       src={nextImage?.["thumbnail_url"]}
-      style="transform:translate({window.innerWidth +
-        dx}px,{dy}px)"
       alt="next"
     />
   </div>
@@ -184,7 +183,7 @@
 
 <style lang="scss">
   img {
-    @apply absolute w-screen h-screen object-contain bg-black;
+    @apply w-screen h-screen object-contain bg-black;
   }
 
   #info-container {
