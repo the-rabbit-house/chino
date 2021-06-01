@@ -28,7 +28,9 @@ export async function requestImages(targetTags) {
 }
 
 export async function requestMoreImages() {
-  if (get(fetching)) return;
+  if (get(fetching)) return false;
+
+  fetching.set(true);
 
   ++page;
   const nextImages = await get(backend).fetchImages(
@@ -36,5 +38,9 @@ export async function requestMoreImages() {
     page
   );
 
+  fetching.set(false);
+
   images.set([...get(images), ...nextImages]);
+
+  return true;
 }
