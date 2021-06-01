@@ -9,7 +9,7 @@ var page = 0;
 export async function requestImages(targetTags) {
   if (get(fetching)) return false;
 
-  page = 1;
+  page = 0;
   images.set([]);
 
   fetching.set(true);
