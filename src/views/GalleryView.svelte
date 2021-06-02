@@ -143,10 +143,9 @@
 
     if (key === "Escape") {
       if (showSearch) showSearch = false;
+      if (showSettings) showSettings = false;
       else back();
     }
-
-    if (key === "F" || key === "f") showSearch = true;
   }
 </script>
 
