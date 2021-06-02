@@ -23,6 +23,8 @@ function parseResponse(data) {
   const baseUrl = "https://img3.gelbooru.com";
 
   for (const post of data) {
+    if (!post?.["file_url"]) continue;
+
     const image = {
       id: post?.["hash"],
       file_name: post?.["image"],

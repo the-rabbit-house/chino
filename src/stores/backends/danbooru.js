@@ -21,6 +21,8 @@ function parseResponse(data) {
   const images = [];
 
   for (const post of data) {
+    if (!post?.["file_url"]) continue;
+
     const image = {
       id: post?.["id"],
       file_name: post?.["md5"] + post?.["file_ext"] || "",
