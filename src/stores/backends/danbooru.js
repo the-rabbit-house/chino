@@ -25,7 +25,7 @@ function parseResponse(data) {
 
     const image = {
       id: post?.["id"],
-      file_name: post?.["md5"] + post?.["file_ext"] || "",
+      file_name: post?.["md5"] + "." + post?.["file_ext"] || "",
       source: post?.["source"],
       artist: post?.["tag_string_artist"],
       thumbnail_url: post?.["preview_file_url"],
