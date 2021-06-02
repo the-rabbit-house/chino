@@ -112,6 +112,11 @@
 
     $images = [];
 
+    // Wait for crossfade
+    await new Promise((resolve) =>
+      setTimeout(resolve, CROSSFADE_TIME + 10)
+    );
+
     const success = await requestImages(tags);
     if (success) showSearch = false;
   }
