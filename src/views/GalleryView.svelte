@@ -23,7 +23,11 @@
   import { crossfade, scale } from "svelte/transition";
 
   import { settings, images, image } from "@Stores";
-  import { requestMoreImages } from "@Stores/images";
+  import {
+    hasNextPage,
+    requestImages,
+    requestMoreImages,
+  } from "@Stores/images";
 
   import { remote } from "@Components/Image.svelte";
 
@@ -101,6 +105,15 @@
     setTimeout(() => {
       showSearch = !showSearch;
     }, SETTINGS_FADE_OUT);
+  }
+
+  async function onSearch(event) {
+    const tags = event.detail;
+
+    $images = [];
+
+    const success = await requestImages(tags);
+    if (success) showSearch = false;
   }
 
   async function back() {
@@ -204,7 +217,7 @@
         />
       {/each}
 
-      {#if R.length($images) > 29}
+      {#if $hasNextPage}
         <button
           id="more-button"
           class="mb-2"
@@ -239,12 +252,7 @@
 
 {#if showSearch}
   <div id="search-menu">
-    <SearchMenu
-      on:searchend={() => {
-        showSearch = false;
-        scrollbar.recalculate();
-      }}
-    />
+    <SearchMenu on:search={onSearch} />
   </div>
 {/if}
 

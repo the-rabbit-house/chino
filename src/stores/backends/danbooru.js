@@ -2,19 +2,24 @@ import { writable } from "svelte/store";
 
 import { Http } from "@capacitor-community/http";
 
-export async function fetchImages(tags, page) {
-  const response = await Http.request({
-    method: "GET",
-    url:
-      "https://danbooru.donmai.us/posts.json" +
-      "?tags=" +
-      tags.join("+") +
-      "&page=" +
-      page +
-      "&limit=30",
-  });
+export async function fetchImages(tags, { page, limit }) {
+  try {
+    const response = await Http.request({
+      method: "GET",
+      url:
+        "https://danbooru.donmai.us/posts.json" +
+        "?tags=" +
+        tags.join("+") +
+        "&page=" +
+        page +
+        "&limit=" +
+        limit,
+    });
 
-  return parseResponse(response.data);
+    return [true, parseResponse(response.data)];
+  } catch (e) {
+    return [false, []];
+  }
 }
 
 function parseResponse(data) {

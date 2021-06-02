@@ -32,7 +32,7 @@
   import { fade } from "svelte/transition";
 
   import { images, tags, favorites } from "@Stores";
-  import { requestImages } from "@Stores/images";
+  import { fetching, requestImages } from "@Stores/images";
 
   import * as R from "ramda";
 
@@ -47,24 +47,11 @@
     rating = rating !== value ? value : "";
   }
 
-  var fetching = false;
-
   async function search() {
-    if (fetching) return;
-
-    $tags = tagsBuffer;
-
-    $images = [];
+    if ($fetching) return;
 
     const ratingTag = rating ? RATINGS?.[rating] : "";
-
-    fetching = true;
-    await requestImages([...$tags, ratingTag]);
-    fetching = false;
-
-    await tick();
-
-    dispatch("searchend", tagsBuffer);
+    dispatch("search", [...tagsBuffer, ratingTag]);
   }
 
   function addTag(tag) {
@@ -134,7 +121,7 @@
     class="mx-4 py-2 text-4xl rounded-lg"
     on:click={search}
   >
-    {!fetching ? "Search" : "Searching..."}
+    {!$fetching ? "Search" : "Searching..."}
   </button>
 </main>
 
