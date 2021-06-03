@@ -16,7 +16,7 @@
 <script>
   import { fade } from "svelte/transition";
 
-  import { settings } from "@Stores";
+  import { DEFAULT_SETTINGS, settings } from "@Stores";
 
   import * as R from "ramda";
 
@@ -24,9 +24,21 @@
   var innerWidth;
   $: isMobile = innerWidth <= 768;
 
-  $: galleryCols = $settings?.galleryCols;
-  $: galleryImageSize = $settings?.galleryImageSize;
-  $: swipeDistance = $settings?.swipeDistance;
+
+  $: galleryCols = R.defaultTo(
+    DEFAULT_SETTINGS["galleryCols"],
+    $settings?.galleryCols
+  );
+
+  $: galleryImageSize = R.defaultTo(
+    DEFAULT_SETTINGS["galleryImageSize"],
+    $settings?.galleryImageSize
+  );
+
+  $: swipeDistance = R.defaultTo(
+    DEFAULT_SETTINGS["swipeDistance"],
+    $settings?.swipeDistance
+  );
 </script>
 
 <svelte:window bind:innerHeight bind:innerWidth />
