@@ -24,6 +24,10 @@
   var innerWidth;
   $: isMobile = innerWidth <= 768;
 
+  $: limit = R.defaultTo(
+    DEFAULT_SETTINGS["limit"],
+    $settings?.limit
+  );
 
   $: galleryCols = R.defaultTo(
     DEFAULT_SETTINGS["galleryCols"],
@@ -48,6 +52,29 @@
   in:fade={{ delay: IN_FADE_DELAY }}
   out:fade={{ delay: 0, duration: OUT_FADE_DURATION }}
 >
+  <section class="px-2 py-4">
+    <p class="flex-1">Images <br />per page</p>
+    <button
+      class="w-14 md:w-16 mr-1"
+      on:click={() => {
+        if (limit > 5) $settings.limit = limit - 5;
+      }}
+    >
+      -
+    </button>
+    <button class="w-14 md:w-16 mr-1" disabled={true}>
+      {limit}
+    </button>
+    <button
+      class="w-14 md:w-16"
+      on:click={() => {
+        if (limit < 95) $settings.limit = limit + 5;
+      }}
+    >
+      +
+    </button>
+  </section>
+
   <section class="relative px-2 py-4 pt-8">
     <sup> MOBILE ONLY </sup>
     <p class="flex-1">Grid<br /> columns</p>
