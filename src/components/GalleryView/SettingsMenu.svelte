@@ -36,7 +36,7 @@
   in:fade={{ delay: IN_FADE_DELAY }}
   out:fade={{ delay: 0, duration: OUT_FADE_DURATION }}
 >
-  <section class="relative">
+  <section class="relative px-2 py-4 pt-8">
     <sup> MOBILE ONLY </sup>
     <p class="flex-1">Grid<br /> columns</p>
     <button
@@ -62,7 +62,7 @@
     </button>
   </section>
 
-  <section class="relative">
+  <section class="relative px-2 py-4 pt-8">
     <sup> MOBILE ONLY </sup>
     <p class="flex-1 text-wrap">Swipe <br />distance</p>
     <button
@@ -94,7 +94,7 @@
     </button>
   </section>
 
-  <section class="relative">
+  <section class="relative px-2 py-4 pt-8">
     <sup> TABLET+ ONLY </sup>
     <p class="flex-1 text-wrap">Image size</p>
     <button
@@ -133,8 +133,7 @@
   }
 
   section {
-    @apply pt-8 pb-4 px-2 rounded;
-    @apply flex flex-row items-center;
+    @apply flex flex-row items-center rounded;
     @apply text-xl md:text-2xl;
     background-color: rgba(0, 0, 0, 0.5);
 
