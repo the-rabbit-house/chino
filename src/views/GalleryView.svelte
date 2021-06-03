@@ -174,7 +174,7 @@
 />
 
 <nav class="flex flex-row items-center">
-  <button class="flex flex-row items-center" on:click={back}>
+  <button class="flex flex-row items-center">
     <i class="ri-arrow-left-s-line text-5xl md:text-6xl" />
     <p class="hidden md:block text-4xl font-light md:text-5xl">
       gallery
