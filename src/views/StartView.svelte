@@ -27,7 +27,7 @@
       const meta = document.querySelector("meta[name=viewport]");
       meta.setAttribute(
         "content",
-        `width=device-width, height=${window.innerHeight}, initial-scale=1.0`
+        `width=device-width, height=${window.innerHeight}, initial-scale=1.0, user-scalable=0`
       );
     }
     setTimeout(() => navigate("Gallery"), 1500);
