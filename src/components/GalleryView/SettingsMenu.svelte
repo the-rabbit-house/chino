@@ -31,17 +31,13 @@
 
 <svelte:window bind:innerHeight bind:innerWidth />
 
-<main
+<article
   class="flex flex-col items-stretch"
   in:fade={{ delay: IN_FADE_DELAY }}
   out:fade={{ delay: 0, duration: OUT_FADE_DURATION }}
 >
-  <section
-    class="relative flex flex-row items-center text-xl md:text-2xl"
-  >
-    <p class="absolute top-0 left-0 pl-2 pt-1 text-base">
-      MOBILE ONLY
-    </p>
+  <section class="relative">
+    <sup> MOBILE ONLY </sup>
     <p class="flex-1">Grid<br /> columns</p>
     <button
       class="w-14 md:w-16 mr-1"
@@ -66,12 +62,8 @@
     </button>
   </section>
 
-  <section
-    class="relative flex flex-row items-center text-xl md:text-2xl"
-  >
-    <p class="absolute top-0 left-0 pl-2 pt-1 text-base">
-      MOBILE ONLY
-    </p>
+  <section class="relative">
+    <sup> MOBILE ONLY </sup>
     <p class="flex-1 text-wrap">Swipe <br />distance</p>
     <button
       class="mr-1"
@@ -102,12 +94,8 @@
     </button>
   </section>
 
-  <section
-    class="relative flex flex-row items-center text-xl md:text-2xl"
-  >
-    <p class="absolute top-0 left-0 pl-2 pt-1 text-base">
-      TABLET+ ONLY
-    </p>
+  <section class="relative">
+    <sup> TABLET+ ONLY </sup>
     <p class="flex-1 text-wrap">Image size</p>
     <button
       class="mr-1"
@@ -137,16 +125,22 @@
       {isMobile ? "LG" : "LARGE"}
     </button>
   </section>
-</main>
+</article>
 
 <style lang="scss">
-  main {
+  article {
     @apply w-screen h-full px-2 pb-4 space-y-2;
   }
 
   section {
     @apply pt-8 pb-4 px-2 rounded;
+    @apply flex flex-row items-center;
+    @apply text-xl md:text-2xl;
     background-color: rgba(0, 0, 0, 0.5);
+
+    & > sup {
+      @apply absolute top-0 left-0 pl-2 pt-1 text-base;
+    }
   }
 
   button {
