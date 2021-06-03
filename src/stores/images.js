@@ -5,7 +5,7 @@ import { backend, tags, images } from "@Stores";
 export const fetching = writable(false);
 
 export const page = writable(0);
-export const limit = writable(10);
+export const limit = writable(20);
 export const hasNextPage = writable(false);
 
 export async function requestImages(targetTags) {
