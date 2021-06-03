@@ -11,7 +11,7 @@ export async function fetchImages(tags, { page, limit }) {
         "?tags=" +
         tags.join("+") +
         "&page=" +
-        page +
+        (page + 1) + // danbooru page 0/1 is the same
         "&limit=" +
         limit,
     });
