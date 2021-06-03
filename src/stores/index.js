@@ -4,6 +4,7 @@ import { writable as persistent } from "svelte-local-storage-store";
 import BACKENDS from "./backends";
 
 export const DEFAULT_SETTINGS = {
+  limit: 20,
   galleryCols: 3,
   galleryImageSize: "BASE",
   swipeDistance: 0.2,

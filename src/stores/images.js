@@ -1,12 +1,23 @@
-import { writable, get } from "svelte/store";
+import { writable, derived, get } from "svelte/store";
 
-import { backend, tags, images } from "@Stores";
+import {
+  DEFAULT_SETTINGS,
+  settings,
+  backend,
+  tags,
+  images,
+} from "@Stores";
+
+import * as R from "ramda";
 
 export const fetching = writable(false);
 
 export const page = writable(0);
-export const limit = writable(20);
 export const hasNextPage = writable(false);
+
+const limit = derived(settings, ($settings) =>
+  R.defaultTo(DEFAULT_SETTINGS["limit"], $settings?.limit)
+);
 
 export async function requestImages(targetTags) {
   if (get(fetching)) return false;
