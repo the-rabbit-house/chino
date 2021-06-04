@@ -29,6 +29,11 @@
     $settings?.limit
   );
 
+  $: throttle = R.defaultTo(
+    DEFAULT_SETTINGS["throttle"],
+    $settings?.throttle
+  );
+
   $: galleryCols = R.defaultTo(
     DEFAULT_SETTINGS["galleryCols"],
     $settings?.galleryCols
@@ -69,6 +74,29 @@
       class="w-14 md:w-16"
       on:click={() => {
         if (limit < 95) $settings.limit = limit + 5;
+      }}
+    >
+      +
+    </button>
+  </section>
+
+  <section class="px-2 py-4">
+    <p class="flex-1">Load <br />limit</p>
+    <button
+      class="w-14 md:w-16 mr-1"
+      on:click={() => {
+        if (throttle > 1) $settings.throttle = throttle - 1;
+      }}
+    >
+      -
+    </button>
+    <button class="w-14 md:w-16 mr-1" disabled={true}>
+      {throttle}
+    </button>
+    <button
+      class="w-14 md:w-16"
+      on:click={() => {
+        if (throttle < 5) $settings.throttle = throttle + 1;
       }}
     >
       +

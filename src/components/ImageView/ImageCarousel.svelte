@@ -30,7 +30,7 @@
 
   import { settings, images } from "@Stores";
 
-  import { remote } from "@Components/Image.svelte";
+  import { getImage, remote } from "@Components/Image.svelte";
   import ImageInfo from "@Components/ImageView/ImageInfo.svelte";
 
   const dispatch = createEventDispatcher();
@@ -167,19 +167,19 @@
     <img
       use:invisible
       class="invisible"
-      src={previousImage?.["thumbnail_url"]}
       alt="previous"
+      src={getImage(previousImage)}
     />
     <img
       bind:this={imageRef}
       use:remote={[image, true]}
-      src={image?.["thumbnail_url"]}
+      src={getImage(image)}
       alt="current"
     />
     <img
       use:invisible
       class="invisible"
-      src={nextImage?.["thumbnail_url"]}
+      src={getImage(nextImage)}
       alt="next"
     />
   </div>

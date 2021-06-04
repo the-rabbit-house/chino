@@ -29,7 +29,7 @@
     requestMoreImages,
   } from "@Stores/images";
 
-  import { remote } from "@Components/Image.svelte";
+  import { remote, getImage } from "@Components/Image.svelte";
 
   import SettingsMenu, {
     OUT_FADE_DURATION as SETTINGS_FADE_OUT,
@@ -175,7 +175,6 @@
 
 <nav class="flex flex-row items-center">
   <button class="flex flex-row items-center">
-    <i class="ri-arrow-left-s-line text-5xl md:text-6xl" />
     <p class="hidden md:block text-4xl font-light md:text-5xl">
       gallery
     </p>
@@ -215,6 +214,7 @@
           use:remote={[image, false]}
           class="object-cover"
           alt=""
+          src={getImage(image)}
           on:click={() => openImage(image)}
           in:receive={{ key: image["id"] }}
           out:send={{ key: image["id"] }}
@@ -306,6 +306,7 @@
 
       & > img {
         @apply rounded-lg;
+        background-color: rgba(0, 0, 0, 0.3);
 
         &:first-child {
           @apply ml-1 mt-2;

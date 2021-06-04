@@ -5,6 +5,7 @@ import BACKENDS from "./backends";
 
 export const DEFAULT_SETTINGS = {
   limit: 20,
+  throttle: 1,
   galleryCols: 3,
   galleryImageSize: "BASE",
   swipeDistance: 0.2,
