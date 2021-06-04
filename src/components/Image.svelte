@@ -4,16 +4,10 @@
   import { Http } from "@capacitor-community/http";
 
   const cached = {};
-  var current = { image: null };
 
-  async function loadAndCache(
-    image,
-    key = "file_url",
-    prefix = ""
-  ) {
-    if (cached?.[prefix + image?.[key]])
-      return cached?.[prefix + image?.[key]];
+  const current = { image: null };
 
+  async function loadAndCache(image, key, prefix) {
     const response = await Http.downloadFile({
       url: image?.[key],
       filePath: prefix + image?.["file_name"],
@@ -21,31 +15,46 @@
       method: "GET",
     });
 
-    let blob = null;
+    let url = null;
 
-    if (response?.blob) blob = response.blob;
+    if (response?.blob) {
+      const blob = response.blob;
+      url = URL.createObjectURL(blob);
+    }
 
     if (response?.path) {
       const file = await Filesystem.getUri({
         path: response.path,
+        directory: "CACHE",
       });
 
-      const path = Capacitor.convertFileSrc(file.uri);
-      cached[prefix + image[key]] = path;
-
-      return path;
+      url = Capacitor.convertFileSrc(file.uri);
     }
 
-    if (!blob) return;
-    return URL.createObjectURL(blob);
+    if (!url) return null;
+
+    cached[prefix + image[key]] = url;
+    return url;
   }
 
   function loadThumbnail(image) {
-    return loadAndCache(image, "thumbnail_url", "thumbnail_");
+    const prefix = "thumbnail_";
+    const key = "thumbnail_url";
+
+    if (cached?.[prefix + image?.[key]])
+      return Promise.resolve(cached?.[prefix + image?.[key]]);
+
+    return loadAndCache(image, key, prefix);
   }
 
   function loadFullImage(image) {
-    return loadAndCache(image);
+    const prefix = "";
+    const key = "file_url";
+
+    if (cached?.[prefix + image?.[key]])
+      return Promise.resolve(cached?.[prefix + image?.[key]]);
+
+    return loadAndCache(image, key, prefix);
   }
 
   export function remote(ref, [image, full = false]) {
