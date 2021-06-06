@@ -110,6 +110,8 @@
   async function onSearch(event) {
     const tags = event.detail;
 
+    scrollbar.getScrollElement().scrollTo(0, 0);
+
     $images = [];
 
     // Wait for crossfade
