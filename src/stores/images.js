@@ -3,7 +3,6 @@ import { writable, derived, get } from "svelte/store";
 import {
   DEFAULT_SETTINGS,
   settings,
-  backend,
   tags,
   images,
 } from "@Stores";
@@ -17,6 +16,10 @@ export const hasNextPage = writable(false);
 
 const limit = derived(settings, ($settings) =>
   R.defaultTo(DEFAULT_SETTINGS["limit"], $settings?.limit)
+);
+
+const backend = derived(settings, ($settings) =>
+  R.defaultTo(DEFAULT_SETTINGS["backend"], $settings?.backend)
 );
 
 export async function requestImages(targetTags) {
