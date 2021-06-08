@@ -66,7 +66,7 @@
 </script>
 
 <main
-  class="flex flex-col items-stretch"
+  class="flex flex-col items-stretch space-y-2"
   in:fade={{ delay: IN_FADE_DELAY }}
   out:fade={{ delay: 0, duration: OUT_FADE_DURATION }}
 >
@@ -118,7 +118,7 @@
 
   <button
     id="search-button"
-    class="mx-4 py-2 text-4xl rounded-lg"
+    class="py-2 text-4xl rounded-lg"
     on:click={search}
   >
     {!$fetching ? "Search" : "Searching..."}
@@ -127,12 +127,10 @@
 
 <style lang="scss">
   main {
-    @apply w-screen h-full pb-4 space-y-2;
+    @apply w-screen h-full px-4 pb-4;
   }
 
   #tags-input {
-    @apply px-2;
-
     @apply text-3xl;
 
     :global(.svelte-tags-input-layout) {
@@ -153,7 +151,7 @@
   }
 
   section {
-    @apply px-4 pt-4 pb-6;
+    @apply px-2 pt-4 pb-6;
 
     background-color: rgba(0, 0, 0, 0.5);
   }
@@ -174,7 +172,7 @@
   }
 
   #rating-buttons {
-    @apply mx-4 space-x-4;
+    @apply space-x-4;
 
     & > button {
       @apply flex-1 py-4 px-4 rounded-lg;
