@@ -28,7 +28,8 @@
   import * as R from "ramda";
   import ZingTouch from "zingtouch";
 
-  import { settings, images } from "@Stores";
+  import { images } from "@Stores";
+  import { SETTINGS } from "@Utils";
 
   import { getImage, remote } from "@Components/Image.svelte";
   import ImageInfo from "@Components/ImageView/ImageInfo.svelte";
@@ -42,14 +43,16 @@
 
   var touchareaRef = null;
 
+  const swipeDistance = SETTINGS.get("swipeDistance");
+
   $: softSwipeDistance = R.defaultTo(
     DEFAULT_SOFT_SWIPE_DISTANCE,
-    nonZeroOrNull(innerWidth * $settings?.swipeDistance)
+    nonZeroOrNull(innerWidth * $swipeDistance)
   );
 
   $: hardSwipeDistance = R.defaultTo(
-    DEFAULT_SOFT_SWIPE_DISTANCE,
-    nonZeroOrNull(innerWidth * $settings?.swipeDistance * 3)
+    DEFAULT_HARD_SWIPE_DISTANCE,
+    nonZeroOrNull(innerWidth * $swipeDistance * 3)
   );
 
   var imageRef = null;

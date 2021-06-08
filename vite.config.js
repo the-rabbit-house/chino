@@ -24,6 +24,7 @@ export default defineConfig({
       "@Components": rootDir + "/src/components",
       "@Views": rootDir + "/src/views",
       "@Events": rootDir + "/src/events",
+      "@Utils": rootDir + "/src/utils",
     },
   },
   build: {

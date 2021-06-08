@@ -22,17 +22,14 @@
   import { writable } from "svelte/store";
   import { crossfade, scale } from "svelte/transition";
 
-  import {
-    DEFAULT_SETTINGS,
-    settings,
-    images,
-    image,
-  } from "@Stores";
+  import { images, image } from "@Stores";
   import {
     hasNextPage,
     requestImages,
     requestMoreImages,
   } from "@Stores/images";
+
+  import { SETTINGS } from "@Utils";
 
   import { remote, getImage } from "@Components/Image.svelte";
 
@@ -52,20 +49,21 @@
 
   var exiting = false;
 
-  var backend = $settings?.backend;
+  const backend = SETTINGS.get("backend");
 
   var innerHeight;
   var innerWidth;
 
   $: isMobile = innerWidth <= 768;
-  $: mobileCols = $settings?.galleryCols;
+  const mobileCols = SETTINGS.get("galleryCols");
+  const imageSize = SETTINGS.get("galleryImageSize");
 
   $: imageWidth = isMobile
-    ? (1 / mobileCols) * 100 + "vw"
-    : imageSizeOrDefault($settings?.galleryImageSize).width;
+    ? (1 / $mobileCols) * 100 + "vw"
+    : imageSizeOrDefault($imageSize).width;
   $: imageHeight = isMobile
-    ? Math.max(20, 20 * (4 / mobileCols)) + "vh"
-    : imageSizeOrDefault($settings?.galleryImageSize).height;
+    ? Math.max(20, 20 * (4 / $mobileCols)) + "vh"
+    : imageSizeOrDefault($imageSize).height;
 
   var scrollbar;
   var scrollY = 0;
@@ -147,9 +145,7 @@
   }
 
   function onBackendChange(event) {
-    const backend = event.detail;
-
-    $settings.backend = backend;
+    SETTINGS.set("backend", event?.detail);
 
     showBackends = false;
     showSearch = true;
@@ -210,10 +206,7 @@
 <nav class="flex flex-row items-center space-x-4">
   {#if showSearch}
     <button id="backend-button" on:click={toggleBackends}>
-      {R.defaultTo(
-        DEFAULT_SETTINGS["backend"],
-        $settings?.backend
-      )}
+      {$backend}
     </button>
   {/if}
 

@@ -16,44 +16,24 @@
 <script>
   import { fade } from "svelte/transition";
 
-  import { DEFAULT_SETTINGS, settings } from "@Stores";
-
+  import { SETTINGS } from "@Utils";
   import * as R from "ramda";
 
   var innerHeight;
   var innerWidth;
   $: isMobile = innerWidth <= 768;
 
-  $: limit = R.defaultTo(
-    DEFAULT_SETTINGS["limit"],
-    $settings?.limit
-  );
-
-  $: throttle = R.defaultTo(
-    DEFAULT_SETTINGS["throttle"],
-    $settings?.throttle
-  );
-
-  $: galleryCols = R.defaultTo(
-    DEFAULT_SETTINGS["galleryCols"],
-    $settings?.galleryCols
-  );
-
-  $: galleryImageSize = R.defaultTo(
-    DEFAULT_SETTINGS["galleryImageSize"],
-    $settings?.galleryImageSize
-  );
-
-  $: swipeDistance = R.defaultTo(
-    DEFAULT_SETTINGS["swipeDistance"],
-    $settings?.swipeDistance
-  );
+  const limit = SETTINGS.get("limit");
+  const throttle = SETTINGS.get("throttle");
+  const galleryCols = SETTINGS.get("galleryCols");
+  const galleryImageSize = SETTINGS.get("galleryImageSize");
+  const swipeDistance = SETTINGS.get("swipeDistance");
 </script>
 
 <svelte:window bind:innerHeight bind:innerWidth />
 
 <article
-  class="flex flex-col items-stretch"
+  class="flex flex-col items-stretch overflow-y-auto"
   in:fade={{ delay: IN_FADE_DELAY }}
   out:fade={{ delay: 0, duration: OUT_FADE_DURATION }}
 >
@@ -62,18 +42,18 @@
     <button
       class="w-14 md:w-16 mr-1"
       on:click={() => {
-        if (limit > 5) $settings.limit = limit - 5;
+        if ($limit > 5) SETTINGS.set("limit", $limit - 5);
       }}
     >
       -
     </button>
     <button class="w-14 md:w-16 mr-1" disabled={true}>
-      {limit}
+      {$limit}
     </button>
     <button
       class="w-14 md:w-16"
       on:click={() => {
-        if (limit < 95) $settings.limit = limit + 5;
+        if ($limit < 95) SETTINGS.set("limit", $limit + 5);
       }}
     >
       +
@@ -85,18 +65,20 @@
     <button
       class="w-14 md:w-16 mr-1"
       on:click={() => {
-        if (throttle > 1) $settings.throttle = throttle - 1;
+        if ($throttle > 1)
+          SETTINGS.set("throttle", $throttle - 1);
       }}
     >
       -
     </button>
     <button class="w-14 md:w-16 mr-1" disabled={true}>
-      {throttle}
+      {$throttle}
     </button>
     <button
       class="w-14 md:w-16"
       on:click={() => {
-        if (throttle < 5) $settings.throttle = throttle + 1;
+        if ($throttle < 5)
+          SETTINGS.set("throttle", $throttle + 1);
       }}
     >
       +
@@ -109,20 +91,20 @@
     <button
       class="w-14 md:w-16 mr-1"
       on:click={() => {
-        if (galleryCols > 1)
-          $settings.galleryCols = R.dec(galleryCols);
+        if ($galleryCols > 1)
+          SETTINGS.set("galleryCols", R.dec($galleryCols));
       }}
     >
       -
     </button>
     <button class="w-14 md:w-16 mr-1" disabled={true}>
-      {galleryCols}
+      {$galleryCols}
     </button>
     <button
       class="w-14 md:w-16"
       on:click={() => {
-        if (galleryCols < 5)
-          $settings.galleryCols = R.inc(galleryCols);
+        if ($galleryCols < 5)
+          SETTINGS.set("galleryCols", R.inc($galleryCols));
       }}
     >
       +
@@ -134,28 +116,22 @@
     <p class="flex-1 text-wrap">Swipe <br />distance</p>
     <button
       class="mr-1"
-      use:active={swipeDistance === 0.161}
-      on:click={() => {
-        $settings.swipeDistance = 0.161;
-      }}
+      use:active={$swipeDistance === 0.161}
+      on:click={() => SETTINGS.set("swipeDistance", 0.161)}
     >
       16.1%
     </button>
 
     <button
       class="mr-1"
-      use:active={swipeDistance === 0.2}
-      on:click={() => {
-        $settings.swipeDistance = 0.2;
-      }}
+      use:active={$swipeDistance === 0.2}
+      on:click={() => SETTINGS.set("swipeDistance", 0.2)}
     >
       20%
     </button>
     <button
-      use:active={swipeDistance === 0.25}
-      on:click={() => {
-        $settings.swipeDistance = 0.25;
-      }}
+      use:active={$swipeDistance === 0.25}
+      on:click={() => SETTINGS.set("swipeDistance", 0.25)}
     >
       25%
     </button>
@@ -166,28 +142,22 @@
     <p class="flex-1 text-wrap">Image size</p>
     <button
       class="mr-1"
-      use:active={galleryImageSize === "SMALL"}
-      on:click={() => {
-        $settings.galleryImageSize = "SMALL";
-      }}
+      use:active={$galleryImageSize === "SMALL"}
+      on:click={() => SETTINGS.set("galleryImageSize", "SMALL")}
     >
       {isMobile ? "SM" : "SMALL"}
     </button>
 
     <button
       class="mr-1"
-      use:active={galleryImageSize === "BASE"}
-      on:click={() => {
-        $settings.galleryImageSize = "BASE";
-      }}
+      use:active={$galleryImageSize === "BASE"}
+      on:click={() => SETTINGS.set("galleryImageSize", "BASE")}
     >
       BASE
     </button>
     <button
-      use:active={galleryImageSize === "LARGE"}
-      on:click={() => {
-        $settings.galleryImageSize = "LARGE";
-      }}
+      use:active={$galleryImageSize === "LARGE"}
+      on:click={() => SETTINGS.set("galleryImageSize", "LARGE")}
     >
       {isMobile ? "LG" : "LARGE"}
     </button>
