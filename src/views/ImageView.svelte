@@ -202,6 +202,6 @@
     @apply fixed left-0;
 
     top: 6rem;
-    height: calc(100vh - 6rem);
+    height: 100vh;
   }
 </style>

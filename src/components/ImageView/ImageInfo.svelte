@@ -3,8 +3,12 @@
 
 <script>
   import { createEventDispatcher } from "svelte";
+
   import { image, tags, favorites } from "@Stores";
+
   import * as R from "ramda";
+
+  import { Clipboard } from "@capacitor/clipboard";
 
   const dispatch = createEventDispatcher();
 
@@ -34,18 +38,40 @@
     // Force tags re-render
     imageTags = imageTags;
   }
+
+  async function copyToClipboard() {
+    await Clipboard.write({
+      url: $image?.["file_url"],
+    });
+  }
 </script>
 
 <svelte:window bind:innerWidth />
 
 <article class="flex flex-col space-y-2">
-  <section class="p-4 flex flex-col">
-    <p class="text-lg">Source:</p>
+  <div class="p-2 flex flex-row justify-between space-x-4">
+    <button class="icon-button">
+      <i class="ri-star-fill text-4xl" />
+    </button>
     <a
-      class="truncate text-xl font-light text-blue-400"
-      href={$image?.["source"]}>{$image?.["source"]}</a
+      class="icon-button"
+      href={$image?.["file_url"]}
+      target="_blank"
+      download
     >
-  </section>
+      <i class="ri-download-fill text-4xl" />
+    </a>
+    <button class="icon-button" on:click={copyToClipboard}>
+      <i class="ri-file-copy-fill text-4xl" />
+    </button>
+    <a
+      class="icon-button"
+      href={$image?.["source"]}
+      target="_blank"
+    >
+      <i class="ri-phone-find-line text-4xl" />
+    </a>
+  </div>
   <section class="p-4 flex flex-row">
     <div class="flex-1 flex flex-col">
       <p class="text-lg">Artist:</p>
@@ -54,7 +80,7 @@
       </p>
     </div>
     <button
-      class="tag-button"
+      class="icon-button"
       on:click={() => addOrRemoveFavorite($image?.["artist"])}
     >
       {#if isInFavorites($image?.["artist"])}
@@ -74,7 +100,7 @@
 
         {#if isInTags(tag)}
           <button
-            class="tag-button"
+            class="icon-button"
             on:click={() => addOrRemoveTag(tag)}
           >
             {!isMobile ? "Remove" : ""}
@@ -82,7 +108,7 @@
           </button>
         {:else}
           <button
-            class="tag-button"
+            class="icon-button"
             on:click={() => addOrRemoveTag(tag)}
           >
             {!isMobile ? "Add" : ""}
@@ -91,7 +117,7 @@
         {/if}
 
         <button
-          class="tag-button"
+          class="icon-button"
           on:click={() => addOrRemoveFavorite(tag)}
         >
           {#if isInFavorites(tag)}
@@ -119,6 +145,10 @@
   article {
     @apply w-screen h-full p-4 space-y-2 bg-black rounded-2xl;
 
+    @screen md {
+      padding-bottom: 15rem;
+    }
+
     transform: translateY(1rem);
 
     background: linear-gradient(
@@ -143,8 +173,8 @@
     }
   }
 
-  .tag-button {
-    @apply px-4 py-2 flex flex-row items-center;
+  .icon-button {
+    @apply px-4 py-2 flex flex-row items-center rounded-lg;
     background-color: rgba(0, 0, 0, 0.5);
   }
 

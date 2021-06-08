@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@capacitor-community/http": "^1.0.0",
+    "@capacitor/clipboard": "^1.0.0",
     "@capacitor/core": "^3.0.0",
     "@capacitor/device": "^1.0.0",
     "@capacitor/filesystem": "^1.0.0",
