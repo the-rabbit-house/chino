@@ -22,7 +22,12 @@
   import { writable } from "svelte/store";
   import { crossfade, scale } from "svelte/transition";
 
-  import { settings, images, image } from "@Stores";
+  import {
+    DEFAULT_SETTINGS,
+    settings,
+    images,
+    image,
+  } from "@Stores";
   import {
     hasNextPage,
     requestImages,
@@ -46,6 +51,8 @@
   const { navigate } = getContext("navigator");
 
   var exiting = false;
+
+  var backend = $settings?.backend;
 
   var innerHeight;
   var innerWidth;
@@ -203,13 +210,10 @@
 <nav class="flex flex-row items-center space-x-4">
   {#if showSearch}
     <button id="backend-button" on:click={toggleBackends}>
-      {$settings?.backend}
-    </button>
-  {:else}
-    <button class="flex flex-row items-center">
-      <p class="hidden md:block text-4xl font-light md:text-5xl">
-        gallery
-      </p>
+      {R.defaultTo(
+        DEFAULT_SETTINGS["backend"],
+        $settings?.backend
+      )}
     </button>
   {/if}
 
