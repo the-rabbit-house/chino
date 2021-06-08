@@ -46,11 +46,23 @@
       href={$image?.["source"]}>{$image?.["source"]}</a
     >
   </section>
-  <section class="p-4">
-    <p class="text-lg">Artist:</p>
-    <p class="text-xl font-light">
-      {$image?.["artist"]}
-    </p>
+  <section class="p-4 flex flex-row">
+    <div class="flex-1 flex flex-col">
+      <p class="text-lg">Artist:</p>
+      <p class="text-xl font-light">
+        {$image?.["artist"]}
+      </p>
+    </div>
+    <button
+      class="tag-button"
+      on:click={() => addOrRemoveFavorite($image?.["artist"])}
+    >
+      {#if isInFavorites($image?.["artist"])}
+        <i class="ri-star-fill text-4xl text-yellow-300" />
+      {:else}
+        <i class="ri-star-line text-4xl md:text-5xl" />
+      {/if}
+    </button>
   </section>
 
   <div id="tags" class="flex flex-col">
