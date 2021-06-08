@@ -2,6 +2,9 @@ import { writable } from "svelte/store";
 
 import { Http } from "@capacitor-community/http";
 
+export const NAME = "gelbooru";
+export const PLATFORMS = ["native"];
+
 export async function fetchImages(tags, { page, limit }) {
   try {
     const response = await Http.request({

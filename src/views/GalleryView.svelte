@@ -37,6 +37,7 @@
   import SearchMenu, {
     OUT_FADE_DURATION as SEARCH_FADE_OUT,
   } from "@Components/GalleryView/SearchMenu.svelte";
+  import BackendsMenu from "@Components/GalleryView/BackendsMenu.svelte";
   import ImageCarousel from "@Components/ImageView/ImageCarousel.svelte";
 
   import * as R from "ramda";
@@ -68,6 +69,7 @@
   var showImages = true;
   var showSettings = false;
   var showSearch = false;
+  var showBackends = false;
 
   $: showBackButton = scrollY > innerHeight;
   $: document.body.classList.toggle(
@@ -92,6 +94,7 @@
   }
 
   function toggleSettings() {
+    showBackends = false;
     showSearch = false;
     setTimeout(() => {
       showSettings = !showSettings;
@@ -101,10 +104,23 @@
   function toggleSearch() {
     window.scrollTo(0, 0);
 
+    showBackends = false;
     showSettings = false;
     setTimeout(() => {
       showSearch = !showSearch;
     }, SETTINGS_FADE_OUT);
+  }
+
+  function toggleBackends() {
+    if (!showBackends) {
+      showSearch = false;
+      setTimeout(() => {
+        showBackends = true;
+      }, SEARCH_FADE_OUT);
+    } else {
+      showBackends = false;
+      showSearch = true;
+    }
   }
 
   async function onSearch(event) {
@@ -121,6 +137,15 @@
 
     const success = await requestImages(tags);
     if (success) showSearch = false;
+  }
+
+  function onBackendChange(event) {
+    const backend = event.detail;
+
+    $settings.backend = backend;
+
+    showBackends = false;
+    showSearch = true;
   }
 
   async function back() {
@@ -175,14 +200,21 @@
   on:keyup={handleShortcuts}
 />
 
-<nav class="flex flex-row items-center">
-  <button class="flex flex-row items-center">
-    <p class="hidden md:block text-4xl font-light md:text-5xl">
-      gallery
-    </p>
-  </button>
+<nav class="flex flex-row items-center space-x-4">
+  {#if showSearch}
+    <button id="backend-button" on:click={toggleBackends}>
+      {$settings?.backend}
+    </button>
+  {:else}
+    <button class="flex flex-row items-center">
+      <p class="hidden md:block text-4xl font-light md:text-5xl">
+        gallery
+      </p>
+    </button>
+  {/if}
+
   <div class="flex-1" />
-  <div id="settings-icon" class="mr-3" on:click={toggleSettings}>
+  <div id="settings-icon" on:click={toggleSettings}>
     {#if showSettings}
       <i class="ri-close-line text-3xl" />
     {:else}
@@ -207,7 +239,7 @@
     <div
       id="images"
       class="flex flex-row flex-wrap justify-center md:justify-between"
-      style={showSearch || showSettings
+      style={showSearch || showSettings || showBackends
         ? "filter: blur(20px)"
         : null}
     >
@@ -263,6 +295,12 @@
   </div>
 {/if}
 
+{#if showBackends}
+  <div id="backends-menu">
+    <BackendsMenu on:backendchange={onBackendChange} />
+  </div>
+{/if}
+
 {#if showBackButton && !showSearch && !selectedImage}
   <button
     id="back-button"
@@ -276,17 +314,26 @@
 
 <style lang="scss">
   nav {
-    @apply px-6 pt-2 h-20;
+    @apply px-4 pt-2 h-20;
   }
 
   #settings-icon,
   #search-icon {
-    @apply py-2 px-4 rounded-xl cursor-pointer;
+    @apply px-4 rounded-xl cursor-pointer;
+    @apply flex flex-row items-center;
+    height: 85%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  #backend-button {
+    @apply px-8 md:px-24 rounded-lg truncate text-sm;
+    height: 85%;
     background-color: rgba(0, 0, 0, 0.5);
   }
 
   #settings-menu,
-  #search-menu {
+  #search-menu,
+  #backends-menu {
     @apply fixed left-0;
 
     top: 6rem;
