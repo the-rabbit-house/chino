@@ -7,6 +7,8 @@ import {
   images,
 } from "@Stores";
 
+import BACKENDS from "./backends";
+
 import * as R from "ramda";
 
 export const fetching = writable(false);
@@ -25,7 +27,7 @@ const backend = derived(settings, ($settings) =>
 export async function requestImages(targetTags) {
   if (get(fetching)) return false;
 
-  const booru = get(backend);
+  const booru = BACKENDS[get(backend)];
 
   page.set(0);
   hasNextPage.set(false);
@@ -56,7 +58,7 @@ export async function requestMoreImages() {
   if (!get(hasNextPage)) return false;
   if (get(fetching)) return false;
 
-  const booru = get(backend);
+  const booru = BACKENDS[get(backend)];
 
   fetching.set(true);
 

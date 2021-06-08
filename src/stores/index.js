@@ -1,10 +1,8 @@
 import { writable, derived } from "svelte/store";
 import { writable as persistent } from "svelte-local-storage-store";
 
-import BACKENDS from "./backends";
-
 export const DEFAULT_SETTINGS = {
-  backend: BACKENDS["danbooru"],
+  backend: "danbooru",
   limit: 20,
   throttle: 1,
   galleryCols: 3,
