@@ -3,12 +3,12 @@
 
 <script>
   import { createEventDispatcher } from "svelte";
-
   import { image, tags, favorites } from "@Stores";
 
   import * as R from "ramda";
-
   import { Clipboard } from "@capacitor/clipboard";
+
+  import { getImage } from "@Components/Image.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -53,12 +53,7 @@
     <button class="icon-button">
       <i class="ri-star-fill text-4xl" />
     </button>
-    <a
-      class="icon-button"
-      href={$image?.["file_url"]}
-      target="_blank"
-      download
-    >
+    <a class="icon-button" href={getImage($image)} download>
       <i class="ri-download-fill text-4xl" />
     </a>
     <button class="icon-button" on:click={copyToClipboard}>
