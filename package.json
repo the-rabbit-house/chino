@@ -5,7 +5,7 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "android": "npm run build && npx cap run android"
+    "android": "vite build && cap run android"
   },
   "devDependencies": {
     "@capacitor/cli": "^3.0.0",
