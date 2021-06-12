@@ -13,12 +13,21 @@
       size ? IMAGE_SIZES[size] : null
     );
 
+  function remToPx(rem) {
+    return (
+      rem *
+      parseFloat(
+        getComputedStyle(document.documentElement).fontSize
+      )
+    );
+  }
+
   // Last scroll position in case navigating back from image
   export const lastScrollY = writable(0);
 </script>
 
 <script>
-  import { getContext } from "svelte";
+  import { getContext, tick } from "svelte";
   import { writable } from "svelte/store";
   import { crossfade, scale } from "svelte/transition";
 
@@ -70,6 +79,8 @@
 
   var selectedImage = $image;
   $: $image = selectedImage;
+
+  var showMoreButton = false;
 
   var showImages = true;
   var showSettings = false;
@@ -176,14 +187,40 @@
 
     scrollbar.getScrollElement().scrollTop = $lastScrollY;
 
+    function handleScroll() {
+      scrollY = scrollbar.getScrollElement().scrollTop;
+
+      const scrollHeight =
+        scrollbar.getScrollElement().scrollHeight;
+
+      const scrollDepth = Math.abs(
+        window.innerHeight -
+          remToPx(6.5) +
+          scrollY -
+          scrollHeight
+      );
+
+      if (scrollDepth < remToPx(6)) showMoreButton = true;
+      else if (
+        scrollHeight > 0 &&
+        scrollHeight < window.innerHeight
+      )
+        showMoreButton = true;
+      else showMoreButton = false;
+
+      $lastScrollY = scrollY;
+    }
+
     scrollbar
       .getScrollElement()
-      .addEventListener("scroll", (event) => {
-        scrollY = scrollbar.getScrollElement().scrollTop;
-        $lastScrollY = scrollY;
-      });
+      .addEventListener("scroll", handleScroll);
 
-    images.subscribe(() => scrollbar.recalculate());
+    images.subscribe(async () => {
+      scrollbar.recalculate();
+
+      await tick();
+      handleScroll();
+    });
   }
 
   function handleShortcuts(event) {
@@ -254,16 +291,6 @@
       {/each}
     </div>
   </div>
-
-  {#if $hasNextPage}
-    <button
-      id="more-button"
-      class="mb-2"
-      on:click={requestMoreImages}
-    >
-      More
-    </button>
-  {/if}
 {/if}
 
 {#if isMobile && selectedImage}
@@ -278,6 +305,19 @@
       if (direction === "DOWN") selectedImage = null;
     }}
   />
+{/if}
+
+{#if showMoreButton && !showSearch && !showSettings && !showBackends && $hasNextPage}
+  <button
+    id="more-button"
+    class="mb-2"
+    on:click={() => {
+      showMoreButton = false;
+      requestMoreImages();
+    }}
+  >
+    More
+  </button>
 {/if}
 
 {#if showSettings}
