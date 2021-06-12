@@ -16,10 +16,8 @@
     "rating:explicit",
   ]);
 
-  function longpress(node, threshold = 500) {
+  function longpress(node, threshold = 1500) {
     function handleMouseDown() {
-      let start = Date.now();
-
       const timeout = setTimeout(() => {
         node.dispatchEvent(new CustomEvent("longpress"));
       }, threshold);
@@ -27,25 +25,56 @@
       const cancel = () => {
         clearTimeout(timeout);
         node.removeEventListener("mousemove", cancel);
-        node.removeEventListener("touchmove", cancel);
-
         node.removeEventListener("mouseup", cancel);
-        node.removeEventListener("touchend", cancel);
       };
 
       node.addEventListener("mousemove", cancel);
-      node.addEventListener("touchmove", cancel);
-
       node.addEventListener("mouseup", cancel);
+    }
+
+    function handleTouchStart() {
+      console.log("LOL");
+      const timeout = setTimeout(() => {
+        node.dispatchEvent(new CustomEvent("longpress"));
+      }, threshold);
+
+      const cancel = () => {
+        clearTimeout(timeout);
+        node.removeEventListener("touchmove", cancel);
+        node.removeEventListener("touchend", cancel);
+      };
+
+      node.addEventListener("touchmove", cancel);
       node.addEventListener("touchend", cancel);
     }
 
     node.addEventListener("mousedown", handleMouseDown);
-    node.addEventListener("touchstart", handleMouseDown);
+    node.addEventListener("touchstart", handleTouchStart);
 
     return {
       destroy() {
         node.removeEventListener("mousedown", handleMouseDown);
+        node.removeEventListener("touchstart", handleTouchStart);
+      },
+    };
+  }
+
+  function nocontext(node) {
+    function handleContextMenu(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      return false;
+    }
+
+    node.addEventListener("oncontextmenu", handleContextMenu);
+
+    return {
+      destroy() {
+        node.removeEventListener(
+          "oncontextmenu",
+          handleContextMenu
+        );
       },
     };
   }
@@ -71,6 +100,8 @@
   import * as R from "ramda";
 
   import TagsInput from "svelte-tags-input";
+
+  import { Device } from "@capacitor/device";
 
   const { tags: favoriteTags } = favorites;
 
@@ -129,6 +160,8 @@
           {#each $favoriteTags as tag}
             <button
               use:longpress
+              use:nocontext
+              class="select-none"
               on:longpress={() => removeFromFavorites(tag)}
               on:click={() => addTag(tag)}
             >
@@ -212,6 +245,13 @@
       background-color: rgba(0, 0, 0, 0.3);
 
       transform: translateX(-1rem);
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 
       &:first-child {
         @apply mt-2 ml-4;
