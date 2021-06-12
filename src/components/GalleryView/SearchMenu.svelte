@@ -33,7 +33,6 @@
     }
 
     function handleTouchStart() {
-      console.log("LOL");
       const timeout = setTimeout(() => {
         node.dispatchEvent(new CustomEvent("longpress"));
       }, threshold);
