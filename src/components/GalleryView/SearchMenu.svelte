@@ -16,6 +16,40 @@
     "rating:explicit",
   ]);
 
+  function longpress(node, threshold = 500) {
+    function handleMouseDown() {
+      let start = Date.now();
+
+      const timeout = setTimeout(() => {
+        node.dispatchEvent(new CustomEvent("longpress"));
+      }, threshold);
+
+      const cancel = () => {
+        clearTimeout(timeout);
+        node.removeEventListener("mousemove", cancel);
+        node.removeEventListener("touchmove", cancel);
+
+        node.removeEventListener("mouseup", cancel);
+        node.removeEventListener("touchend", cancel);
+      };
+
+      node.addEventListener("mousemove", cancel);
+      node.addEventListener("touchmove", cancel);
+
+      node.addEventListener("mouseup", cancel);
+      node.addEventListener("touchend", cancel);
+    }
+
+    node.addEventListener("mousedown", handleMouseDown);
+    node.addEventListener("touchstart", handleMouseDown);
+
+    return {
+      destroy() {
+        node.removeEventListener("mousedown", handleMouseDown);
+      },
+    };
+  }
+
   function active(ref, test) {
     ref.classList.toggle("active-button", test);
 
@@ -62,6 +96,12 @@
     tagsBuffer = R.append(tag, tagsBuffer);
   }
 
+  function removeFromFavorites(tag) {
+    if (!R.contains(tag, $favoriteTags)) return;
+
+    $favoriteTags = R.without([tag], $favoriteTags);
+  }
+
   onMount(() => {
     document.querySelector(".svelte-tags-input").focus();
   });
@@ -80,14 +120,20 @@
     />
   </div>
 
-  <div class="flex-1 overflow-y-auto">
+  <div class="flex-1 rounded overflow-y-auto">
     {#if !R.isEmpty($favoriteTags)}
       <section>
         <p class="text-4xl font-medium">Favorites</p>
 
         <div id="favorites" class="flex flex-row flex-wrap">
           {#each $favoriteTags as tag}
-            <button on:click={() => addTag(tag)}>{tag}</button>
+            <button
+              use:longpress
+              on:longpress={() => removeFromFavorites(tag)}
+              on:click={() => addTag(tag)}
+            >
+              {tag}
+            </button>
           {/each}
         </div>
       </section>
@@ -133,7 +179,7 @@
   }
 
   #tags-input {
-    @apply text-3xl;
+    @apply text-3xl rounded;
 
     :global(.svelte-tags-input-layout) {
       border: none;
