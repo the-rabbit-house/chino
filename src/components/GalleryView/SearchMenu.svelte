@@ -38,6 +38,8 @@
 
   import TagsInput from "svelte-tags-input";
 
+  const { tags: favoriteTags } = favorites;
+
   const dispatch = createEventDispatcher();
 
   var tagsBuffer = stripTags($tags);
@@ -79,12 +81,12 @@
   </div>
 
   <div class="flex-1 overflow-y-auto">
-    {#if !R.isEmpty($favorites)}
+    {#if !R.isEmpty($favoriteTags)}
       <section>
         <p class="text-4xl font-medium">Favorites</p>
 
         <div id="favorites" class="flex flex-row flex-wrap">
-          {#each $favorites as tag}
+          {#each $favoriteTags as tag}
             <button on:click={() => addTag(tag)}>{tag}</button>
           {/each}
         </div>

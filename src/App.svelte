@@ -11,21 +11,17 @@
 
   import {
     init as initNavigator,
-    navigate as _navigate,
+    navigate,
     screen,
     screenEvents,
   } from "@Stores/navigator";
-
-  function navigate(screen, reset) {
-    _navigate(screen, reset);
-  }
 
   initNavigator(Events, Screens);
 
   setContext("navigator", { navigate });
   setContext("events", screenEvents);
 
-  _navigate("Start");
+  navigate("Start");
 </script>
 
 <main class="relative flex flex-col">

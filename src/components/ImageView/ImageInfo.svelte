@@ -10,6 +10,8 @@
 
   import { getImage } from "@Components/Image.svelte";
 
+  const { tags: favoriteTags } = favorites;
+
   const dispatch = createEventDispatcher();
 
   export let closable = false;
@@ -20,7 +22,7 @@
   $: imageTags = R.defaultTo([], $image?.["tags"]);
 
   const isInTags = (tag) => R.contains(tag, $tags);
-  const isInFavorites = (tag) => R.contains(tag, $favorites);
+  const isInFavorites = (tag) => R.contains(tag, $favoriteTags);
 
   function addOrRemoveTag(tag) {
     if (isInTags(tag)) $tags = R.without([tag], $tags);
@@ -31,9 +33,9 @@
   }
 
   function addOrRemoveFavorite(tag) {
-    if (isInFavorites(tag))
-      $favorites = R.without([tag], $favorites);
-    else $favorites = R.append(tag, $favorites);
+    if (isInFavorites(tag)) {
+      $favoriteTags = R.without([tag], $favoriteTags);
+    } else $favoriteTags = R.append(tag, $favoriteTags);
 
     // Force tags re-render
     imageTags = imageTags;
@@ -79,7 +81,9 @@
       on:click={() => addOrRemoveFavorite($image?.["artist"])}
     >
       {#if isInFavorites($image?.["artist"])}
-        <i class="ri-star-fill text-4xl text-yellow-300" />
+        <i
+          class="ri-star-fill text-4xl md:text-5xl text-yellow-300"
+        />
       {:else}
         <i class="ri-star-line text-4xl md:text-5xl" />
       {/if}
@@ -116,7 +120,9 @@
           on:click={() => addOrRemoveFavorite(tag)}
         >
           {#if isInFavorites(tag)}
-            <i class="ri-star-fill text-4xl text-yellow-300" />
+            <i
+              class="ri-star-fill text-4xl md:text-5xl text-yellow-300"
+            />
           {:else}
             <i class="ri-star-line text-4xl md:text-5xl" />
           {/if}
