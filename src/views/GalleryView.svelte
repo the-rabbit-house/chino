@@ -252,18 +252,18 @@
           style={`width:${imageWidth}; height:${imageHeight}`}
         />
       {/each}
-
-      {#if $hasNextPage}
-        <button
-          id="more-button"
-          class="mb-2"
-          on:click={requestMoreImages}
-        >
-          More
-        </button>
-      {/if}
     </div>
   </div>
+
+  {#if $hasNextPage}
+    <button
+      id="more-button"
+      class="mb-2"
+      on:click={requestMoreImages}
+    >
+      More
+    </button>
+  {/if}
 {/if}
 
 {#if isMobile && selectedImage}
@@ -344,7 +344,7 @@
   }
 
   #images {
-    @apply flex-1 pb-2;
+    @apply flex-1 pb-24;
     transition: 0.5s filter linear;
 
     @screen md {
@@ -368,7 +368,13 @@
   }
 
   #more-button {
-    @apply w-full mx-4 mt-3 py-2 text-3xl rounded-lg;
+    @apply fixed w-full py-2 text-3xl rounded-lg;
+
+    width: 75%;
+
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
 
     background-color: rgba(0, 0, 0, 0.5);
   }
