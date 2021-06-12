@@ -29,7 +29,7 @@
 <script>
   import { getContext, tick } from "svelte";
   import { writable } from "svelte/store";
-  import { crossfade, scale } from "svelte/transition";
+  import { crossfade, fade, scale } from "svelte/transition";
 
   import { images, image } from "@Stores";
   import {
@@ -46,6 +46,7 @@
     OUT_FADE_DURATION as SETTINGS_FADE_OUT,
   } from "@Components/GalleryView/SettingsMenu.svelte";
   import SearchMenu, {
+    IN_FADE_DURATION as SEARCH_FADE_IN,
     OUT_FADE_DURATION as SEARCH_FADE_OUT,
   } from "@Components/GalleryView/SearchMenu.svelte";
   import BackendsMenu from "@Components/GalleryView/BackendsMenu.svelte";
@@ -242,7 +243,12 @@
 
 <nav class="flex flex-row items-center space-x-4">
   {#if showSearch}
-    <button id="backend-button" on:click={toggleBackends}>
+    <button
+      in:fade={{ delay: SEARCH_FADE_IN }}
+      out:fade={{ duration: SEARCH_FADE_OUT }}
+      id="backend-button"
+      on:click={toggleBackends}
+    >
       {$backend}
     </button>
   {/if}
