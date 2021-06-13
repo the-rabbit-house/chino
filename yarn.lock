@@ -72,10 +72,10 @@
   dependencies:
     tslib "^2.1.0"
 
-"@capacitor/device@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@capacitor/device/-/device-1.0.0.tgz#d72204f929b8e60bbc89c57ab67d4821e4ca1ded"
-  integrity sha512-FdDjBXk2Bwiju3xDzElx2eT50SmucNm77CDgBqNHjj+QPHpifcVpfrmK8xmuidwOcTb3TSEbmwxLRTn/RVAtNg==
+"@capacitor/device@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@capacitor/device/-/device-1.0.1.tgz#ddde0c17768469973a8924adb2067eb80016b8a6"
+  integrity sha512-s1ii+ww6V1e8Pd2SSJdjjwQ830GMQ43I/VGZlgU305w/1bzSppaipSwXkiOL6oNtwGPCHuiXnqxicRCydmMc+g==
 
 "@capacitor/filesystem@^1.0.0":
   version "1.0.0"
