@@ -7,18 +7,19 @@
 
 <script>
   import { getContext } from "svelte";
-  import { writable } from "svelte/store";
   import { fade, fly, scale } from "svelte/transition";
 
   import * as R from "ramda";
-  import SimpleBar from "simplebar";
 
-  import { images, image } from "@Stores";
+  import { images, image, favorites } from "@Stores";
+  import { toggleImage as toggleFavorite } from "@Stores/favorites";
 
   import { remote } from "@Components/Image.svelte";
 
   import ImagesQueue from "@Components/ImageView/ImagesQueue.svelte";
   import ImageInfo from "@Components/ImageView/ImageInfo.svelte";
+
+  const { images: favoriteImages } = favorites;
 
   const { navigate } = getContext("navigator");
   const events = getContext("events");
@@ -30,15 +31,16 @@
     setTimeout(() => navigate("Gallery"), QUEUE_FLY_TIME);
   }
 
-  const tags = writable([]);
-  $: $tags = $image?.["tag_string"]?.split(" ") || [];
-
   var innerWidth;
   var innerHeight;
   $: if (innerWidth < 768) back();
 
   var showAdjacentImages = true;
   var showInfo = false;
+
+  $: isInFavorites =
+    typeof R.find(R.propEq("id", $image.id), $favoriteImages) !==
+    "undefined";
 
   $: index = R.findIndex(R.equals($image))($images);
 
@@ -132,8 +134,13 @@
   <button
     id="favorite-button"
     class="absolute bottom-0 left-0 ml-6 mb-6 py-6 px-8 rounded-3xl"
+    on:click={() => toggleFavorite($image)}
   >
-    <i class="ri-star-line text-3xl" />
+    {#if isInFavorites}
+      <i class="ri-star-line text-3xl text-yellow-300" />
+    {:else}
+      <i class="ri-star-line text-3xl" />
+    {/if}
   </button>
 
   <button

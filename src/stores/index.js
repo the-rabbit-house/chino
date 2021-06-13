@@ -13,8 +13,8 @@ export const DEFAULT_SETTINGS = {
 export const settings = persistent("settings", DEFAULT_SETTINGS);
 
 export const favorites = {
-  tags: persistent("favorites:tags", []),
-  images: persistent("favorites:images", []),
+  tags: writable([]),
+  images: writable([]),
 };
 
 export const images = writable([]);

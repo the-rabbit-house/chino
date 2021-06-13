@@ -8,5 +8,3 @@ class Emitter extends EventEmitter {
     return super.emit(type, ...args);
   }
 }
-
-export const ServerEvents = new Emitter();

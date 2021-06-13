@@ -1,9 +1,9 @@
-<script context="module">
-</script>
-
 <script>
   import { createEventDispatcher } from "svelte";
   import { image, tags, favorites } from "@Stores";
+
+  import { toggleTag } from "@Stores/images";
+  import { toggleTag as toggleFavorite } from "@Stores/favorites";
 
   import * as R from "ramda";
   import { Clipboard } from "@capacitor/clipboard";
@@ -21,25 +21,8 @@
 
   $: imageTags = R.defaultTo([], $image?.["tags"]);
 
-  const isInTags = (tag) => R.contains(tag, $tags);
-  const isInFavorites = (tag) => R.contains(tag, $favoriteTags);
-
-  function addOrRemoveTag(tag) {
-    if (isInTags(tag)) $tags = R.without([tag], $tags);
-    else $tags = R.append(tag, $tags);
-
-    // Force tags re-render
-    imageTags = imageTags;
-  }
-
-  function addOrRemoveFavorite(tag) {
-    if (isInFavorites(tag)) {
-      $favoriteTags = R.without([tag], $favoriteTags);
-    } else $favoriteTags = R.append(tag, $favoriteTags);
-
-    // Force tags re-render
-    imageTags = imageTags;
-  }
+  $: isInTags = (tag) => R.contains(tag, $tags);
+  $: isInFavorites = (tag) => R.contains(tag, $favoriteTags);
 
   function copyToClipboard() {
     Clipboard.write({
@@ -82,7 +65,7 @@
     </div>
     <button
       class="icon-button"
-      on:click={() => addOrRemoveFavorite($image?.["artist"])}
+      on:click={() => toggleFavorite($image?.["artist"])}
     >
       {#if isInFavorites($image?.["artist"])}
         <i
@@ -104,7 +87,7 @@
         {#if isInTags(tag)}
           <button
             class="icon-button"
-            on:click={() => addOrRemoveTag(tag)}
+            on:click={() => toggleTag(tag)}
           >
             {!isMobile ? "Remove" : ""}
             <i class="ri-subtract-line text-4xl md:text-5xl" />
@@ -112,7 +95,7 @@
         {:else}
           <button
             class="icon-button"
-            on:click={() => addOrRemoveTag(tag)}
+            on:click={() => toggleTag(tag)}
           >
             {!isMobile ? "Add" : ""}
             <i class="ri-add-line text-4xl md:text-5xl" />
@@ -121,7 +104,7 @@
 
         <button
           class="icon-button"
-          on:click={() => addOrRemoveFavorite(tag)}
+          on:click={() => toggleFavorite(tag)}
         >
           {#if isInFavorites(tag)}
             <i

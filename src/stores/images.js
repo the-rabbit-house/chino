@@ -1,7 +1,9 @@
-import { writable, derived, get } from "svelte/store";
+import { writable, get } from "svelte/store";
 
 import { tags, images } from "@Stores";
 import { SETTINGS } from "@Utils";
+
+import * as R from "ramda";
 
 import BACKENDS from "./backends";
 
@@ -12,6 +14,15 @@ export const hasNextPage = writable(false);
 
 const limit = SETTINGS.get("limit");
 const backend = SETTINGS.get("backend");
+
+export function toggleTag(tag) {
+  let nextTags = get(tags);
+  if (!R.find(R.equals(tag), get(tags)))
+    nextTags = R.append(tag, nextTags);
+  else nextTags = R.without([tag], nextTags);
+
+  tags.set(nextTags);
+}
 
 export async function requestImages(targetTags) {
   if (get(fetching)) return false;

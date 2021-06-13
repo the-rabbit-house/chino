@@ -15,6 +15,8 @@
     screen,
     screenEvents,
   } from "@Stores/navigator";
+  import "@Stores/images";
+  import "@Stores/favorites";
 
   initNavigator(Events, Screens);
 
