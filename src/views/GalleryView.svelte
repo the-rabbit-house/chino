@@ -313,7 +313,7 @@
   />
 {/if}
 
-{#if showMoreButton && !showSearch && !showSettings && !showBackends && $hasNextPage}
+{#if showMoreButton && !selectedImage && !showSearch && !showSettings && !showBackends && $hasNextPage}
   <button
     id="more-button"
     class="mb-2"
