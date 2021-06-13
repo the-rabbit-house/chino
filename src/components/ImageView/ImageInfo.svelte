@@ -3,14 +3,18 @@
   import { image, tags, favorites } from "@Stores";
 
   import { toggleTag } from "@Stores/images";
-  import { toggleTag as toggleFavorite } from "@Stores/favorites";
+  import {
+    toggleTag as toggleFavorite,
+    toggleImage,
+  } from "@Stores/favorites";
 
   import * as R from "ramda";
   import { Clipboard } from "@capacitor/clipboard";
 
   import { getImage } from "@Components/Image.svelte";
 
-  const { tags: favoriteTags } = favorites;
+  const { tags: favoriteTags, images: favoriteImages } =
+    favorites;
 
   const dispatch = createEventDispatcher();
 
@@ -22,7 +26,12 @@
   $: imageTags = R.defaultTo([], $image?.["tags"]);
 
   $: isInTags = (tag) => R.contains(tag, $tags);
-  $: isInFavorites = (tag) => R.contains(tag, $favoriteTags);
+
+  $: isInFavorites =
+    typeof R.find(R.propEq("id", $image.id), $favoriteImages) !==
+    "undefined";
+
+  $: isInFavoriteTags = (tag) => R.contains(tag, $favoriteTags);
 
   function copyToClipboard() {
     Clipboard.write({
@@ -35,8 +44,15 @@
 
 <article class="flex flex-col space-y-2">
   <div class="p-2 flex flex-row justify-between space-x-4">
-    <button class="icon-button">
-      <i class="ri-star-fill text-4xl" />
+    <button
+      class="icon-button"
+      on:click={() => toggleImage($image)}
+    >
+      {#if isInFavorites}
+        <i class="ri-star-fill text-3xl text-yellow-300" />
+      {:else}
+        <i class="ri-star-fill text-3xl" />
+      {/if}
     </button>
     <a
       class="icon-button"
@@ -67,7 +83,7 @@
       class="icon-button"
       on:click={() => toggleFavorite($image?.["artist"])}
     >
-      {#if isInFavorites($image?.["artist"])}
+      {#if isInFavoriteTags($image?.["artist"])}
         <i
           class="ri-star-fill text-4xl md:text-5xl text-yellow-300"
         />
@@ -106,7 +122,7 @@
           class="icon-button"
           on:click={() => toggleFavorite(tag)}
         >
-          {#if isInFavorites(tag)}
+          {#if isInFavoriteTags(tag)}
             <i
               class="ri-star-fill text-4xl md:text-5xl text-yellow-300"
             />
