@@ -46,7 +46,7 @@
     OUT_FADE_DURATION as SETTINGS_FADE_OUT,
   } from "@Components/GalleryView/SettingsMenu.svelte";
   import SearchMenu, {
-    IN_FADE_DURATION as SEARCH_FADE_IN,
+    IN_FADE_DELAY as SEARCH_FADE_IN,
     OUT_FADE_DURATION as SEARCH_FADE_OUT,
   } from "@Components/GalleryView/SearchMenu.svelte";
   import BackendsMenu from "@Components/GalleryView/BackendsMenu.svelte";
