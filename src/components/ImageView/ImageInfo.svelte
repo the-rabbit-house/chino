@@ -41,8 +41,8 @@
     imageTags = imageTags;
   }
 
-  async function copyToClipboard() {
-    await Clipboard.write({
+  function copyToClipboard() {
+    Clipboard.write({
       url: $image?.["file_url"],
     });
   }
@@ -55,7 +55,11 @@
     <button class="icon-button">
       <i class="ri-star-fill text-4xl" />
     </button>
-    <a class="icon-button" href={getImage($image)} download>
+    <a
+      class="icon-button"
+      href={getImage($image)}
+      download={$image?.file_name}
+    >
       <i class="ri-download-fill text-4xl" />
     </a>
     <button class="icon-button" on:click={copyToClipboard}>
