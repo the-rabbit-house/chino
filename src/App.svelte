@@ -55,6 +55,14 @@
 
     font-family: "KoHo", sans-serif;
     color: white;
+
+    @media screen and (min-width: 320px) {
+      font-size: calc(16px + 6 * ((100vw - 300px) / 680));
+    }
+
+    @media screen and (min-width: 1000px) {
+      font-size: 22px;
+    }
   }
 
   main {
