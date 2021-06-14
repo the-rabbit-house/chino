@@ -37,7 +37,9 @@
         on:click={() => switchBackend(backend)}
       >
         <p class="absolute top-0 right-0 pt-6 pr-6">
-          {isSupported(_, platform) ? "AVAILABLE" : "UNVAILABLE"}
+          {isSupported(_, platform)
+            ? "AVAILABLE"
+            : "UNAVAILABLE"}
         </p>
 
         <p class="pb-2 text-2xl">{backend}</p>
