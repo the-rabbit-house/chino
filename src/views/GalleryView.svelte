@@ -344,7 +344,7 @@
   </div>
 {/if}
 
-{#if showBackButton && !showSearch && !selectedImage}
+{#if showBackButton && !selectedImage && !showSearch && !showSettings && !showBackends}
   <button
     id="back-button"
     on:click={() => {
