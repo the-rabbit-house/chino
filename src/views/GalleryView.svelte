@@ -33,6 +33,7 @@
 
   import { images, image } from "@Stores";
   import {
+    fetching,
     hasNextPage,
     requestImages,
     requestMoreImages,
@@ -313,7 +314,7 @@
   />
 {/if}
 
-{#if showMoreButton && !selectedImage && !showSearch && !showSettings && !showBackends && $hasNextPage}
+{#if showMoreButton && !selectedImage && !showSearch && !showSettings && !showBackends && !$fetching && $hasNextPage}
   <button
     id="more-button"
     class="mb-2"
