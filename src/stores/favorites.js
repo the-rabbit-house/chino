@@ -37,7 +37,5 @@ export function toggleImage(image) {
   if (!found) nextImages = R.append(image, nextImages);
   else nextImages = R.without([found], nextImages);
 
-  console.log(nextImages);
-
   cache.images.set(nextImages);
 }
