@@ -28,6 +28,7 @@
   const galleryCols = SETTINGS.get("galleryCols");
   const galleryImageSize = SETTINGS.get("galleryImageSize");
   const swipeDistance = SETTINGS.get("swipeDistance");
+  const nsfw = SETTINGS.get("nsfw");
 </script>
 
 <svelte:window bind:innerHeight bind:innerWidth />
@@ -139,7 +140,7 @@
 
   <section class="relative px-2 py-4 pt-8">
     <sup> TABLET+ ONLY </sup>
-    <p class="flex-1 text-wrap">Image size</p>
+    <p class="flex-1 text-wrap">Image <br /> size</p>
     <button
       class="mr-1"
       use:active={$galleryImageSize === "SMALL"}
@@ -160,6 +161,26 @@
       on:click={() => SETTINGS.set("galleryImageSize", "LARGE")}
     >
       {isMobile ? "LG" : "LARGE"}
+    </button>
+  </section>
+
+  <section class="px-2 py-4">
+    <p class="flex-1">NSFW<br /> mode</p>
+
+    <button
+      use:active={$nsfw === false}
+      on:click={() => SETTINGS.set("nsfw", false)}
+      style="flex-basis: 6rem"
+    >
+      OFF
+    </button>
+    <button
+      use:active={$nsfw === true}
+      on:click={() => SETTINGS.set("nsfw", true)}
+      class="ml-1"
+      style="flex-basis: 6rem"
+    >
+      ON
     </button>
   </section>
 </article>

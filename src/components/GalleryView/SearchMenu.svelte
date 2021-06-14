@@ -96,6 +96,7 @@
   import { images, tags, favorites } from "@Stores";
   import { fetching, requestImages } from "@Stores/images";
 
+  import { SETTINGS } from "@Utils";
   import * as R from "ramda";
 
   import TagsInput from "svelte-tags-input";
@@ -105,6 +106,8 @@
   const { tags: favoriteTags } = favorites;
 
   const dispatch = createEventDispatcher();
+
+  const nsfw = SETTINGS.get("nsfw");
 
   var tagsBuffer = stripTags($tags);
 
@@ -117,7 +120,10 @@
     if ($fetching) return;
 
     const ratingTag = rating ? RATINGS?.[rating] : "";
-    dispatch("search", [...tagsBuffer, ratingTag]);
+    dispatch("search", [
+      ...tagsBuffer,
+      $nsfw ? ratingTag : "rating:safe",
+    ]);
   }
 
   function addTag(tag) {
@@ -172,29 +178,31 @@
     {/if}
   </div>
 
-  <div
-    id="rating-buttons"
-    class="flex flex-row items-center justify-between"
-  >
-    <button
-      use:active={rating === "SAFE"}
-      on:click={() => toggleRating("SAFE")}
+  {#if $nsfw}
+    <div
+      id="rating-buttons"
+      class="flex flex-row items-center justify-between"
     >
-      SAFE
-    </button>
-    <button
-      use:active={rating === "UNSAFE"}
-      on:click={() => toggleRating("UNSAFE")}
-    >
-      UNSAFE
-    </button>
-    <button
-      use:active={rating === "EXPLICIT"}
-      on:click={() => toggleRating("EXPLICIT")}
-    >
-      EXPLICIT
-    </button>
-  </div>
+      <button
+        use:active={rating === "SAFE"}
+        on:click={() => toggleRating("SAFE")}
+      >
+        SAFE
+      </button>
+      <button
+        use:active={rating === "UNSAFE"}
+        on:click={() => toggleRating("UNSAFE")}
+      >
+        UNSAFE
+      </button>
+      <button
+        use:active={rating === "EXPLICIT"}
+        on:click={() => toggleRating("EXPLICIT")}
+      >
+        EXPLICIT
+      </button>
+    </div>
+  {/if}
 
   <button
     id="search-button"

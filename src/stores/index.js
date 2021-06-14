@@ -8,6 +8,7 @@ export const DEFAULT_SETTINGS = {
   galleryCols: 3,
   galleryImageSize: "BASE",
   swipeDistance: 0.2,
+  nsfw: false,
 };
 
 export const settings = persistent("settings", DEFAULT_SETTINGS);
