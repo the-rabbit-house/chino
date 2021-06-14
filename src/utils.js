@@ -5,7 +5,7 @@ import * as R from "ramda";
 
 export const SETTINGS = {
   get: function (key) {
-    return derived(settings, ($settings) =>
+    return derived(settings, $settings =>
       R.defaultTo(DEFAULT_SETTINGS[key], $settings?.[key])
     );
   },

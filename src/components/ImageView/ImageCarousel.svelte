@@ -5,11 +5,11 @@
   const nonZeroOrNull = R.when(R.equals(0), () => null);
 
   const isDirection = {
-    DOWN: (angle) => angle > 200 && angle < 315,
-    LEFT: (angle) => angle > 120 && angle < 200,
-    RIGHT: (angle) =>
+    DOWN: angle => angle > 200 && angle < 315,
+    LEFT: angle => angle > 120 && angle < 200,
+    RIGHT: angle =>
       (angle > 0 && angle < 60) || (angle > 315 && angle <= 360),
-    UP: (angle) => angle > 60 && angle < 120,
+    UP: angle => angle > 60 && angle < 120,
   };
 
   function invisible(ref) {

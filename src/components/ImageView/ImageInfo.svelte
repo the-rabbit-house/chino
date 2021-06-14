@@ -25,13 +25,13 @@
 
   $: imageTags = R.defaultTo([], $image?.["tags"]);
 
-  $: isInTags = (tag) => R.contains(tag, $tags);
+  $: isInTags = tag => R.contains(tag, $tags);
 
   $: isInFavorites =
     typeof R.find(R.propEq("id", $image.id), $favoriteImages) !==
     "undefined";
 
-  $: isInFavoriteTags = (tag) => R.contains(tag, $favoriteTags);
+  $: isInFavoriteTags = tag => R.contains(tag, $favoriteTags);
 
   function copyToClipboard() {
     Clipboard.write({

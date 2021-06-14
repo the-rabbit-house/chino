@@ -10,8 +10,8 @@ const cache = {
   images: persistent("favorites:images", []),
 };
 
-cache.tags.subscribe((tags) => favorites.tags.set(tags));
-cache.images.subscribe((images) => favorites.images.set(images));
+cache.tags.subscribe(tags => favorites.tags.set(tags));
+cache.images.subscribe(images => favorites.images.set(images));
 
 export function toggleTag(tag) {
   const tags = get(cache.tags);

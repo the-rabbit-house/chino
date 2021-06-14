@@ -62,7 +62,7 @@ export async function requestMoreImages() {
 
   fetching.set(true);
 
-  page.update((p) => p + 1);
+  page.update(p => p + 1);
   const [success, nextImages] = await booru.fetchImages(
     get(tags),
     {

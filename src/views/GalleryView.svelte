@@ -7,7 +7,7 @@
     LARGE: { width: "16rem", height: "24rem" },
   };
 
-  const imageSizeOrDefault = (size) =>
+  const imageSizeOrDefault = size =>
     R.defaultTo(
       IMAGE_SIZES["BASE"],
       size ? IMAGE_SIZES[size] : null
@@ -148,7 +148,7 @@
     $images = [];
 
     // Wait for crossfade
-    await new Promise((resolve) =>
+    await new Promise(resolve =>
       setTimeout(resolve, CROSSFADE_TIME + 10)
     );
 
@@ -302,11 +302,11 @@
 {#if isMobile && selectedImage}
   <ImageCarousel
     image={selectedImage}
-    on:imagechange={(event) => {
+    on:imagechange={event => {
       const image = event.detail;
       selectedImage = image;
     }}
-    on:swipe={(event) => {
+    on:swipe={event => {
       const direction = event.detail;
       if (direction === "DOWN") selectedImage = null;
     }}

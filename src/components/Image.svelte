@@ -105,7 +105,7 @@
       const pair = [image, thumbnail];
       processing.set(R.append(pair, get(processing)));
 
-      loadAndCache(image, key, prefix).then((url) => {
+      loadAndCache(image, key, prefix).then(url => {
         updateImage();
 
         processing.set(R.without([pair], get(processing)));

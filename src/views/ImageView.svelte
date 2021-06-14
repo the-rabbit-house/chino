@@ -110,7 +110,7 @@
       }}
     >
       <ImagesQueue
-        on:imagechange={(event) => {
+        on:imagechange={event => {
           $image = event.detail;
         }}
       />
