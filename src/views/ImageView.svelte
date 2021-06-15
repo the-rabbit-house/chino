@@ -28,7 +28,10 @@
     showInfo = false;
     showAdjacentImages = false;
 
-    setTimeout(() => navigate("Gallery"), QUEUE_FLY_TIME);
+    setTimeout(() => {
+      $image = null;
+      navigate("Gallery");
+    }, QUEUE_FLY_TIME);
   }
 
   var innerWidth;
@@ -39,8 +42,10 @@
   var showInfo = false;
 
   $: isInFavorites =
-    typeof R.find(R.propEq("id", $image.id), $favoriteImages) !==
-    "undefined";
+    typeof R.find(
+      R.propEq("id", $image?.id),
+      $favoriteImages
+    ) !== "undefined";
 
   $: index = R.findIndex(R.equals($image))($images);
 

@@ -19,10 +19,10 @@
   export const cached = {};
 
   export function getImage(image) {
-    if (cached?.[image?.id]) return cached[image.id];
+    if (cached?.[image?.id]) return cached[image?.id];
 
     if (cached?.[THUMBNAIL_PREFIX + image?.id])
-      return cached[THUMBNAIL_PREFIX + image.id];
+      return cached[THUMBNAIL_PREFIX + image?.id];
 
     return PLACEHOLDER_IMAGE;
   }
