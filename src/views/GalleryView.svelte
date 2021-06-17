@@ -250,7 +250,11 @@
       id="backend-button"
       on:click={toggleBackends}
     >
-      {$backend}
+      {#if isMobile}
+        <i class="ri-gallery-line text-3xl" />
+      {:else}
+        {$backend}
+      {/if}
     </button>
   {/if}
 
@@ -370,7 +374,7 @@
   }
 
   #backend-button {
-    @apply px-8 md:px-24 rounded-lg truncate text-sm;
+    @apply px-4 md:px-24 rounded-lg truncate text-sm;
     height: 85%;
     background-color: rgba(0, 0, 0, 0.5);
   }
