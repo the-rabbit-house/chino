@@ -31,7 +31,7 @@
   import { writable } from "svelte/store";
   import { crossfade, fade, scale } from "svelte/transition";
 
-  import { images, image } from "@Stores";
+  import { tags, images, image, favorites } from "@Stores";
   import {
     fetching,
     hasNextPage,
@@ -55,6 +55,8 @@
 
   import * as R from "ramda";
   import SimpleBar from "simplebar";
+
+  const { images: favoriteImages } = favorites;
 
   const { navigate } = getContext("navigator");
 
@@ -109,6 +111,13 @@
       showImages = false;
       setTimeout(() => navigate("Image"), CROSSFADE_TIME + 10);
     }
+  }
+
+  function showFavorites() {
+    $tags = [];
+    $images = $favoriteImages;
+
+    $hasNextPage = false;
   }
 
   function toggleSettings() {
@@ -259,6 +268,9 @@
   {/if}
 
   <div class="flex-1" />
+  <div id="favorites-icon" on:click={showFavorites}>
+    <i class="ri-star-line text-3xl" />
+  </div>
   <div id="settings-icon" on:click={toggleSettings}>
     {#if showSettings}
       <i class="ri-close-line text-3xl" />
@@ -329,6 +341,8 @@
   >
     More
   </button>
+{:else if showMoreButton && !selectedImage && !showSearch && !showSettings && !showBackends && !$hasNextPage}
+  <p class="text-3xl text-center pb-2">No more images...</p>
 {/if}
 
 {#if showSettings}
@@ -366,7 +380,8 @@
   }
 
   #settings-icon,
-  #search-icon {
+  #search-icon,
+  #favorites-icon {
     @apply px-4 rounded-xl cursor-pointer;
     @apply flex flex-row items-center;
     height: 85%;
