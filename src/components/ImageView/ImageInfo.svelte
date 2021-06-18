@@ -28,8 +28,10 @@
   $: isInTags = tag => R.contains(tag, $tags);
 
   $: isInFavorites =
-    typeof R.find(R.propEq("id", $image.id), $favoriteImages) !==
-    "undefined";
+    typeof R.find(
+      R.propEq("id", $image?.id),
+      $favoriteImages
+    ) !== "undefined";
 
   $: isInFavoriteTags = tag => R.contains(tag, $favoriteTags);
 
