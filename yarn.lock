@@ -77,10 +77,10 @@
   resolved "https://registry.yarnpkg.com/@capacitor/device/-/device-1.0.1.tgz#ddde0c17768469973a8924adb2067eb80016b8a6"
   integrity sha512-s1ii+ww6V1e8Pd2SSJdjjwQ830GMQ43I/VGZlgU305w/1bzSppaipSwXkiOL6oNtwGPCHuiXnqxicRCydmMc+g==
 
-"@capacitor/filesystem@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@capacitor/filesystem/-/filesystem-1.0.0.tgz#dbf98802d73e5e19efb784096c1374cc8bafc8be"
-  integrity sha512-dneksUnpCSwTKZbUPeBR7th6XMR9iHGXMAKhtSCfeiNHm+QWaxPHCov3bxCHE3hyIstbkeC2Uipa0Lu8SW883Q==
+"@capacitor/filesystem@^1.0.0", "@capacitor/filesystem@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@capacitor/filesystem/-/filesystem-1.0.1.tgz#48c1987e4eb0b14a27f0805e8debd01800734a6f"
+  integrity sha512-DID5qryvvKvcptyxYCGHsq9SENiXiiECH0uuYlS9Eaasd6R+YCnwK2F8mhOOjnElvnaoVXTG1EGVe9mZEfHEEA==
 
 "@capacitor/ios@^3.0.0":
   version "3.0.0"
