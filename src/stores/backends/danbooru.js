@@ -1,4 +1,5 @@
 import { writable } from "svelte/store";
+import * as R from "ramda";
 
 import { Http } from "@capacitor-community/http";
 
@@ -25,11 +26,19 @@ export async function fetchImages(tags, { page, limit }) {
   }
 }
 
+const isVideo = R.anyPass([
+  R.equals("zip"),
+  R.equals("webm"),
+  R.equals("mp4"),
+]);
+
 function parseResponse(data) {
   const images = [];
 
   for (const post of data) {
     if (!post?.["file_url"]) continue;
+
+    const ext = post?.["file_ext"];
 
     const image = {
       id: post?.["md5"],
@@ -37,11 +46,14 @@ function parseResponse(data) {
       source: post?.["source"],
       artist: post?.["tag_string_artist"],
       thumbnail_url: post?.["preview_file_url"],
-      file_url: post?.["file_url"],
+      file_url: !isVideo(ext)
+        ? post?.["file_url"]
+        : post?.["large_file_url"],
       width: post?.["image_width"],
       height: post?.["image_height"],
       tags: post?.["tag_string"].split(" "),
       data: post,
+      video: isVideo(ext),
     };
 
     images.push(image);

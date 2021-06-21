@@ -14,7 +14,11 @@
   import { images, image, favorites } from "@Stores";
   import { toggleImage as toggleFavorite } from "@Stores/favorites";
 
-  import { remote } from "@Components/Image.svelte";
+  import {
+    remote,
+    cached as cachedImages,
+    getImage,
+  } from "@Components/Image.svelte";
 
   import ImagesQueue from "@Components/ImageView/ImagesQueue.svelte";
   import ImageInfo from "@Components/ImageView/ImageInfo.svelte";
@@ -68,6 +72,9 @@
     // Spacebar
     if (key === " ") nextImage();
   }
+
+  var videoRef = null;
+  $: if ($image?.video) videoRef?.load();
 </script>
 
 <svelte:window
@@ -94,16 +101,29 @@
 </nav>
 
 <main class="flex flex-col lg:flex-row px-4 overflow-hidden">
-  <img
-    id="main-image"
-    style={showInfo ? "filter: blur(12px)" : ""}
-    use:remote={[$image, true]}
-    width={$image?.["width"]}
-    height={$image?.["height"]}
-    src={$image?.["thumbnail_url"]}
-    in:fade
-    alt="main"
-  />
+  {#if $image?.["video"] && $cachedImages?.[$image?.id]}
+    <video
+      id="main-image"
+      bind:this={videoRef}
+      width={$image?.["width"]}
+      height={$image?.["height"]}
+      controls
+    >
+      <track default kind="captions" />
+      <source src={getImage($image)} type="video/webm" />
+    </video>
+  {:else}
+    <img
+      id="main-image"
+      style={showInfo ? "filter: blur(12px)" : ""}
+      use:remote={[$image, true]}
+      width={$image?.["width"]}
+      height={$image?.["height"]}
+      src={$image?.["thumbnail_url"]}
+      in:fade
+      alt="main"
+    />
+  {/if}
 
   {#if showAdjacentImages && !showInfo}
     <div

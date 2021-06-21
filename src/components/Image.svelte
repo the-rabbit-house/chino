@@ -16,13 +16,23 @@
   // transparent 1x1 .png image
   const PLACEHOLDER_IMAGE = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=`;
 
-  export const cached = {};
+  export const cached = writable({});
+
+  export function getThumbnail(image) {
+    const cachedImages = get(cached);
+    if (cachedImages?.[THUMBNAIL_PREFIX + image?.id])
+      return cachedImages[THUMBNAIL_PREFIX + image?.id];
+
+    return PLACEHOLDER_IMAGE;
+  }
 
   export function getImage(image) {
-    if (cached?.[image?.id]) return cached[image?.id];
+    const cachedImages = get(cached);
+    if (cachedImages?.[image?.id])
+      return cachedImages[image?.id];
 
-    if (cached?.[THUMBNAIL_PREFIX + image?.id])
-      return cached[THUMBNAIL_PREFIX + image?.id];
+    if (cachedImages?.[THUMBNAIL_PREFIX + image?.id])
+      return cachedImages[THUMBNAIL_PREFIX + image?.id];
 
     return PLACEHOLDER_IMAGE;
   }
@@ -52,7 +62,8 @@
 
     if (!url) return null;
 
-    cached[prefix + image?.["id"]] = url;
+    get(cached)[prefix + image?.["id"]] = url;
+    cached.set(get(cached));
     return url;
   }
 
@@ -94,14 +105,15 @@
     }
 
     function updateImage() {
-      if (!thumbnail && current.image !== image) return;
+      if (!thumbnail && current.image !== image && !image?.video)
+        return;
       if (document.body.contains(ref)) ref.src = getImage(image);
     }
 
     const key = thumbnail ? THUMBNAIL_KEY : ORIGINAL_KEY;
     const prefix = thumbnail ? THUMBNAIL_PREFIX : "";
 
-    if (!cached?.[prefix + image?.id]) {
+    if (!get(cached)?.[prefix + image?.id]) {
       const pair = [image, thumbnail];
       processing.set(R.append(pair, get(processing)));
 
@@ -120,7 +132,7 @@
 
   export function remote(ref, [image, full = false]) {
     if (full) current.image = image;
-    ref.src = getImage(image);
+    if (!image?.video) ref.src = getImage(image);
 
     queue1.set([...get(queue1), [image, ref, true]]);
     if (full) queue2.set([[image, ref, false], ...get(queue2)]);
@@ -128,7 +140,7 @@
     return {
       update([image, full = false]) {
         if (full) current.image = image;
-        ref.src = getImage(image);
+        if (!image?.video) ref.src = getImage(image);
 
         queue1.set([...get(queue1), [image, ref, true]]);
         if (full)

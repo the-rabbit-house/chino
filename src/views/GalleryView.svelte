@@ -41,7 +41,11 @@
 
   import { SETTINGS } from "@Utils";
 
-  import { remote, getImage } from "@Components/Image.svelte";
+  import {
+    remote,
+    getImage,
+    getThumbnail,
+  } from "@Components/Image.svelte";
 
   import SettingsMenu, {
     OUT_FADE_DURATION as SETTINGS_FADE_OUT,
@@ -305,7 +309,7 @@
           use:remote={[image, false]}
           class="object-cover"
           alt=""
-          src={getImage(image)}
+          src={getThumbnail(image)}
           on:click={() => openImage(image)}
           in:receive={{ key: image["id"] }}
           out:send={{ key: image["id"] }}
