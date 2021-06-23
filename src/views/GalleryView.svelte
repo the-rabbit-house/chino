@@ -68,17 +68,16 @@
 
   const backend = SETTINGS.get("backend");
 
-  var innerHeight;
-  var innerWidth;
+  const { height: windowHeight, isMobile } =
+    getContext("window");
 
-  $: isMobile = innerWidth <= 768;
   const mobileCols = SETTINGS.get("galleryCols");
   const imageSize = SETTINGS.get("galleryImageSize");
 
-  $: imageWidth = isMobile
+  $: imageWidth = $isMobile
     ? (1 / $mobileCols) * 100 + "vw"
     : imageSizeOrDefault($imageSize).width;
-  $: imageHeight = isMobile
+  $: imageHeight = $isMobile
     ? Math.max(20, 20 * (4 / $mobileCols)) + "vh"
     : imageSizeOrDefault($imageSize).height;
 
@@ -95,7 +94,7 @@
   var showSearch = false;
   var showBackends = false;
 
-  $: showBackButton = scrollY > innerHeight;
+  $: showBackButton = scrollY > $windowHeight;
   $: document.body.classList.toggle(
     "noscroll",
     showSearch || selectedImage !== null
@@ -111,7 +110,7 @@
     selectedImage = image;
 
     // Wait for crossfade to end
-    if (!isMobile) {
+    if (!$isMobile) {
       showImages = false;
       setTimeout(() => navigate("Image"), CROSSFADE_TIME + 10);
     }
@@ -249,11 +248,7 @@
   }
 </script>
 
-<svelte:window
-  bind:innerWidth
-  bind:innerHeight
-  on:keyup={handleShortcuts}
-/>
+<svelte:window on:keyup={handleShortcuts} />
 
 <nav class="flex flex-row items-center space-x-4">
   {#if showSearch}
@@ -263,7 +258,7 @@
       id="backend-button"
       on:click={toggleBackends}
     >
-      {#if isMobile}
+      {#if $isMobile}
         <i class="ri-gallery-line text-3xl" />
       {:else}
         {$backend}
@@ -320,7 +315,7 @@
   </div>
 {/if}
 
-{#if isMobile && selectedImage}
+{#if $isMobile && selectedImage}
   <ImageCarousel
     image={selectedImage}
     on:imagechange={event => {

@@ -38,9 +38,8 @@
     }, QUEUE_FLY_TIME);
   }
 
-  var innerWidth;
-  var innerHeight;
-  $: if (innerWidth < 768) back();
+  const { isMobile } = getContext("window");
+  $: if ($isMobile) back();
 
   var showAdjacentImages = true;
   var showInfo = false;
@@ -77,11 +76,7 @@
   $: if ($image?.video) videoRef?.load();
 </script>
 
-<svelte:window
-  bind:innerWidth
-  bind:innerHeight
-  on:keyup={handleShortcuts}
-/>
+<svelte:window on:keyup={handleShortcuts} />
 
 <nav class="px-6 pt-2 h-20 flex flex-row items-center">
   <button class="flex flex-row items-center" on:click={back}>

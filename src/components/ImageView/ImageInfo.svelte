@@ -1,5 +1,5 @@
 <script>
-  import { createEventDispatcher } from "svelte";
+  import { getContext, createEventDispatcher } from "svelte";
   import { image, tags, favorites } from "@Stores";
 
   import { toggleTag } from "@Stores/images";
@@ -16,12 +16,11 @@
   const { tags: favoriteTags, images: favoriteImages } =
     favorites;
 
+  const { isMobile } = getContext("window");
+
   const dispatch = createEventDispatcher();
 
   export let closable = false;
-
-  var innerWidth;
-  $: isMobile = innerWidth <= 768;
 
   $: imageTags = R.defaultTo([], $image?.["tags"]);
 
@@ -41,8 +40,6 @@
     });
   }
 </script>
-
-<svelte:window bind:innerWidth />
 
 <article class="flex flex-col space-y-2">
   <div class="p-2 flex flex-row justify-between space-x-4">
@@ -107,7 +104,7 @@
             class="icon-button"
             on:click={() => toggleTag(tag)}
           >
-            {!isMobile ? "Remove" : ""}
+            {!$isMobile ? "Remove" : ""}
             <i class="ri-subtract-line text-4xl md:text-5xl" />
           </button>
         {:else}
@@ -115,7 +112,7 @@
             class="icon-button"
             on:click={() => toggleTag(tag)}
           >
-            {!isMobile ? "Add" : ""}
+            {!$isMobile ? "Add" : ""}
             <i class="ri-add-line text-4xl md:text-5xl" />
           </button>
         {/if}

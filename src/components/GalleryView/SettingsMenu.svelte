@@ -14,14 +14,13 @@
 </script>
 
 <script>
+  import { getContext } from "svelte";
   import { fade } from "svelte/transition";
 
   import { SETTINGS } from "@Utils";
   import * as R from "ramda";
 
-  var innerHeight;
-  var innerWidth;
-  $: isMobile = innerWidth <= 768;
+  const { isMobile } = getContext("window");
 
   const limit = SETTINGS.get("limit");
   const throttle = SETTINGS.get("throttle");
@@ -30,8 +29,6 @@
   const swipeDistance = SETTINGS.get("swipeDistance");
   const nsfw = SETTINGS.get("nsfw");
 </script>
-
-<svelte:window bind:innerHeight bind:innerWidth />
 
 <article
   class="flex flex-col items-stretch overflow-y-auto"
@@ -146,7 +143,7 @@
       use:active={$galleryImageSize === "SMALL"}
       on:click={() => SETTINGS.set("galleryImageSize", "SMALL")}
     >
-      {isMobile ? "SM" : "SMALL"}
+      {$isMobile ? "SM" : "SMALL"}
     </button>
 
     <button
@@ -160,7 +157,7 @@
       use:active={$galleryImageSize === "LARGE"}
       on:click={() => SETTINGS.set("galleryImageSize", "LARGE")}
     >
-      {isMobile ? "LG" : "LARGE"}
+      {$isMobile ? "LG" : "LARGE"}
     </button>
   </section>
 

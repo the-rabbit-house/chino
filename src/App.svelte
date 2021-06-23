@@ -5,6 +5,7 @@
   import "simplebar/dist/simplebar.css";
 
   import { setContext } from "svelte";
+  import { writable } from "svelte/store";
 
   import * as Events from "@Events";
   import Screens from "@Views";
@@ -20,11 +21,27 @@
 
   initNavigator(Events, Screens);
 
+  const innerWidth = writable(0);
+  const innerHeight = writable(0);
+  const isMobile = writable(false);
+
+  $: $isMobile = $innerWidth < 768;
+
+  setContext("window", {
+    width: innerWidth,
+    height: innerHeight,
+    isMobile,
+  });
   setContext("navigator", { navigate });
   setContext("events", screenEvents);
 
   navigate("Start");
 </script>
+
+<svelte:window
+  bind:innerWidth={$innerWidth}
+  bind:innerHeight={$innerHeight}
+/>
 
 <main class="relative flex flex-col">
   <svelte:component this={$screen?.COMPONENT} />

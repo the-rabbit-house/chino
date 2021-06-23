@@ -11,7 +11,7 @@
 </script>
 
 <script>
-  import { createEventDispatcher } from "svelte";
+  import { getContext, createEventDispatcher } from "svelte";
   import { images, image } from "@Stores";
 
   import {
@@ -25,9 +25,9 @@
 
   var adjacentImages = [];
 
-  var innerWidth;
-  var innerHeight;
-  $: visibleAdjacentImages = innerHeight < 1050 ? 4 : 5;
+  const { width: innerWidth, height: innerHeight } =
+    getContext("window");
+  $: visibleAdjacentImages = $innerHeight < 1050 ? 4 : 5;
 
   $: {
     const index = R.findIndex(R.equals($image))($images);
@@ -58,8 +58,6 @@
     adjacentImages = R.slice(indexMin, indexMax, $images);
   }
 </script>
-
-<svelte:window bind:innerWidth bind:innerHeight />
 
 <div id="images" class="flex flex-row lg:flex-col rounded-lg">
   {#each adjacentImages as adjacentImage}

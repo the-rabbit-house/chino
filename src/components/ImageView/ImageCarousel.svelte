@@ -20,7 +20,7 @@
 </script>
 
 <script>
-  import { createEventDispatcher } from "svelte";
+  import { getContext, createEventDispatcher } from "svelte";
   import { writable } from "svelte/store";
   import { tweened } from "svelte/motion";
   import { fly } from "svelte/transition";
@@ -38,8 +38,8 @@
 
   export let image = null;
 
-  var innerHeight = 0;
-  var innerWidth = 0;
+  const { width: windowWidth, height: windowHeight } =
+    getContext("window");
 
   var touchareaRef = null;
 
@@ -47,12 +47,12 @@
 
   $: softSwipeDistance = R.defaultTo(
     DEFAULT_SOFT_SWIPE_DISTANCE,
-    nonZeroOrNull(innerWidth * $swipeDistance)
+    nonZeroOrNull($windowWidth * $swipeDistance)
   );
 
   $: hardSwipeDistance = R.defaultTo(
     DEFAULT_HARD_SWIPE_DISTANCE,
-    nonZeroOrNull(innerWidth * $swipeDistance * 3)
+    nonZeroOrNull($windowWidth * $swipeDistance * 3)
   );
 
   var imageRef = null;
@@ -154,8 +154,6 @@
   $: bindGestures(imageRef, touchareaRef, showInfo);
 </script>
 
-<svelte:window bind:innerHeight bind:innerWidth />
-
 <div
   class="fixed top-0 left-0"
   use:bindRegion
@@ -164,7 +162,7 @@
   <div
     bind:this={touchareaRef}
     class="flex flex-row"
-    style="width:300vw;transform:translate({-innerWidth +
+    style="width:300vw;transform:translate({-$windowWidth +
       dx}px,{dy}px);will-change:transform"
   >
     <img
@@ -191,7 +189,7 @@
 <div
   id="info-container"
   style={!showInfo
-    ? `transform:translateY(${innerHeight + dy * 1.75}px`
+    ? `transform:translateY(${$windowHeight + dy * 1.75}px`
     : ""}
 >
   <ImageInfo
