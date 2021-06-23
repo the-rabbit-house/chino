@@ -1,6 +1,7 @@
 <script>
   import "./ui/tailwindcss.svelte";
   import "./ui/common.scss";
+  import "@fontsource/koho";
   import "remixicon/fonts/remixicon.css";
   import "simplebar/dist/simplebar.css";
 
@@ -47,9 +48,7 @@
   <svelte:component this={$screen?.COMPONENT} />
 </main>
 
-<style>
-  @import url("https://fonts.googleapis.com/css2?family=KoHo:wght@200;300;400;500&display=swap");
-
+<style lang="scss">
   :global(html) {
     /* Android keyboard background */
     background-color: rgba(0, 0, 0, 0.8);
