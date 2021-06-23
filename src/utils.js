@@ -14,3 +14,12 @@ export const SETTINGS = {
     settings.set(get(settings));
   },
 };
+
+export function remToPx(rem) {
+  return (
+    rem *
+    parseFloat(
+      getComputedStyle(document.documentElement).fontSize
+    )
+  );
+}

@@ -13,15 +13,6 @@
       size ? IMAGE_SIZES[size] : null
     );
 
-  function remToPx(rem) {
-    return (
-      rem *
-      parseFloat(
-        getComputedStyle(document.documentElement).fontSize
-      )
-    );
-  }
-
   // Last scroll position in case navigating back from image
   export const lastScrollY = writable(0);
 </script>
@@ -39,7 +30,7 @@
     requestMoreImages,
   } from "@Stores/images";
 
-  import { SETTINGS } from "@Utils";
+  import { SETTINGS, remToPx } from "@Utils";
 
   import {
     remote,
