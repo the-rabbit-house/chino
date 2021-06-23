@@ -96,7 +96,7 @@
 </nav>
 
 <main class="flex flex-col lg:flex-row px-4 overflow-hidden">
-  {#if $image?.["video"] && $cachedImages?.[$image?.id]}
+  {#if $image?.video && $cachedImages?.[$image?.id]}
     <video
       id="main-image"
       bind:this={videoRef}

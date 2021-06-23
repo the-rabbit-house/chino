@@ -31,7 +31,12 @@
   import { images } from "@Stores";
   import { SETTINGS } from "@Utils";
 
-  import { getImage, remote } from "@Components/Image.svelte";
+  import {
+    getImage,
+    getThumbnail,
+    remote,
+    cached as cachedImages,
+  } from "@Components/Image.svelte";
   import ImageInfo from "@Components/ImageView/ImageInfo.svelte";
 
   const dispatch = createEventDispatcher();
@@ -152,6 +157,14 @@
   }
 
   $: bindGestures(imageRef, touchareaRef, showInfo);
+
+  function toggleVideo() {
+    if (!image?.video) return;
+    if (typeof imageRef.paused === "undefined") return;
+
+    if (imageRef?.paused) imageRef?.play();
+    else imageRef?.pause();
+  }
 </script>
 
 <div
@@ -169,18 +182,52 @@
       use:invisible
       class="invisible"
       alt="previous"
-      src={getImage(previousImage)}
+      src={getThumbnail(previousImage)}
     />
-    <img
-      bind:this={imageRef}
-      use:remote={[image, true]}
-      src={getImage(image)}
-      alt="current"
-    />
+    {#if image?.video}
+      {#key image}
+        {#if $cachedImages?.[image.id]}
+          <div>
+            <video
+              bind:this={imageRef}
+              class="relative h-screen bg-black"
+              width={$windowWidth}
+              height={$windowHeight}
+              on:click={e => imageRef.play()}
+            >
+              <track default kind="captions" />
+              <source src={getImage(image)} type="video/webm" />
+            </video>
+            <button
+              class="fixed bottom-[4rem] left-[2rem] w-16 h-16 z-10"
+              style="transform: translateX(100vw)"
+              on:click={toggleVideo}
+              on:touchend={toggleVideo}
+            >
+              <i class="ri-play-line text-5xl" />
+            </button>
+          </div>
+        {:else}
+          <img
+            bind:this={imageRef}
+            use:remote={[image, true]}
+            src={getThumbnail(image)}
+            alt="current"
+          />
+        {/if}
+      {/key}
+    {:else}
+      <img
+        bind:this={imageRef}
+        use:remote={[image, true]}
+        src={getImage(image)}
+        alt="current"
+      />
+    {/if}
     <img
       use:invisible
       class="invisible"
-      src={getImage(nextImage)}
+      src={getThumbnail(nextImage)}
       alt="next"
     />
   </div>
