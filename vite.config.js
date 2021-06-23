@@ -17,6 +17,9 @@ export default defineConfig({
       }),
     }),
   ],
+  optimizeDeps: {
+    exclude: ["svelte-tags-input"],
+  },
   resolve: {
     alias: {
       "@Assets": rootDir + "/src/assets",
