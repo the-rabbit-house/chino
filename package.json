@@ -25,7 +25,7 @@
   "dependencies": {
     "@capacitor-community/http": "^1.0.0",
     "@capacitor/clipboard": "^1.0.1",
-    "@capacitor/core": "^3.0.1",
+    "@capacitor/core": "^3.0.2",
     "@capacitor/device": "^1.0.1",
     "@capacitor/filesystem": "^1.0.2",
     "@fontsource/koho": "^4.4.5",
