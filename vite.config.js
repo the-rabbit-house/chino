@@ -15,6 +15,13 @@ export default defineConfig({
         postcss: true,
         sass,
       }),
+      onwarn: (warning, handler) => {
+        const { code, frame } = warning;
+        if (code === "module-script-reactive-declaration")
+          return;
+
+        handler(warning);
+      },
     }),
   ],
   optimizeDeps: {
