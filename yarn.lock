@@ -60,10 +60,10 @@
     tslib "^2.1.0"
     xml2js "^0.4.23"
 
-"@capacitor/clipboard@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@capacitor/clipboard/-/clipboard-1.0.1.tgz#6dd8ff63193c34a89bc6df465d8c875e15caca89"
-  integrity sha512-yZORPSsyOndIUNpeVFIxkz/GLDLLTaiiC1TxQc+8SPLqtNqaBPeaPnVv3JHUiBns7TDXm+peEE9Ri8ku+Pnj3w==
+"@capacitor/clipboard@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@capacitor/clipboard/-/clipboard-1.0.2.tgz#835d42a4ce5d56232c356a20b1c28704b6644cd0"
+  integrity sha512-uYed+v10UjZapn1v5pRbRAJd6od6gUW1ROuu/pO0JxMABVV3SwmwqQbu9y6K8l4ptqNH5ZmpqkFmc4Qz0lN3JA==
 
 "@capacitor/core@^3.0.0", "@capacitor/core@^3.0.2":
   version "3.0.2"
