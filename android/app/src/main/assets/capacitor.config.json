@@ -2,5 +2,6 @@
 	"appId": "com.therabbithouse.chino",
 	"appName": "chino",
 	"webDir": "docs",
-	"bundledWebRuntime": false
+	"bundledWebRuntime": false,
+	"backgroundColor": "#000000"
 }
