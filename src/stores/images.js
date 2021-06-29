@@ -49,9 +49,9 @@ export async function requestImages(targetTags) {
   tags.set(targetTags);
   images.set(allImages);
 
-  if (allImages?.length > 0) hasNextPage.set(true);
+  if (R.length(allImages) > 0) hasNextPage.set(true);
 
-  return true;
+  return success;
 }
 
 export async function requestMoreImages() {
@@ -78,5 +78,5 @@ export async function requestMoreImages() {
 
   images.set([...get(images), ...nextImages]);
 
-  return true;
+  return success;
 }
