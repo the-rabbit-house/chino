@@ -1,18 +1,6 @@
 <script context="module">
   const CROSSFADE_TIME = 200;
 
-  const IMAGE_SIZES = {
-    SMALL: { width: "12rem", height: "16rem" },
-    BASE: { width: "14rem", height: "20rem" },
-    LARGE: { width: "16rem", height: "24rem" },
-  };
-
-  const imageSizeOrDefault = size =>
-    R.defaultTo(
-      IMAGE_SIZES["BASE"],
-      size ? IMAGE_SIZES[size] : null
-    );
-
   // Last scroll position in case navigating back from image
   export const lastScrollY = writable(0);
 </script>
@@ -20,7 +8,7 @@
 <script>
   import { getContext, tick } from "svelte";
   import { writable } from "svelte/store";
-  import { crossfade, fade, scale } from "svelte/transition";
+  import { fade } from "svelte/transition";
 
   import { tags, images, image, favorites } from "@Stores";
   import {
@@ -32,12 +20,7 @@
 
   import { SETTINGS, remToPx } from "@Utils";
 
-  import {
-    remote,
-    getImage,
-    getThumbnail,
-  } from "@Components/Image.svelte";
-
+  import Images from "@Components/GalleryView/Images.svelte";
   import SettingsMenu, {
     OUT_FADE_DURATION as SETTINGS_FADE_OUT,
   } from "@Components/GalleryView/SettingsMenu.svelte";
@@ -62,17 +45,7 @@
   const { height: windowHeight, isMobile } =
     getContext("window");
 
-  const mobileCols = SETTINGS.get("galleryCols");
-  const imageSize = SETTINGS.get("galleryImageSize");
-
-  $: imageWidth = $isMobile
-    ? (1 / $mobileCols) * 100 + "vw"
-    : imageSizeOrDefault($imageSize).width;
-  $: imageHeight = $isMobile
-    ? Math.max(20, 20 * (4 / $mobileCols)) + "vh"
-    : imageSizeOrDefault($imageSize).height;
-
-  var scrollbar;
+  var scrollbar = null;
   var scrollY = 0;
 
   var selectedImage = $image;
@@ -90,12 +63,6 @@
     "noscroll",
     showSearch || selectedImage !== null
   );
-
-  // Crossfade images when opening / loading / closing
-  const [send, receive] = crossfade({
-    duration: CROSSFADE_TIME,
-    fallback: scale,
-  });
 
   function openImage(image) {
     selectedImage = image;
@@ -147,7 +114,7 @@
   async function onSearch(event) {
     const tags = event.detail;
 
-    scrollbar.getScrollElement().scrollTo(0, 0);
+    scrollbar.getScrollElement().scrollTop = 0;
 
     $images = [];
 
@@ -222,7 +189,6 @@
 
     images.subscribe(async () => {
       scrollbar.recalculate();
-
       await tick();
       handleScroll();
     });
@@ -277,34 +243,17 @@
   </div>
 </nav>
 
-{#if showImages}
-  <div
-    id="images-container"
-    class="flex-1 flex flex-col items-stretch"
-    use:customScrollbar
-  >
-    <div
-      id="images"
-      class="flex flex-row flex-wrap justify-center md:justify-between"
-      style={showSearch || showSettings || showBackends
-        ? "filter: blur(20px)"
-        : null}
-    >
-      {#each $images as image}
-        <img
-          use:remote={[image, false]}
-          class="object-cover"
-          alt=""
-          src={getThumbnail(image)}
-          on:click={() => openImage(image)}
-          in:receive={{ key: image["id"] }}
-          out:send={{ key: image["id"] }}
-          style={`width:${imageWidth}; height:${imageHeight}`}
-        />
-      {/each}
-    </div>
-  </div>
-{/if}
+<article
+  class="flex-1 flex flex-col items-stretch"
+  use:customScrollbar
+>
+  {#if showImages}
+    <Images
+      blur={showSearch || showSettings || showBackends}
+      on:imageclick={e => openImage(e.detail)}
+    />
+  {/if}
+</article>
 
 {#if $isMobile && selectedImage}
   <ImageCarousel
@@ -393,28 +342,10 @@
     height: calc(100vh - 6rem);
   }
 
-  #images-container {
+  article {
     @apply mt-4 overflow-x-hidden overflow-y-auto;
 
     max-height: calc(100vh - 6.5rem);
-  }
-
-  #images {
-    @apply flex-1 pb-24;
-    transition: 0.5s filter linear;
-
-    @screen md {
-      @apply space-x-1 space-y-2 px-5;
-
-      & > img {
-        @apply rounded-lg;
-        background-color: rgba(0, 0, 0, 0.3);
-
-        &:first-child {
-          @apply ml-1 mt-2;
-        }
-      }
-    }
   }
 
   #back-button {
