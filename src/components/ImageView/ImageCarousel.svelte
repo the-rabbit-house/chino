@@ -158,6 +158,13 @@
 
   $: bindGestures(imageRef, touchareaRef, showInfo);
 
+  var duration = 0;
+  var elapsed = 0;
+
+  function video(node) {
+    node?.play();
+  }
+
   function toggleVideo() {
     if (!image?.video) return;
     if (typeof imageRef.paused === "undefined") return;
@@ -165,18 +172,40 @@
     if (imageRef?.paused) imageRef?.play();
     else imageRef?.pause();
   }
+
+  function skipForward() {
+    if (!image?.video) return;
+
+    imageRef?.pause();
+    imageRef.currentTime = Math.min(
+      imageRef?.currentTime + 5,
+      duration
+    );
+    imageRef?.play();
+  }
+
+  function skipBackward() {
+    if (!image?.video) return;
+
+    imageRef?.pause();
+    imageRef.currentTime = Math.max(
+      imageRef?.currentTime - 5,
+      0
+    );
+    imageRef?.play();
+  }
 </script>
 
 <div
-  class="fixed top-0 left-0"
   use:bindRegion
+  class="fixed top-0 left-0"
   in:fly={{ y: 1000 }}
 >
   <div
+    id="carousel"
     bind:this={touchareaRef}
-    class="flex flex-row"
-    style="width:300vw;transform:translate({-$windowWidth +
-      dx}px,{dy}px);will-change:transform"
+    class="flex flex-row w-[300vw]"
+    style="transform:translate({-$windowWidth + dx}px,{dy}px);"
   >
     <img
       use:invisible
@@ -190,22 +219,51 @@
           <div>
             <video
               bind:this={imageRef}
+              use:video
               class="relative h-screen bg-black"
               width={$windowWidth}
               height={$windowHeight}
+              loop
+              bind:currentTime={elapsed}
+              bind:duration
               on:click={e => imageRef.play()}
             >
               <track default kind="captions" />
-              <source src={getImage(image)} type="video/webm" />
+              <source src={getImage(image)} />
             </video>
-            <button
-              class="fixed bottom-[4rem] left-[2rem] w-16 h-16 z-10"
-              style="transform: translateX(100vw)"
-              on:click={toggleVideo}
-              on:touchend={toggleVideo}
+            <div
+              id="video-buttons"
+              class="fixed flex flex-row items-center pl-2 pr-4 z-10"
             >
-              <i class="ri-play-line text-5xl" />
-            </button>
+              <button
+                class="w-16 h-16 z-10"
+                on:click={toggleVideo}
+                on:touchend={toggleVideo}
+              >
+                <i class="ri-play-line text-5xl" />
+              </button>
+
+              <button
+                class="w-16 h-16 z-10"
+                on:click={skipForward}
+                on:touchend={skipForward}
+              >
+                <i class="ri-skip-forward-line text-5xl" />
+              </button>
+              <button
+                class="w-16 h-16 z-10"
+                on:click={skipBackward}
+                on:touchend={skipBackward}
+              >
+                <i class="ri-skip-back-line text-5xl" />
+              </button>
+
+              <div class="flex-1" />
+
+              <p class="pb-2">
+                {Math.floor(elapsed)} / {Math.floor(duration)}
+              </p>
+            </div>
           </div>
         {:else}
           <img
@@ -250,6 +308,19 @@
 <style lang="scss">
   img {
     @apply w-screen h-screen object-contain bg-black;
+  }
+
+  #carousel {
+    will-change: transform;
+  }
+
+  #video-buttons {
+    left: 0;
+    bottom: 2rem;
+
+    width: 100vw;
+
+    transform: translateX(100vw);
   }
 
   #info-container {
