@@ -1,5 +1,6 @@
 import { writable } from "svelte/store";
 
+import * as R from "ramda";
 import { Http } from "@capacitor-community/http";
 
 export const NAME = "gelbooru";
@@ -25,6 +26,12 @@ export async function fetchImages(tags, { page, limit }) {
   }
 }
 
+const isVideo = R.anyPass([
+  R.equals("zip"),
+  R.equals("webm"),
+  R.equals("mp4"),
+]);
+
 function parseResponse(data) {
   const images = [];
 
@@ -33,11 +40,15 @@ function parseResponse(data) {
   for (const post of data) {
     if (!post?.["file_url"]) continue;
 
+    const file_ext = R.last(post?.["file_url"].split("."));
+
     const image = {
       id: post?.["hash"],
       file_name: post?.["image"],
       source: post?.["source"],
       artist: post?.["owner"],
+      file_ext,
+      video: isVideo(file_ext),
       thumbnail_url: `${baseUrl}/thumbnails/${post?.["directory"]}/thumbnail_${post?.["hash"]}.jpg`,
       file_url: post?.["file_url"],
       width: post?.["width"],

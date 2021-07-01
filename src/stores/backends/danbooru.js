@@ -38,15 +38,16 @@ function parseResponse(data) {
   for (const post of data) {
     if (!post?.["file_url"]) continue;
 
-    const ext = post?.["file_ext"];
+    const file_ext = post?.["file_ext"];
 
     const image = {
       id: post?.["md5"],
       file_name: post?.["md5"] + "." + post?.["file_ext"] || "",
+      file_ext,
       source: post?.["source"],
       artist: post?.["tag_string_artist"],
       thumbnail_url: post?.["preview_file_url"],
-      file_url: !isVideo(ext)
+      file_url: !isVideo(file_ext)
         ? post?.["file_url"]
         : post?.["large_file_url"],
       width: post?.["image_width"],
