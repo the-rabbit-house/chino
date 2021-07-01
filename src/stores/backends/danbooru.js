@@ -54,7 +54,7 @@ function parseResponse(data) {
       height: post?.["image_height"],
       tags: post?.["tag_string"].split(" "),
       data: post,
-      video: isVideo(ext),
+      video: isVideo(file_ext),
     };
 
     images.push(image);
