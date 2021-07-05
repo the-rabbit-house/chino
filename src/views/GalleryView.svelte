@@ -43,7 +43,7 @@
   const backend = SETTINGS.get("backend");
 
   const { height: windowHeight, isMobile } =
-    getContext("window");
+    getContext("screen");
 
   var scrollbar = null;
   var scrollY = 0;

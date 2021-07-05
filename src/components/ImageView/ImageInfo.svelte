@@ -16,7 +16,7 @@
   const { tags: favoriteTags, images: favoriteImages } =
     favorites;
 
-  const { isMobile } = getContext("window");
+  const { isMobile } = getContext("screen");
 
   const dispatch = createEventDispatcher();
 

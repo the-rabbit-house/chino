@@ -28,7 +28,7 @@
 
   $: $isMobile = $innerWidth < 768;
 
-  setContext("window", {
+  setContext("screen", {
     width: innerWidth,
     height: innerHeight,
     isMobile,

@@ -38,7 +38,7 @@
     }, QUEUE_FLY_TIME);
   }
 
-  const { isMobile } = getContext("window");
+  const { isMobile } = getContext("screen");
   $: if ($isMobile) back();
 
   var showAdjacentImages = true;

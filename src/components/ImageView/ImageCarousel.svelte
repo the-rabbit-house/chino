@@ -44,7 +44,7 @@
   export let image = null;
 
   const { width: windowWidth, height: windowHeight } =
-    getContext("window");
+    getContext("screen");
 
   var touchareaRef = null;
 

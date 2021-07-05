@@ -25,8 +25,7 @@
 
   var adjacentImages = [];
 
-  const { width: innerWidth, height: innerHeight } =
-    getContext("window");
+  const { height: innerHeight } = getContext("screen");
   $: visibleAdjacentImages = $innerHeight < 1050 ? 4 : 5;
 
   $: {

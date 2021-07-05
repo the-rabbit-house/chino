@@ -35,7 +35,7 @@
   export let blur = false;
 
   const { height: windowHeight, isMobile } =
-    getContext("window");
+    getContext("screen");
 
   const mobileCols = SETTINGS.get("galleryCols");
   const imageSize = SETTINGS.get("galleryImageSize");

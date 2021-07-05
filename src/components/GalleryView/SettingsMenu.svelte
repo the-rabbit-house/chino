@@ -20,7 +20,7 @@
   import { SETTINGS } from "@Utils";
   import * as R from "ramda";
 
-  const { isMobile } = getContext("window");
+  const { isMobile } = getContext("screen");
 
   const limit = SETTINGS.get("limit");
   const throttle = SETTINGS.get("throttle");
