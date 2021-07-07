@@ -1,7 +1,7 @@
-import { writable } from "svelte/store";
+import { Http } from "@capacitor-community/http";
 
 import * as R from "ramda";
-import { Http } from "@capacitor-community/http";
+import { timeout } from "@Utils";
 
 export const NAME = "gelbooru";
 export const PLATFORMS = ["native"];
@@ -18,6 +18,9 @@ export async function fetchImages(tags, { page, limit }) {
         page +
         "&limit=" +
         limit,
+      webFetchExtra: {
+        signal: timeout(),
+      },
     });
 
     return [true, parseResponse(response.data)];

@@ -15,6 +15,14 @@ export const SETTINGS = {
   },
 };
 
+export function timeout(ms = 8000) {
+  const controller = new AbortController();
+  const signal = controller.signal;
+
+  setTimeout(() => controller.abort(), ms);
+  return signal;
+}
+
 export function remToPx(rem) {
   return (
     rem *
