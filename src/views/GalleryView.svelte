@@ -243,17 +243,19 @@
   </div>
 </nav>
 
-<article
-  class="flex-1 flex flex-col items-stretch"
-  use:customScrollbar
->
-  {#if showImages}
-    <Images
-      blur={showSearch || showSettings || showBackends}
-      on:imageclick={e => openImage(e.detail)}
-    />
-  {/if}
-</article>
+{#key $tags}
+  <article
+    class="flex-1 flex flex-col items-stretch"
+    use:customScrollbar
+  >
+    {#if showImages}
+      <Images
+        blur={showSearch || showSettings || showBackends}
+        on:imageclick={e => openImage(e.detail)}
+      />
+    {/if}
+  </article>
+{/key}
 
 {#if $isMobile && selectedImage}
   <ImageCarousel
