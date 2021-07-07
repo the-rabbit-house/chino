@@ -210,9 +210,9 @@
 <nav class="flex flex-row items-center space-x-4">
   {#if showSearch}
     <button
+      id="backend-button"
       in:fade={{ delay: SEARCH_FADE_IN }}
       out:fade={{ duration: SEARCH_FADE_OUT }}
-      id="backend-button"
       on:click={toggleBackends}
     >
       {#if $isMobile}
@@ -280,7 +280,7 @@
   >
     More
   </button>
-{:else if showMoreButton && !selectedImage && !showSearch && !showSettings && !showBackends && !$hasNextPage}
+{:else if showMoreButton && !selectedImage && !showSearch && !showSettings && !showBackends && !$hasNextPage && !R.isEmpty($tags)}
   <p class="text-3xl text-center pb-2">No more images...</p>
 {/if}
 
@@ -323,12 +323,15 @@
   #favorites-icon {
     @apply px-4 rounded-xl cursor-pointer;
     @apply flex flex-row items-center;
+
     height: 85%;
     background-color: rgba(0, 0, 0, 0.5);
   }
 
   #backend-button {
-    @apply px-4 md:px-24 rounded-lg truncate text-sm;
+    @apply px-4 md:px-24 rounded-lg;
+    @apply text-sm truncate;
+
     height: 85%;
     background-color: rgba(0, 0, 0, 0.5);
   }
