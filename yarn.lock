@@ -92,10 +92,10 @@
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
   integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
 
-"@fontsource/koho@^4.4.5":
-  version "4.4.5"
-  resolved "https://registry.yarnpkg.com/@fontsource/koho/-/koho-4.4.5.tgz#9fe0c6af3a0099766a43db2ebcf586794270d8dc"
-  integrity sha512-zJKr3F5+Qn6H+32/j6zziAlxzkoKkoSke9jWpXev4DZMfNnzPRgTokD8qnHXIX6bLFWcU8mFBALJ0nUKJVGLFA==
+"@fontsource/koho@^4.5.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@fontsource/koho/-/koho-4.5.0.tgz#d366a4aceb179013d7b76e2c6d11eb7327b3c0b2"
+  integrity sha512-+jPeFVqvr/fG33a01kX2hvju4fvU8oztkiwtuno7P3UJuZVNzg41cK6M5ewHBqa/vn1Huol4YSQVHtF4a0yCyg==
 
 "@fullhuman/postcss-purgecss@^4.0.3":
   version "4.0.3"
