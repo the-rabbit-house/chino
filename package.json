@@ -20,7 +20,7 @@
     "svelte": "^3.38.3",
     "svelte-preprocess": "^4.7.3",
     "tailwindcss": "^2.2.4",
-    "vite": "^2.4.1"
+    "vite": "^2.4.2"
   },
   "dependencies": {
     "@capacitor-community/http": "^1.0.0",
