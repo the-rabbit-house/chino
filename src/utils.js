@@ -23,6 +23,10 @@ export function timeout(ms = 8000) {
   return signal;
 }
 
+export async function sleep(duration) {
+  return new Promise(resolve => setTimeout(resolve, duration));
+}
+
 export function remToPx(rem) {
   return (
     rem *

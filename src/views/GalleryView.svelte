@@ -18,11 +18,12 @@
     requestMoreImages,
   } from "@Stores/images";
 
-  import { SETTINGS, remToPx } from "@Utils";
+  import { SETTINGS, remToPx, sleep } from "@Utils";
 
   import Navbar from "@Components/Navbar.svelte";
 
   import Images from "@Components/GalleryView/Images.svelte";
+
   import SettingsMenu, {
     OUT_FADE_DURATION as SETTINGS_FADE_OUT,
   } from "@Components/GalleryView/SettingsMenu.svelte";
@@ -119,9 +120,7 @@
     $images = [];
 
     // Wait for crossfade
-    await new Promise(resolve =>
-      setTimeout(resolve, CROSSFADE_TIME + 10)
-    );
+    await sleep(CROSSFADE_TIME + 10);
 
     const success = await requestImages(tags);
     if (success) showSearch = false;
