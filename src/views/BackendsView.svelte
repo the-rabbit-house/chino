@@ -4,22 +4,28 @@
 </script>
 
 <script>
-  import { onMount, createEventDispatcher } from "svelte";
+  import { getContext, onMount } from "svelte";
+  import { get } from "svelte/store";
 
   import BACKENDS from "@Stores/backends";
+  import Navbar from "@Components/Navbar.svelte";
+
+  import { SETTINGS } from "@Utils";
 
   import * as R from "ramda";
-
   import { Device } from "@capacitor/device";
 
-  const dispatch = createEventDispatcher();
+  const { navigate } = getContext("navigator");
 
   let platform = null;
 
-  function switchBackend(backend) {
-    // TODO: alert unsupported
+  function back() {
+    navigate("Gallery");
+  }
 
-    dispatch("backendchange", backend);
+  function switchBackend(backend) {
+    SETTINGS.set("backend", backend);
+    back();
   }
 
   onMount(async () => {
@@ -28,6 +34,8 @@
     else platform = "native";
   });
 </script>
+
+<Navbar on:back={back} />
 
 <main class="flex flex-col">
   <div id="backends" class="flex flex-col space-y-2">
@@ -58,7 +66,7 @@
 
 <style>
   main {
-    @apply w-screen h-full px-4 pb-4;
+    @apply w-screen h-full px-4 py-4;
   }
 
   #backends {

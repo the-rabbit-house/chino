@@ -1,12 +1,10 @@
 <script>
   import { getContext, createEventDispatcher } from "svelte";
-
   import * as R from "ramda";
 
   const { currentScreen } = getContext("navigator");
 
   const dispatch = createEventDispatcher();
-
   const back = () => dispatch("back");
 </script>
 

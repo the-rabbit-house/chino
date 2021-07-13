@@ -1,6 +1,7 @@
 import StartView from "./StartView.svelte";
 import GalleryView from "./GalleryView.svelte";
 import ImageView from "./ImageView.svelte";
+import BackendsView from "./BackendsView.svelte";
 
 export default {
   Start: {
@@ -14,5 +15,9 @@ export default {
   Image: {
     NAME: "Image",
     COMPONENT: ImageView,
+  },
+  Backends: {
+    NAME: "Backends",
+    COMPONENT: BackendsView,
   },
 };

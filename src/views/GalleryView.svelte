@@ -31,7 +31,7 @@
     IN_FADE_DELAY as SEARCH_FADE_IN,
     OUT_FADE_DURATION as SEARCH_FADE_OUT,
   } from "@Components/GalleryView/SearchMenu.svelte";
-  import BackendsMenu from "@Components/GalleryView/BackendsMenu.svelte";
+
   import ImageCarousel from "@Components/ImageView/ImageCarousel.svelte";
 
   import * as R from "ramda";
@@ -40,11 +40,11 @@
   const { images: favoriteImages } = favorites;
 
   const { height, isMobile } = getContext("screen");
-  const { navigate } = getContext("navigator");
-
-  var exiting = false;
+  const { navigate: _navigate } = getContext("navigator");
 
   const backend = SETTINGS.get("backend");
+
+  var exiting = false;
 
   var scrollbar = null;
   var scrollY = 0;
@@ -57,7 +57,6 @@
   var showImages = true;
   var showSettings = false;
   var showSearch = false;
-  var showBackends = false;
 
   $: showBackButton = scrollY > $height;
   $: document.body.classList.toggle(
@@ -65,14 +64,19 @@
     showSearch || selectedImage !== null
   );
 
+  function navigate(screen) {
+    showImages = false;
+    showSearch = false;
+    showSettings = false;
+
+    setTimeout(() => _navigate(screen), CROSSFADE_TIME + 300);
+  }
+
   function openImage(image) {
     selectedImage = image;
 
     // Wait for crossfade to end
-    if (!$isMobile) {
-      showImages = false;
-      setTimeout(() => navigate("Image"), CROSSFADE_TIME + 10);
-    }
+    if (!$isMobile) navigate("Image");
   }
 
   function showFavorites() {
@@ -83,7 +87,6 @@
   }
 
   function toggleSettings() {
-    showBackends = false;
     showSearch = false;
     setTimeout(() => {
       showSettings = !showSettings;
@@ -93,23 +96,10 @@
   function toggleSearch() {
     window.scrollTo(0, 0);
 
-    showBackends = false;
     showSettings = false;
     setTimeout(() => {
       showSearch = !showSearch;
     }, SETTINGS_FADE_OUT);
-  }
-
-  function toggleBackends() {
-    if (!showBackends) {
-      showSearch = false;
-      setTimeout(() => {
-        showBackends = true;
-      }, SEARCH_FADE_OUT);
-    } else {
-      showBackends = false;
-      showSearch = true;
-    }
   }
 
   async function onSearch(event) {
@@ -124,13 +114,6 @@
 
     const success = await requestImages(tags);
     if (success) showSearch = false;
-  }
-
-  function onBackendChange(event) {
-    SETTINGS.set("backend", event?.detail);
-
-    showBackends = false;
-    showSearch = true;
   }
 
   async function back() {
@@ -213,7 +196,7 @@
         id="backend-button"
         in:fade={{ delay: SEARCH_FADE_IN }}
         out:fade={{ duration: SEARCH_FADE_OUT }}
-        on:click={toggleBackends}
+        on:click={() => navigate("Backends")}
       >
         {#if $isMobile}
           <i class="ri-gallery-line text-3xl" />
@@ -252,7 +235,7 @@
   >
     {#if showImages}
       <Images
-        blur={showSearch || showSettings || showBackends}
+        blur={showSearch || showSettings}
         on:imageclick={e => openImage(e.detail)}
       />
     {/if}
@@ -273,7 +256,7 @@
   />
 {/if}
 
-{#if showMoreButton && !selectedImage && !showSearch && !showSettings && !showBackends && !$fetching && $hasNextPage}
+{#if showMoreButton && !selectedImage && !showSearch && !showSettings && !$fetching && $hasNextPage}
   <button
     id="more-button"
     class="mb-2"
@@ -284,7 +267,7 @@
   >
     More
   </button>
-{:else if showMoreButton && !selectedImage && !showSearch && !showSettings && !showBackends && !$hasNextPage && !R.isEmpty($tags)}
+{:else if showMoreButton && !selectedImage && !showSearch && !showSettings && !$hasNextPage && !R.isEmpty($tags)}
   <p class="text-3xl text-center pb-2">No more images...</p>
 {/if}
 
@@ -300,13 +283,7 @@
   </div>
 {/if}
 
-{#if showBackends}
-  <div id="backends-menu">
-    <BackendsMenu on:backendchange={onBackendChange} />
-  </div>
-{/if}
-
-{#if showBackButton && !selectedImage && !showSearch && !showSettings && !showBackends}
+{#if showBackButton && !selectedImage && !showSearch && !showSettings}
   <button
     id="back-button"
     on:click={() => {
@@ -337,8 +314,7 @@
   }
 
   #settings-menu,
-  #search-menu,
-  #backends-menu {
+  #search-menu {
     @apply fixed left-0;
 
     top: 6rem;
