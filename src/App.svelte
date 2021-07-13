@@ -33,7 +33,7 @@
     height: innerHeight,
     isMobile,
   });
-  setContext("navigator", { navigate });
+  setContext("navigator", { currentScreen: screen, navigate });
   setContext("events", screenEvents);
 
   navigate("Start");

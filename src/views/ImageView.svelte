@@ -14,6 +14,8 @@
   import { images, image, favorites } from "@Stores";
   import { toggleImage as toggleFavorite } from "@Stores/favorites";
 
+  import Navbar from "@Components/Navbar.svelte";
+
   import {
     remote,
     cached as cachedImages,
@@ -78,22 +80,19 @@
 
 <svelte:window on:keyup={handleShortcuts} />
 
-<nav class="px-6 pt-2 h-20 flex flex-row items-center">
-  <button class="flex flex-row items-center" on:click={back}>
-    <i class="ri-arrow-left-s-line text-4xl md:text-5xl" />
-    <p class="text-4xl font-light md:text-5xl">image</p>
-  </button>
-  <div class="flex-1" />
-  <button id="previous-image-button" on:click={previousImage}>
-    <i class="ri-arrow-left-s-line text-4xl md:text-5xl" />
-  </button>
-  <button id="next-image-button" on:click={nextImage}>
-    <i class="ri-arrow-right-s-line text-4xl md:text-5xl" />
-  </button>
-  <p id="index-indicator" class="ml-4 text-3xl text-center">
-    {index + 1} / {$images.length}
-  </p>
-</nav>
+<Navbar on:back={back}>
+  <section slot="right" class="flex flex-row items-center">
+    <button id="previous-image-button" on:click={previousImage}>
+      <i class="ri-arrow-left-s-line text-4xl md:text-5xl" />
+    </button>
+    <button id="next-image-button" on:click={nextImage}>
+      <i class="ri-arrow-right-s-line text-4xl md:text-5xl" />
+    </button>
+    <p id="index-indicator" class="ml-4 text-3xl text-center">
+      {index + 1} / {$images.length}
+    </p>
+  </section>
+</Navbar>
 
 <main class="flex flex-col lg:flex-row px-4 overflow-hidden">
   {#if $image?.video && $cachedImages?.[$image?.id]}

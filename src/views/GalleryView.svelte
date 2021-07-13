@@ -20,6 +20,8 @@
 
   import { SETTINGS, remToPx } from "@Utils";
 
+  import Navbar from "@Components/Navbar.svelte";
+
   import Images from "@Components/GalleryView/Images.svelte";
   import SettingsMenu, {
     OUT_FADE_DURATION as SETTINGS_FADE_OUT,
@@ -36,14 +38,12 @@
 
   const { images: favoriteImages } = favorites;
 
+  const { height, isMobile } = getContext("screen");
   const { navigate } = getContext("navigator");
 
   var exiting = false;
 
   const backend = SETTINGS.get("backend");
-
-  const { height: windowHeight, isMobile } =
-    getContext("screen");
 
   var scrollbar = null;
   var scrollY = 0;
@@ -58,7 +58,7 @@
   var showSearch = false;
   var showBackends = false;
 
-  $: showBackButton = scrollY > $windowHeight;
+  $: showBackButton = scrollY > $height;
   $: document.body.classList.toggle(
     "noscroll",
     showSearch || selectedImage !== null
@@ -207,41 +207,44 @@
 
 <svelte:window on:keyup={handleShortcuts} />
 
-<nav class="flex flex-row items-center space-x-4">
-  {#if showSearch}
-    <button
-      id="backend-button"
-      in:fade={{ delay: SEARCH_FADE_IN }}
-      out:fade={{ duration: SEARCH_FADE_OUT }}
-      on:click={toggleBackends}
-    >
-      {#if $isMobile}
-        <i class="ri-gallery-line text-3xl" />
-      {:else}
-        {$backend}
-      {/if}
-    </button>
-  {/if}
-
-  <div class="flex-1" />
-  <div id="favorites-icon" on:click={showFavorites}>
-    <i class="ri-star-line text-3xl" />
-  </div>
-  <div id="settings-icon" on:click={toggleSettings}>
-    {#if showSettings}
-      <i class="ri-close-line text-3xl" />
-    {:else}
-      <i class="ri-settings-2-line text-3xl" />
-    {/if}
-  </div>
-  <div id="search-icon" on:click={toggleSearch}>
+<Navbar>
+  <section slot="left" class="flex-1 flex flex-row">
     {#if showSearch}
-      <i class="ri-close-line text-3xl" />
-    {:else}
-      <i class="ri-search-line text-3xl" />
+      <button
+        id="backend-button"
+        in:fade={{ delay: SEARCH_FADE_IN }}
+        out:fade={{ duration: SEARCH_FADE_OUT }}
+        on:click={toggleBackends}
+      >
+        {#if $isMobile}
+          <i class="ri-gallery-line text-3xl" />
+        {:else}
+          {$backend}
+        {/if}
+      </button>
     {/if}
-  </div>
-</nav>
+  </section>
+
+  <section slot="right" class="flex flex-row space-x-2">
+    <div id="favorites-icon" on:click={showFavorites}>
+      <i class="ri-star-line text-3xl" />
+    </div>
+    <div id="settings-icon" on:click={toggleSettings}>
+      {#if showSettings}
+        <i class="ri-close-line text-3xl" />
+      {:else}
+        <i class="ri-settings-2-line text-3xl" />
+      {/if}
+    </div>
+    <div id="search-icon" on:click={toggleSearch}>
+      {#if showSearch}
+        <i class="ri-close-line text-3xl" />
+      {:else}
+        <i class="ri-search-line text-3xl" />
+      {/if}
+    </div>
+  </section>
+</Navbar>
 
 {#key $tags}
   <article
@@ -316,10 +319,6 @@
 {/if}
 
 <style lang="scss">
-  nav {
-    @apply px-4 pt-2 h-20;
-  }
-
   #settings-icon,
   #search-icon,
   #favorites-icon {
