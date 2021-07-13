@@ -10,8 +10,8 @@ export const SETTINGS = {
     );
   },
   set: function (key, value) {
-    get(settings)[key] = value;
-    settings.set(get(settings));
+    const nextSettings = { ...get(settings), [key]: value };
+    settings.set(nextSettings);
   },
 };
 
