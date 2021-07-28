@@ -23,10 +23,10 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@capacitor-community/http@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@capacitor-community/http/-/http-1.1.1.tgz#10d2396cd74877fc9cf18685ce50c8533b0eb0c5"
-  integrity sha512-k0Bu+V1hRcCiwLvwtfAnm5nUkihEvlgBstnC8i90hUoSMC8qaFBHcriUexXPqQcVHNAVpoE+KiN5WZrGtTQiCA==
+"@capacitor-community/http@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@capacitor-community/http/-/http-1.1.2.tgz#f5aa9f7fd103e3d4b87327f5ff601e41c9847318"
+  integrity sha512-SII0+CSd99ImtoamGR/Ca6u9Qi3uLHJA13DuDdchP3CbLrmFcs0N8tGhn0XCvG2cNnpzP/aeVr74j9Ke977s+w==
   dependencies:
     "@capacitor/android" "^3.0.0"
     "@capacitor/core" "^3.0.0"
