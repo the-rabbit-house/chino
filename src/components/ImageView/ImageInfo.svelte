@@ -1,7 +1,11 @@
 <script>
   import { getContext, createEventDispatcher } from "svelte";
-  import { image, tags, favorites } from "@Stores";
 
+  import { Filesystem } from "@capacitor/filesystem";
+  import { Clipboard } from "@capacitor/clipboard";
+  import { Http } from "@capacitor-community/http";
+
+  import { image, tags, favorites } from "@Stores";
   import { toggleTag } from "@Stores/images";
   import {
     toggleTag as toggleFavorite,
@@ -9,21 +13,19 @@
   } from "@Stores/favorites";
 
   import * as R from "ramda";
-  import { Clipboard } from "@capacitor/clipboard";
-
-  import { getImage } from "@Components/Image.svelte";
 
   const { tags: favoriteTags, images: favoriteImages } =
     favorites;
 
-  const { isMobile } = getContext("screen");
+  const { isMobile, isNative } = getContext("screen");
 
   const dispatch = createEventDispatcher();
 
   export let closable = false;
 
-  $: imageTags = R.defaultTo([], $image?.["tags"]);
+  var downloading = false;
 
+  $: imageTags = R.defaultTo([], $image?.["tags"]);
   $: isInTags = tag => R.contains(tag, $tags);
 
   $: isInFavorites =
@@ -31,8 +33,32 @@
       R.propEq("id", $image?.id),
       $favoriteImages
     ) !== "undefined";
-
   $: isInFavoriteTags = tag => R.contains(tag, $favoriteTags);
+
+  async function download() {
+    if (!$isNative || downloading) return;
+
+    let status = await Filesystem.checkPermissions();
+    if (status.publicStorage !== "granted") {
+      status = await Filesystem.requestPermissions();
+      if (status.publicStorage !== "granted") return;
+    }
+
+    downloading = true;
+
+    try {
+      await Http.downloadFile({
+        url: $image.file_url,
+        filePath: $image.file_name,
+        fileDirectory: "DOWNLOADS",
+        method: "GET",
+      });
+    } catch (err) {
+      console.log(err);
+    }
+
+    downloading = false;
+  }
 
   function copyToClipboard() {
     Clipboard.write({
@@ -53,16 +79,26 @@
         <i class="ri-star-fill text-3xl" />
       {/if}
     </button>
+
     <a
-      class="icon-button"
-      href={getImage($image)}
+      href={$isNative ? null : $image?.file_url}
+      target={$isNative ? null : "_blank"}
       download={$image?.file_name}
     >
-      <i class="ri-download-fill text-4xl" />
+      <button class="icon-button">
+        <i
+          class="ri-download-fill text-4xl cursor-pointer"
+          class:ri-loader-4-line={downloading}
+          class:animate-spin={downloading}
+          on:click={download}
+        />
+      </button>
     </a>
+
     <button class="icon-button" on:click={copyToClipboard}>
       <i class="ri-file-copy-fill text-4xl" />
     </button>
+
     <a
       class="icon-button"
       href={$image?.["source"]}
