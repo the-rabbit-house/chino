@@ -19,7 +19,12 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
+    "baseUrl": "./src",
+    "paths": {
+      "@Stores": ["./stores/index"],
+      "@Stores/*": ["./stores/*"],
+      "@Utils/*": ["./utils/*"]
+    },
     /**
      * Typecheck JS in `.svelte` and `.js` files by default.
      * Disable this if you'd like to use dynamic types.
