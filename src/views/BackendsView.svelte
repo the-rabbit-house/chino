@@ -4,8 +4,7 @@
 </script>
 
 <script>
-  import { getContext, onMount } from "svelte";
-  import { get } from "svelte/store";
+  import { getContext } from "svelte";
 
   import BACKENDS from "@Stores/backends";
   import Navbar from "@Components/Navbar.svelte";
@@ -13,13 +12,12 @@
   import { SETTINGS } from "@Utils";
 
   import * as R from "ramda";
-  import { Device } from "@capacitor/device";
 
   const { navigate } = getContext("navigator");
+  const { isNative } = getContext("screen");
 
   const backend = SETTINGS.get("backend");
-
-  let platform = null;
+  const platform = $isNative ? "native" : "web";
 
   function back() {
     navigate("Gallery");
@@ -29,12 +27,6 @@
     SETTINGS.set("backend", nextBackend);
     back();
   }
-
-  onMount(async () => {
-    const info = await Device.getInfo();
-    if (info.platform === "web") platform = "web";
-    else platform = "native";
-  });
 </script>
 
 <Navbar on:back={back} />
