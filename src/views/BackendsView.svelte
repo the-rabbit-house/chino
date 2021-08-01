@@ -17,14 +17,16 @@
 
   const { navigate } = getContext("navigator");
 
+  const backend = SETTINGS.get("backend");
+
   let platform = null;
 
   function back() {
     navigate("Gallery");
   }
 
-  function switchBackend(backend) {
-    SETTINGS.set("backend", backend);
+  function switchBackend(nextBackend) {
+    SETTINGS.set("backend", nextBackend);
     back();
   }
 
@@ -39,10 +41,10 @@
 
 <main class="flex flex-col">
   <div id="backends" class="flex flex-col space-y-2">
-    {#each Object.entries(BACKENDS) as [backend, _]}
+    {#each Object.entries(BACKENDS) as [backendName, _]}
       <button
         data-supported={isSupported(_, platform)}
-        on:click={() => switchBackend(backend)}
+        on:click={() => switchBackend(backendName)}
       >
         <p class="absolute top-0 right-0 pt-6 pr-6">
           {isSupported(_, platform)
@@ -50,7 +52,12 @@
             : "UNAVAILABLE"}
         </p>
 
-        <p class="pb-2 text-2xl">{backend}</p>
+        <p
+          class="pb-2 text-2xl"
+          class:text-green-400={$backend === backendName}
+        >
+          {backendName}
+        </p>
 
         <p class="text-lg">Supported platforms:</p>
         <div class="pt-1 flex flex-row space-x-4">
