@@ -15,11 +15,7 @@
 
   import tippy from "@Assets/tippy.png";
 
-  import { Device } from "@capacitor/device";
-
   const { navigate } = getContext("navigator");
-  const events = getContext("events");
-
   const { isNative } = getContext("screen");
 
   var showTippy = false;

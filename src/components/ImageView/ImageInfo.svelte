@@ -53,9 +53,7 @@
         fileDirectory: "DOWNLOADS",
         method: "GET",
       });
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
 
     downloading = false;
   }
