@@ -1,3 +1,14 @@
+<script context="module">
+  function spin(node, params) {
+    return {
+      delay: 0,
+      duration: 1000,
+      easing: cubicOut,
+      css: (t, u) => `transform: rotate(${t * 360}deg);`,
+    };
+  }
+</script>
+
 <script>
   import { getContext, onMount } from "svelte";
   import { cubicOut } from "svelte/easing";
@@ -9,28 +20,22 @@
   const { navigate } = getContext("navigator");
   const events = getContext("events");
 
-  function spin(node, params) {
-    return {
-      delay: 0,
-      duration: 1500,
-      easing: cubicOut,
-      css: (t, u) => `transform: rotate(${t * 360}deg);`,
-    };
-  }
+  const { isNative } = getContext("screen");
 
   var showTippy = false;
 
-  onMount(async () => {
+  onMount(() => {
     showTippy = true;
-    const info = await Device.getInfo();
-    if (info?.operatingSystem === "android") {
+
+    if ($isNative) {
       const meta = document.querySelector("meta[name=viewport]");
       meta.setAttribute(
         "content",
         `width=device-width, height=${window.innerHeight}, initial-scale=1.0, user-scalable=0`
       );
     }
-    setTimeout(() => navigate("Gallery"), 1500);
+
+    setTimeout(() => navigate("Gallery"), 1000);
   });
 </script>
 
@@ -59,6 +64,3 @@
 <p class="pb-6 text-2xl font-light text-center">
   Brewing the coffee..
 </p>
-
-<style>
-</style>

@@ -208,9 +208,6 @@
   </section>
 
   <section slot="right" class="flex flex-row space-x-2">
-    <div id="favorites-icon" on:click={showFavorites}>
-      <i class="ri-star-line text-3xl" />
-    </div>
     <div id="settings-icon" on:click={toggleSettings}>
       {#if showSettings}
         <i class="ri-close-line text-3xl" />
@@ -218,6 +215,7 @@
         <i class="ri-settings-2-line text-3xl" />
       {/if}
     </div>
+
     <div id="search-icon" on:click={toggleSearch}>
       {#if showSearch}
         <i class="ri-close-line text-3xl" />
@@ -296,8 +294,7 @@
 
 <style lang="scss">
   #settings-icon,
-  #search-icon,
-  #favorites-icon {
+  #search-icon {
     @apply px-4 rounded-xl cursor-pointer;
     @apply flex flex-row items-center;
 

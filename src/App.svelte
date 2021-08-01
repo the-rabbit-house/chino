@@ -5,7 +5,9 @@
   import "remixicon/fonts/remixicon.css";
   import "simplebar/dist/simplebar.css";
 
-  import { setContext } from "svelte";
+  import { Device } from "@capacitor/device";
+
+  import { onMount, setContext } from "svelte";
   import { writable } from "svelte/store";
 
   import * as Events from "@Events";
@@ -25,6 +27,7 @@
   const innerWidth = writable(0);
   const innerHeight = writable(0);
   const isMobile = writable(false);
+  const isNative = writable(false);
 
   $: $isMobile = $innerWidth < 768;
 
@@ -32,11 +35,17 @@
     width: innerWidth,
     height: innerHeight,
     isMobile,
+    isNative,
   });
   setContext("navigator", { currentScreen: screen, navigate });
   setContext("events", screenEvents);
 
-  navigate("Start");
+  onMount(async () => {
+    const info = await Device.getInfo();
+    if (info?.operatingSystem === "android") isNative.set(true);
+
+    navigate("Start");
+  });
 </script>
 
 <svelte:window
