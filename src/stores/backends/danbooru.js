@@ -53,6 +53,7 @@ function parseResponse(data) {
       file_url: !isVideo(file_ext)
         ? post?.["file_url"]
         : post?.["large_file_url"],
+      sample_url: post?.["large_file_url"],
       width: post?.["image_width"],
       height: post?.["image_height"],
       tags: post?.["tag_string"].split(" "),

@@ -4,11 +4,9 @@
   import { Filesystem } from "@capacitor/filesystem";
   import { Http } from "@capacitor-community/http";
 
-  import { settings } from "@Stores";
+  import { SETTINGS } from "@Utils";
 
   import * as R from "ramda";
-
-  const ORIGINAL_KEY = "file_url";
 
   const THUMBNAIL_PREFIX = "thumbnail_";
   const THUMBNAIL_KEY = "thumbnail_url";
@@ -86,7 +84,10 @@
   const processing = writable([]);
 
   function processQueue() {
-    const throttle = R.defaultTo(1, get(settings)?.throttle);
+    const throttle = R.defaultTo(
+      1,
+      get(SETTINGS.get("throttle"))
+    );
     if (get(processing).length >= throttle) return;
     if (get(queue).length < 1) return;
 
@@ -110,7 +111,13 @@
       if (document.body.contains(ref)) ref.src = getImage(image);
     }
 
-    const key = thumbnail ? THUMBNAIL_KEY : ORIGINAL_KEY;
+    const useSource = get(SETTINGS.get("useSourceQuality"));
+
+    const key = thumbnail
+      ? THUMBNAIL_KEY
+      : useSource
+      ? "file_url"
+      : "sample_url";
     const prefix = thumbnail ? THUMBNAIL_PREFIX : "";
 
     if (!get(cached)?.[prefix + image?.id]) {

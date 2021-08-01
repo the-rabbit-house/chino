@@ -38,6 +38,7 @@ export declare interface Image {
   artist: string,
   thumbnail_url: string,
   file_url: string,
+  sample_url: string,
   width: number,
   height: number,
   tags: Array<string>,

@@ -18,6 +18,7 @@ export declare interface Settings {
   galleryCols: number, // Number of columns in GalleryView
   galleryImageSize: ImageSize, // Size of images in GalleryView
   swipeDistance: number, // Swipe distance in % of screen width e.g 0.2 means 20% of screen
+  useSourceQuality: boolean, // Use source quality whenever possible
   nsfw: boolean // Shows unsafe and explicit filters in SearchMenu
 }
 

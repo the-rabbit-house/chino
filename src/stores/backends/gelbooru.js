@@ -54,6 +54,7 @@ function parseResponse(data) {
       video: isVideo(file_ext),
       thumbnail_url: `${baseUrl}/thumbnails/${post?.["directory"]}/thumbnail_${post?.["hash"]}.jpg`,
       file_url: post?.["file_url"],
+      sample_url: `${baseUrl}//samples/${post?.["directory"]}/sample_${post?.["hash"]}.jpg`,
       width: post?.["width"],
       height: post?.["height"],
       tags: post?.["tags"].split(" "),

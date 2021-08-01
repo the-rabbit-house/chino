@@ -27,6 +27,7 @@
   const galleryCols = SETTINGS.get("galleryCols");
   const galleryImageSize = SETTINGS.get("galleryImageSize");
   const swipeDistance = SETTINGS.get("swipeDistance");
+  const useSourceQuality = SETTINGS.get("useSourceQuality");
   const nsfw = SETTINGS.get("nsfw");
 </script>
 
@@ -80,6 +81,25 @@
       }}
     >
       +
+    </button>
+  </section>
+
+  <section class="px-2 py-4">
+    <p class="flex-1 text-wrap">Use source <br /> quality</p>
+    <button
+      class="mr-1 w-24"
+      use:active={$useSourceQuality}
+      on:click={() => SETTINGS.set("useSourceQuality", true)}
+    >
+      YES
+    </button>
+
+    <button
+      class="mr-1 w-24"
+      use:active={!$useSourceQuality}
+      on:click={() => SETTINGS.set("useSourceQuality", false)}
+    >
+      NO
     </button>
   </section>
 
