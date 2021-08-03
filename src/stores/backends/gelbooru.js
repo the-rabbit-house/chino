@@ -18,6 +18,7 @@ export async function fetchImages(tags, { page, limit }) {
         page +
         "&limit=" +
         limit,
+      connectTimeout: 8,
       webFetchExtra: {
         signal: timeout(),
       },

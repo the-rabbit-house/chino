@@ -18,6 +18,7 @@ export async function fetchImages(tags, { page, limit }) {
         (page + 1) + // danbooru page 0/1 is the same
         "&limit=" +
         limit,
+      connectTimeout: 8,
       webFetchExtra: {
         signal: timeout(),
       },
