@@ -38,7 +38,7 @@ export async function fetchTags(tag) {
   // Unsupported:
   // autocomplete.php is CORS
   // tags.json has bad fuzzy search
-  return false;
+  return [false, []];
 }
 
 const isVideo = R.anyPass([
