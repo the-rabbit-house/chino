@@ -204,14 +204,15 @@
   <div
     id="carousel"
     bind:this={touchareaRef}
-    class="flex flex-row w-[300vw]"
+    class="flex flex-row w-[300vw] bg-black"
     style="transform:translate({-$windowWidth + dx}px,{dy}px);"
   >
     <img
       use:invisible
       class="invisible"
-      alt="previous"
+      style="transform:translateX(-1px)"
       src={getThumbnail(previousImage)}
+      alt="previous"
     />
     {#if image?.video}
       {#key image}
@@ -285,6 +286,7 @@
     <img
       use:invisible
       class="invisible"
+      style="transform:translateX(1px)"
       src={getThumbnail(nextImage)}
       alt="next"
     />
