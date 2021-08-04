@@ -90,18 +90,21 @@
 </script>
 
 <script>
-  import { onMount, tick, createEventDispatcher } from "svelte";
+  import {
+    onMount,
+    tick,
+    createEventDispatcher,
+    onDestroy,
+  } from "svelte";
   import { fade } from "svelte/transition";
 
-  import { images, tags, favorites } from "@Stores";
-  import { fetching, requestImages } from "@Stores/images";
+  import { tags, suggestions, favorites } from "@Stores";
+  import { fetching, requestTags } from "@Stores/images";
 
   import { SETTINGS } from "@Utils";
   import * as R from "ramda";
 
   import TagsInput from "svelte-tags-input";
-
-  import { Device } from "@capacitor/device";
 
   const { tags: favoriteTags } = favorites;
 
@@ -109,6 +112,9 @@
 
   const nsfw = SETTINGS.get("nsfw");
 
+  var inputRef = null;
+
+  var suggestionsTimeout = null;
   var tagsBuffer = stripTags($tags);
 
   var rating = "";
@@ -138,8 +144,29 @@
     $favoriteTags = R.without([tag], $favoriteTags);
   }
 
+  var lastPhrase = null;
+  function handleAutocomplete() {
+    const tag = R.last(R.split(" ", inputRef.value));
+    clearTimeout(suggestionsTimeout);
+
+    if (R.isEmpty(tag) || lastPhrase === tag) return;
+    $suggestions = [];
+
+    lastPhrase = tag;
+    suggestionsTimeout = setTimeout(
+      () => requestTags(tag),
+      1000
+    );
+  }
+
   onMount(() => {
-    document.querySelector(".svelte-tags-input").focus();
+    inputRef = document.querySelector(".svelte-tags-input");
+    inputRef.addEventListener("input", handleAutocomplete);
+    inputRef.focus();
+  });
+
+  onDestroy(() => {
+    inputRef.removeEventListener("input", handleAutocomplete);
   });
 </script>
 
@@ -153,10 +180,39 @@
       tags={tagsBuffer}
       onlyUnique={true}
       allowBlur={true}
+      on:tags={handleAutocomplete}
     />
   </div>
 
-  <div class="flex-1 rounded overflow-y-auto">
+  <div class="rounded overflow-y-auto">
+    {#if !R.isEmpty($suggestions)}
+      <section>
+        <p class="text-4xl font-medium">Suggested</p>
+
+        <div id="suggestions" class="flex flex-row flex-wrap">
+          {#each $suggestions as tag}
+            <button
+              class="select-none"
+              on:click={async () => {
+                clearTimeout(suggestionsTimeout);
+
+                await tick();
+                tagsBuffer = R.dropLast(1, tagsBuffer);
+
+                addTag(tag);
+                console.log(tagsBuffer);
+                $suggestions = [];
+              }}
+            >
+              {tag}
+            </button>
+          {/each}
+        </div>
+      </section>
+    {/if}
+  </div>
+
+  <div class="rounded overflow-y-auto">
     {#if !R.isEmpty($favoriteTags)}
       <section>
         <p class="text-4xl font-medium">Favorites</p>
@@ -177,6 +233,8 @@
       </section>
     {/if}
   </div>
+
+  <div class="flex-1" />
 
   {#if $nsfw}
     <div
@@ -244,7 +302,8 @@
     background-color: rgba(0, 0, 0, 0.5);
   }
 
-  #favorites {
+  #favorites,
+  #suggestions {
     @apply pt-2 md:pt-4 space-x-4 space-y-2;
 
     & > button {

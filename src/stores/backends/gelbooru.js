@@ -6,25 +6,54 @@ import { timeout } from "@Utils";
 export const NAME = "gelbooru";
 export const PLATFORMS = ["native"];
 
+const ROOT_URL = "https://gelbooru.com/index.php";
+
 export async function fetchImages(tags, { page, limit }) {
   try {
     const response = await Http.request({
       method: "GET",
-      url:
-        "https://gelbooru.com/index.php?page=dapi&s=post&q=index&json=1" +
-        "&tags=" +
-        tags.join("+") +
-        "&pid=" +
-        page +
-        "&limit=" +
+      url: ROOT_URL,
+      params: {
+        page: "dapi",
+        s: "post",
+        q: "index",
+        json: 1,
+        tags: tags.join("+"),
         limit,
+      },
       connectTimeout: 8000,
       webFetchExtra: {
         signal: timeout(),
       },
     });
 
-    return [true, parseResponse(response.data)];
+    return [true, parseImagesResponse(response.data)];
+  } catch (e) {
+    return [false, []];
+  }
+}
+
+export async function fetchTags(tag) {
+  const parseTagsResponse = R.pluck("tag");
+
+  try {
+    const response = await Http.request({
+      method: "GET",
+      url: ROOT_URL,
+      params: {
+        page: "dapi",
+        s: "tag",
+        q: "index",
+        json: 1,
+        name_pattern: tag + "%",
+      },
+      connectTimeout: 8000,
+      webFetchExtra: {
+        signal: timeout(),
+      },
+    });
+
+    return [true, parseTagsResponse(response.data)];
   } catch (e) {
     return [false, []];
   }
@@ -36,7 +65,7 @@ const isVideo = R.anyPass([
   R.equals("mp4"),
 ]);
 
-function parseResponse(data) {
+function parseImagesResponse(data) {
   const images = [];
 
   const baseUrl = "https://img3.gelbooru.com";

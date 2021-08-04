@@ -23,3 +23,4 @@ export const images = writable([]);
 export const image = writable(null);
 
 export const tags = writable([]);
+export const suggestions = writable([]);

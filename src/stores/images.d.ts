@@ -30,6 +30,13 @@ export declare function requestImages(tags: Array<string>): boolean;
  */
 export declare function requestMoreImages(): boolean;
 
+/**
+ * Fetches tags using pattern, used for tags autocompletion
+ *
+ * @param {string} tag The tag which will get autocompleted
+ * @returns {boolean} boolean that indicates success
+ */
+
 export declare interface Image {
   id: string,
   file_name: string,

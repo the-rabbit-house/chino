@@ -6,12 +6,16 @@ import { timeout } from "@Utils";
 export const NAME = "danbooru";
 export const PLATFORMS = ["web", "native"];
 
+const ROOT_URL = "https://danbooru.donmai.us/";
+
 export async function fetchImages(tags, { page, limit }) {
   try {
     const response = await Http.request({
       method: "GET",
+      // We pack everything into url since Http package forces + to be %2B
       url:
-        "https://danbooru.donmai.us/posts.json" +
+        ROOT_URL +
+        "/posts.json" +
         "?tags=" +
         tags.join("+") +
         "&page=" +
@@ -24,10 +28,17 @@ export async function fetchImages(tags, { page, limit }) {
       },
     });
 
-    return [true, parseResponse(response.data)];
+    return [true, parseImagesResponse(response.data)];
   } catch (e) {
     return [false, []];
   }
+}
+
+export async function fetchTags(tag) {
+  // Unsupported:
+  // autocomplete.php is CORS
+  // tags.json has bad fuzzy search
+  return false;
 }
 
 const isVideo = R.anyPass([
@@ -36,7 +47,7 @@ const isVideo = R.anyPass([
   R.equals("mp4"),
 ]);
 
-function parseResponse(data) {
+function parseImagesResponse(data) {
   const images = [];
 
   for (const post of data) {

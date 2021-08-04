@@ -34,4 +34,4 @@ export declare const images: Writable<Array<Image>>;
 export declare const image: Writable<Image>;
 
 export declare const tags: Writable<string>;
-
+export declare const suggestions: Writable<Array<string>>;

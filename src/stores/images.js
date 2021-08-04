@@ -1,6 +1,6 @@
 import { writable, get } from "svelte/store";
 
-import { tags, images } from "@Stores";
+import { tags, suggestions, images } from "@Stores";
 import { SETTINGS } from "@Utils";
 
 import * as R from "ramda";
@@ -78,5 +78,14 @@ export async function requestMoreImages() {
 
   images.set([...get(images), ...nextImages]);
 
+  return success;
+}
+
+export async function requestTags(tag) {
+  const booru = BACKENDS[get(backend)];
+
+  const [success, nextTags] = await booru.fetchTags(tag);
+
+  suggestions.set(R.take(10, nextTags));
   return success;
 }
