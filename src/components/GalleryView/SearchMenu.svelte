@@ -274,6 +274,8 @@
 <style lang="scss">
   main {
     @apply w-screen h-full px-4 pb-4;
+
+    will-change: opacity;
   }
 
   #tags-input {
