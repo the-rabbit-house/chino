@@ -17,6 +17,7 @@ export async function fetchImages(tags, { page, limit }) {
         page: "dapi",
         s: "post",
         q: "index",
+        pid: page,
         json: 1,
         tags: tags.join("+"),
         limit,
