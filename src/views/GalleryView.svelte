@@ -65,11 +65,20 @@
   );
 
   function navigate(screen) {
+    const waitExtra =
+      showImages ||
+      showSearch ||
+      showSettings ||
+      R.length($images) > 0;
+
     showImages = false;
     showSearch = false;
     showSettings = false;
 
-    setTimeout(() => _navigate(screen), CROSSFADE_TIME + 300);
+    setTimeout(
+      () => _navigate(screen),
+      CROSSFADE_TIME + waitExtra ? 300 : 0
+    );
   }
 
   function openImage(image) {
@@ -77,13 +86,6 @@
 
     // Wait for crossfade to end
     if (!$isMobile) navigate("Image");
-  }
-
-  function showFavorites() {
-    $tags = [];
-    $images = $favoriteImages;
-
-    $hasNextPage = false;
   }
 
   function toggleSettings() {
