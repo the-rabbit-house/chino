@@ -4,6 +4,8 @@
 
   const { currentScreen } = getContext("navigator");
 
+  export let title = R.toLower($currentScreen.NAME);
+
   const dispatch = createEventDispatcher();
   const back = () => dispatch("back");
 </script>
@@ -16,7 +18,7 @@
     >
       <i id="arrow-button" class="ri-arrow-left-s-line" />
       <p id="screen-name">
-        {R.toLower($currentScreen.NAME)}
+        {title}
       </p>
     </button>
   </slot>
@@ -25,7 +27,7 @@
 
 <style>
   nav {
-    @apply px-4 pt-2 h-20;
+    @apply px-2 pt-2 h-20;
   }
 
   #arrow-button {
