@@ -14,13 +14,16 @@ export const DEFAULT_SETTINGS = {
 
 export const settings = persistent("settings", DEFAULT_SETTINGS);
 
-export const favorites = {
-  tags: writable([]),
-  images: writable([]),
-};
-
 export const images = writable([]);
 export const image = writable(null);
 
 export const tags = writable([]);
 export const suggestions = writable([]);
+
+export const favorites = {
+  tags: writable([]),
+  images: writable([]),
+  bookmarks: writable({}),
+};
+
+export const bookmarks = writable([]);

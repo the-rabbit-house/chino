@@ -210,6 +210,13 @@
   </section>
 
   <section slot="right" class="flex flex-row space-x-2">
+    <div
+      id="bookmarks-icon"
+      on:click={() => navigate("Bookmarks")}
+    >
+      <i class="ri-bookmark-line text-3xl" />
+    </div>
+
     <div id="settings-icon" on:click={toggleSettings}>
       {#if showSettings}
         <i class="ri-close-line text-3xl" />
@@ -296,7 +303,8 @@
 
 <style lang="scss">
   #settings-icon,
-  #search-icon {
+  #search-icon,
+  #bookmarks-icon {
     @apply px-4 rounded-xl cursor-pointer;
     @apply flex flex-row items-center;
 

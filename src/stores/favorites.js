@@ -1,17 +1,30 @@
 import { get } from "svelte/store";
 import { writable as persistent } from "svelte-local-storage-store";
 
-import { favorites } from "@Stores";
+import { favorites, bookmarks } from "@Stores";
 
 import * as R from "ramda";
 
 const cache = {
   tags: persistent("favorites:tags", []),
   images: persistent("favorites:images", []),
+  bookmarks: persistent("bookmarks", []),
 };
 
 cache.tags.subscribe(tags => favorites.tags.set(tags));
 cache.images.subscribe(images => favorites.images.set(images));
+
+cache.bookmarks.subscribe($bookmarks =>
+  favorites.bookmarks.set(
+    R.zipObj(
+      $bookmarks,
+      R.map(
+        name => persistent("bookmarks:" + name, []),
+        $bookmarks
+      )
+    )
+  )
+);
 
 export function toggleTag(tag) {
   const tags = get(cache.tags);
