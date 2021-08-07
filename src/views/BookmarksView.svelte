@@ -67,7 +67,7 @@
   </article>
 </main>
 
-<style>
+<style lang="scss">
   main {
     @apply px-2 pt-2;
   }

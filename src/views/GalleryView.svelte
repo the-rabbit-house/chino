@@ -77,7 +77,7 @@
 
     setTimeout(
       () => _navigate(screen),
-      CROSSFADE_TIME + waitExtra ? 300 : 0
+      CROSSFADE_TIME + (waitExtra ? 300 : 0)
     );
   }
 

@@ -27,11 +27,14 @@ export declare const settings: Writable<Settings>;
 
 export declare const favorites: {
   tags: Writable<Array<string>>,
-  images: Writable<Array<Image>>
+  images: Writable<Array<Image>>,
+  bookmarks: Writable<Record<string, Array<Image>>>
 };
 
 export declare const images: Writable<Array<Image>>;
 export declare const image: Writable<Image>;
 
-export declare const tags: Writable<string>;
+export declare const tags: Writable<Array<string>>;
 export declare const suggestions: Writable<Array<string>>;
+
+export declare const bookmarks: Writable<Array<string>>;

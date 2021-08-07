@@ -1,12 +1,12 @@
 /**
  * Indicates that some requests are fetching images
  */
-export declare const fetching: boolean;
+export declare const fetching: Writable<boolean>;
 
 /**
  * Indicates that there is next page of current search query
  */
-export declare const hasNextPage: boolean;
+export declare const hasNextPage: Writable<boolean>;
 
 /**
  * Adds or removes (toggles) the tag from being searched
