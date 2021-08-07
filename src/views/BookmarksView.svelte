@@ -41,45 +41,41 @@
   </button>
 </Navbar>
 
-<main class="flex flex-col">
-  <article class="flex flex-col space-y-2 pt-2">
+<article class="flex flex-col space-y-2">
+  <section>
+    <p class="truncate">Favorites</p>
+    <div class="flex flex-row">
+      <div class="flex-1" />
+      <button on:click={() => open("favorites")}>
+        <i class="ri-arrow-right-line text-6xl" />
+      </button>
+    </div>
+  </section>
+
+  {#each $bookmarks as bookmark, i}
     <section>
-      <p class="truncate">Favorites</p>
+      <p class="truncate">{bookmark}</p>
       <div class="flex flex-row">
         <div class="flex-1" />
-        <button on:click={() => open("favorites")}>
+        <button on:click={() => open(bookmark)}>
           <i class="ri-arrow-right-line text-6xl" />
         </button>
       </div>
     </section>
-
-    {#each $bookmarks as bookmark}
-      <section>
-        <p class="truncate">{bookmark}</p>
-        <div class="flex flex-row">
-          <div class="flex-1" />
-          <button on:click={() => open(bookmark)}>
-            <i class="ri-arrow-right-line text-6xl" />
-          </button>
-        </div>
-      </section>
-    {/each}
-  </article>
-</main>
+  {/each}
+</article>
 
 <style lang="scss">
-  main {
-    @apply px-2 pt-2;
-  }
-
   #add-bookmark-button {
-    @apply self-center py-2 px-3 rounded-lg;
+    @apply px-4 rounded-xl cursor-pointer;
+    @apply flex flex-row items-center;
 
+    height: 85%;
     background-color: rgba(0, 0, 0, 0.5);
   }
 
   article {
-    @apply overflow-y-auto;
+    @apply flex-1 p-2 mt-1 overflow-y-auto;
   }
 
   section {
