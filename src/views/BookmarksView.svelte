@@ -53,7 +53,7 @@
   </section>
 
   {#each $bookmarks as bookmark, i}
-    <section>
+    <section in:fade={{ delay: 250 * i, duration: 175 }}>
       <p class="truncate">{bookmark}</p>
       <div class="flex flex-row">
         <div class="flex-1" />
