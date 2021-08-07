@@ -6,7 +6,7 @@
 <script>
   import { getContext } from "svelte";
 
-  import BACKENDS from "@Stores/backends";
+  import { BACKENDS } from "@Stores/backends";
   import Navbar from "@Components/Navbar.svelte";
 
   import { SETTINGS } from "@Utils";

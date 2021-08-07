@@ -5,7 +5,7 @@ import { SETTINGS } from "@Utils";
 
 import * as R from "ramda";
 
-import BACKENDS from "./backends";
+import { BACKENDS } from "./backends";
 
 export const fetching = writable(false);
 

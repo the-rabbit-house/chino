@@ -1,3 +1,5 @@
+export type { Image } from "./backends";
+
 /**
  * Indicates that some requests are fetching images
  */
@@ -21,14 +23,14 @@ export declare function toggleTag(tag: string, d: number): void;
  * @param {Array<string>} tags The tags which should be searched for
  * @returns {boolean} boolean that indicates success
  */
-export declare function requestImages(tags: Array<string>): boolean;
+export declare function requestImages(tags: Array<string>): Promise<boolean>;
 
 /**
  * Fetches next page of images
  * 
  * @returns {boolean} boolean that indicates success
  */
-export declare function requestMoreImages(): boolean;
+export declare function requestMoreImages(): Promise<boolean>;
 
 /**
  * Fetches tags using pattern, used for tags autocompletion
@@ -36,19 +38,4 @@ export declare function requestMoreImages(): boolean;
  * @param {string} tag The tag which will get autocompleted
  * @returns {boolean} boolean that indicates success
  */
-
-export declare interface Image {
-  id: string,
-  file_name: string,
-  file_ext: string,
-  source: string,
-  artist: string,
-  thumbnail_url: string,
-  file_url: string,
-  sample_url: string,
-  width: number,
-  height: number,
-  tags: Array<string>,
-  video: boolean
-  data: any,
-}
+export declare function requestTags(tag: string): Promise<boolean>;
