@@ -38,13 +38,16 @@
   async function download() {
     if (!$isNative || downloading) return;
 
+    downloading = true;
+
     let status = await Filesystem.checkPermissions();
     if (status.publicStorage !== "granted") {
       status = await Filesystem.requestPermissions();
-      if (status.publicStorage !== "granted") return;
+      if (status.publicStorage !== "granted") {
+        downloading = false;
+        return;
+      }
     }
-
-    downloading = true;
 
     try {
       await Http.downloadFile({
