@@ -200,7 +200,6 @@
                 tagsBuffer = R.dropLast(1, tagsBuffer);
 
                 addTag(tag);
-                console.log(tagsBuffer);
                 $suggestions = [];
               }}
             >
