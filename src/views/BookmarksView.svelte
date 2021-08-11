@@ -1,6 +1,10 @@
+<script context="module">
+  const INPUT_SLIDE_DURATION = 300;
+</script>
+
 <script>
   import { getContext } from "svelte";
-  import { fade } from "svelte/transition";
+  import { fade, slide } from "svelte/transition";
 
   import { favorites, bookmarks, images, tags } from "@Stores";
   import { hasNextPage } from "@Stores/images";
@@ -14,8 +18,16 @@
 
   const { navigate } = getContext("navigator");
 
+  var inputRef = null;
+
+  var showInput = false;
+  var bookmark = "";
+
+  $: if (showInput) inputRef?.focus();
+
   function back() {
-    navigate("Gallery");
+    showInput = false;
+    setTimeout(() => navigate("Gallery"), INPUT_SLIDE_DURATION);
   }
 
   function open(bookmark) {
@@ -31,12 +43,29 @@
     $tags = [];
     $hasNextPage = false;
 
-    navigate("Gallery");
+    showInput = false;
+    setTimeout(() => navigate("Gallery"), INPUT_SLIDE_DURATION);
+  }
+
+  function addBookmark() {
+    if (!bookmark) return;
+    showInput = false;
+
+    $bookmarks.push(bookmark);
+    $bookmarks = $bookmarks;
+
+    bookmark = "";
   }
 </script>
 
 <Navbar on:back={back}>
-  <button slot="right" id="add-bookmark-button">
+  <button
+    slot="right"
+    id="add-bookmark-button"
+    on:click={() => {
+      showInput = true;
+    }}
+  >
     <i class="ri-add-line text-3xl" />
   </button>
 </Navbar>
@@ -51,6 +80,25 @@
       </button>
     </div>
   </section>
+
+  {#if showInput}
+    <div
+      id="bookmark-menu"
+      class="flex flex-row items-center"
+      transition:slide={{ duration: INPUT_SLIDE_DURATION + 10 }}
+    >
+      <input
+        type="text"
+        class="flex-1"
+        placeholder="Bookmark name..."
+        bind:this={inputRef}
+        bind:value={bookmark}
+      />
+      <button on:click={addBookmark}>
+        <i class="ri-add-line px-4 py-8 text-3xl" />
+      </button>
+    </div>
+  {/if}
 
   {#each $bookmarks as bookmark, i}
     <section in:fade={{ delay: 250 * i, duration: 175 }}>
@@ -86,6 +134,17 @@
 
     > p {
       @apply text-3xl;
+    }
+  }
+
+  #bookmark-menu {
+    @apply py-6 px-4 rounded-lg;
+
+    background-color: rgba(0, 0, 0, 0.7);
+
+    > input {
+      @apply px-4 py-4 rounded;
+      background-color: rgba(0, 0, 0, 0.5);
     }
   }
 </style>
