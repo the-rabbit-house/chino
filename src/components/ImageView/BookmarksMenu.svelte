@@ -1,6 +1,6 @@
 <script>
   import { getContext, createEventDispatcher } from "svelte";
-  import { slide } from "svelte/transition";
+  import { slide, fade } from "svelte/transition";
 
   import { bookmarks, favorites, image } from "@Stores";
 
@@ -28,7 +28,9 @@
     {/each}
   </div>
 
-  <p class="text-xl text-white text-center">Add to bookmark</p>
+  <p class="text-xl text-white text-center" in:fade>
+    {$bookmarks.length > 0 ? "Add to bookmark" : "No bookmarks"}
+  </p>
 </article>
 
 <style lang="scss">
