@@ -2,6 +2,10 @@
   const DEFAULT_SOFT_SWIPE_DISTANCE = 120;
   const DEFAULT_HARD_SWIPE_DISTANCE = 450;
 
+  const BOOKMARKS_REGION_WIDTH = 0.25;
+  const BOOKMARKS_REGION_HEIGHT = 0.3;
+  const BOOKMARKS_SWIPE_DISTANCE = 150;
+
   const nonZeroOrNull = R.when(R.equals(0), () => null);
 
   const isDirection = {
@@ -38,6 +42,7 @@
     cached as cachedImages,
   } from "@Components/Image.svelte";
   import ImageInfo from "@Components/ImageView/ImageInfo.svelte";
+  import BookmarksMenu from "./BookmarksMenu.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -72,7 +77,9 @@
   }
 
   var showInfo = false;
+  var showBookmarks = false;
 
+  const ignoreSwipe = writable(false);
   const direction = writable(null);
   const delta = tweened(0, { duration: 50 });
 
@@ -89,7 +96,17 @@
       ? -$delta
       : 0;
 
+  $: bookmarksThreshold = [
+    $windowWidth - $windowWidth * BOOKMARKS_REGION_WIDTH,
+    $windowHeight * BOOKMARKS_REGION_HEIGHT,
+  ];
+
   function handleSwipe() {
+    if ($ignoreSwipe) {
+      $ignoreSwipe = false;
+      $delta = 0;
+    }
+
     if ($delta > softSwipeDistance) {
       if ($direction === "DOWN") $delta = 0;
       if ($direction === "UP") {
@@ -133,7 +150,26 @@
       return;
     }
 
+    function handleBookmarksPan(event) {
+      const angle = event.detail.data[0].directionFromOrigin;
+      const distance = event.detail.data[0].distanceFromOrigin;
+      const x = event.detail.events[0].x;
+      const y = event.detail.events[0].y;
+
+      const [minX, maxY] = bookmarksThreshold;
+      if (x > minX && y < maxY) $ignoreSwipe = true;
+
+      if (!isDirection.DOWN(angle)) return;
+      if (distance > BOOKMARKS_SWIPE_DISTANCE && $ignoreSwipe)
+        showBookmarks = true;
+    }
+
     function handlePan(event) {
+      showBookmarks = false;
+
+      handleBookmarksPan(event);
+      if ($ignoreSwipe) return;
+
       const angle = event.detail.data[0].directionFromOrigin;
       const distance = event.detail.data[0].distanceFromOrigin;
 
@@ -160,7 +196,6 @@
 
   var duration = 0;
   var elapsed = 0;
-
   function video(node) {
     node?.play();
   }
@@ -293,6 +328,16 @@
   </div>
 </div>
 
+{#if showBookmarks}
+  <div id="bookmarks-menu">
+    <BookmarksMenu
+      on:dismiss={() => {
+        showBookmarks = false;
+      }}
+    />
+  </div>
+{/if}
+
 <div
   id="info-container"
   style={!showInfo
@@ -328,5 +373,9 @@
   #info-container {
     @apply fixed top-0 left-0 h-screen w-screen bg-black;
     will-change: transform;
+  }
+
+  #bookmarks-menu {
+    @apply fixed top-0 left-0 z-10;
   }
 </style>
