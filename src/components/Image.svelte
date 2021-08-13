@@ -36,33 +36,38 @@
   }
 
   async function loadAndCache(image, key, prefix) {
-    const response = await Http.downloadFile({
-      url: image?.[key],
-      filePath: prefix + image?.["file_name"],
-      fileDirectory: "CACHE",
-      method: "GET",
-    });
-
-    let url = null;
-
-    if (response?.blob) {
-      const blob = response.blob;
-      url = URL.createObjectURL(blob);
-    }
-
-    if (response?.path) {
-      const file = await Filesystem.getUri({
-        path: response.path,
+    try {
+      const response = await Http.downloadFile({
+        url: image?.[key],
+        filePath: prefix + image?.["file_name"],
+        fileDirectory: "CACHE",
+        method: "GET",
       });
 
-      url = Capacitor.convertFileSrc(file.uri);
+      let url = null;
+
+      if (response?.blob) {
+        const blob = response.blob;
+        url = URL.createObjectURL(blob);
+      }
+
+      if (response?.path) {
+        const file = await Filesystem.getUri({
+          path: response.path,
+        });
+
+        url = Capacitor.convertFileSrc(file.uri);
+      }
+
+      if (!url) return null;
+
+      get(cached)[prefix + image?.["id"]] = url;
+      cached.set(get(cached));
+
+      return url;
+    } catch (err) {
+      return null;
     }
-
-    if (!url) return null;
-
-    get(cached)[prefix + image?.["id"]] = url;
-    cached.set(get(cached));
-    return url;
   }
 
   const current = { image: null };
