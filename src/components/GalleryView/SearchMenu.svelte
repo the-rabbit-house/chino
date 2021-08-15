@@ -160,12 +160,17 @@
   }
 
   onMount(() => {
+    $suggestions = [];
+
     inputRef = document.querySelector(".svelte-tags-input");
     inputRef.addEventListener("input", handleAutocomplete);
     inputRef.focus();
   });
 
   onDestroy(() => {
+    clearTimeout(suggestionsTimeout);
+    $suggestions = [];
+
     inputRef.removeEventListener("input", handleAutocomplete);
   });
 </script>
