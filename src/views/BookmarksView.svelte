@@ -72,7 +72,12 @@
 
 <article class="flex flex-col space-y-2">
   <section>
-    <p class="truncate">Favorites</p>
+    <div class="flex flex-row items-center">
+      <p class="flex-1 text-3xl truncate">Favorites</p>
+      <p class="text-2xl pr-1">
+        {R.length($favoriteImages || [])}
+      </p>
+    </div>
     <div class="flex flex-row">
       <div class="flex-1" />
       <button on:click={() => open("favorites")}>
@@ -102,7 +107,12 @@
 
   {#each $bookmarks as bookmark, i}
     <section in:fade={{ delay: 250 * i, duration: 175 }}>
-      <p class="truncate">{bookmark}</p>
+      <div class="flex flex-row items-center">
+        <p class="flex-1 text-3xl truncate">{bookmark}</p>
+        <p class="flex-2xl pr-1">
+          {R.length($bookmarksByName?.[bookmark] || [])}
+        </p>
+      </div>
       <div class="flex flex-row">
         <div class="flex-1" />
         <button on:click={() => open(bookmark)}>
@@ -131,10 +141,6 @@
     @apply p-2;
 
     background-color: rgba(0, 0, 0, 0.5);
-
-    > p {
-      @apply text-3xl;
-    }
   }
 
   #bookmark-menu {
