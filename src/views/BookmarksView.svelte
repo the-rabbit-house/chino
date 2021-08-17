@@ -48,8 +48,9 @@
   }
 
   function addBookmark() {
-    if (!bookmark) return;
     showInput = false;
+
+    if (!bookmark) return;
 
     $bookmarks.push(bookmark);
     $bookmarks = $bookmarks;
@@ -98,6 +99,7 @@
         placeholder="Bookmark name..."
         bind:this={inputRef}
         bind:value={bookmark}
+        on:keyup={e => e.key === "Enter" && addBookmark()}
       />
       <button on:click={addBookmark}>
         <i class="ri-add-line px-4 py-8 text-3xl" />
