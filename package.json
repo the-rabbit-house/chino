@@ -19,7 +19,7 @@
     "prettier-plugin-svelte": "^2.3.0",
     "sass": "^1.38.0",
     "svelte": "^3.42.2",
-    "svelte-preprocess": "^4.7.4",
+    "svelte-preprocess": "^4.8.0",
     "tailwindcss": "^2.2.7",
     "vite": "^2.5.0"
   },
