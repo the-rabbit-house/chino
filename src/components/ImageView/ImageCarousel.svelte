@@ -177,6 +177,8 @@
     var deltaTimeout = null;
 
     function handleZoom(event) {
+      if (image?.video) return;
+
       if (R.length(event.detail?.events) >= 2) {
         const distance1 =
           event.detail.data[0].distanceFromOrigin;
@@ -463,6 +465,8 @@
       background-position: center;
       background-repeat: no-repeat;
       background-size: contain;
+
+      transition: background-image 1s ease-in-out;
     }
   }
 
