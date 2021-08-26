@@ -25,7 +25,7 @@
   <slot name="right" />
 </nav>
 
-<style>
+<style lang="scss">
   nav {
     @apply px-2 pt-2 h-20;
   }

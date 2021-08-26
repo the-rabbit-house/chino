@@ -11,7 +11,6 @@ export default defineConfig({
   plugins: [
     svelte({
       preprocess: preprocess({
-        defaults: { style: "scss" },
         postcss: true,
         sass,
       }),

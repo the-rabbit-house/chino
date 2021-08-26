@@ -63,7 +63,7 @@
   <button class="text-2xl">Help</button>
 </main>
 
-<style>
+<style lang="scss">
   main {
     @apply w-screen h-full px-4 py-4;
   }
