@@ -465,8 +465,6 @@
       background-position: center;
       background-repeat: no-repeat;
       background-size: contain;
-
-      transition: background-image 1s ease-in-out;
     }
   }
 
