@@ -66,6 +66,7 @@
   );
 
   var imageRef = null;
+
   var previousImage = null;
   var nextImage = null;
 
@@ -95,6 +96,11 @@
       : $direction === "UP"
       ? -$delta
       : 0;
+
+  const scale = writable(1);
+
+  const zoom_dx = writable(0);
+  const zoom_dy = writable(0);
 
   $: bookmarksThreshold = [
     $windowWidth - $windowWidth * BOOKMARKS_REGION_WIDTH,
@@ -164,8 +170,89 @@
         showBookmarks = true;
     }
 
+    var radiusThreshold = 10;
+    var zoomTimeout = null;
+
+    var zoomStart = null;
+    var deltaTimeout = null;
+
+    function handleZoom(event) {
+      if (R.length(event.detail?.events) >= 2) {
+        const distance1 =
+          event.detail.data[0].distanceFromOrigin;
+        const distance2 =
+          event.detail.data[1].distanceFromOrigin;
+
+        const direction1 =
+          event.detail.data[0].directionFromOrigin;
+        const direction2 =
+          event.detail.data[1].directionFromOrigin;
+
+        let directions = [direction1, direction2];
+
+        const y1 = event.detail.events[0].clientY;
+        const y2 = event.detail.events[1].clientY;
+
+        if (y1 > y2) directions = [direction2, direction1];
+
+        const distance = Math.max(distance1, distance2);
+        if (distance > radiusThreshold) {
+          if (
+            isDirection.DOWN(directions[0]) &&
+            isDirection.UP(directions[1])
+          ) {
+            $scale = Math.max(1, $scale - 0.05);
+            if ($scale <= 1) {
+              $zoom_dx = 0;
+              $zoom_dy = 0;
+            }
+          } else $scale = Math.min(3, $scale + 0.05);
+
+          radiusThreshold = distance;
+
+          clearTimeout(zoomTimeout);
+          zoomTimeout = setTimeout(() => {
+            radiusThreshold = 10;
+          }, 100);
+        }
+      } else {
+        if ($scale <= 1) return;
+
+        const distance = event.detail.data[0].distanceFromOrigin;
+        const direction =
+          event.detail.data[0].directionFromOrigin;
+
+        if (!zoomStart) {
+          zoomStart = distance;
+          return;
+        }
+
+        if (isDirection.LEFT(direction))
+          $zoom_dx = $zoom_dx + (zoomStart - distance);
+
+        if (isDirection.RIGHT(direction))
+          $zoom_dx = $zoom_dx - (zoomStart - distance);
+
+        if (isDirection.UP(direction))
+          $zoom_dy = $zoom_dy + (zoomStart - distance);
+
+        if (isDirection.DOWN(direction))
+          $zoom_dy = $zoom_dy - (zoomStart - distance);
+
+        zoomStart = distance;
+
+        clearTimeout(deltaTimeout);
+        deltaTimeout = setTimeout(() => {
+          zoomStart = null;
+        }, 30);
+      }
+    }
+
     function handlePan(event) {
       showBookmarks = false;
+
+      handleZoom(event);
+      if ($scale > 1) return;
 
       handleBookmarksPan(event);
       if ($ignoreSwipe) return;
@@ -189,6 +276,11 @@
     }
 
     region.bind(area, "pan", handlePan);
+    region.bind(
+      area,
+      new ZingTouch.Pan({ numInputs: 2 }),
+      handlePan
+    );
     window.addEventListener("touchend", handleSwipe);
   }
 
@@ -311,12 +403,15 @@
         {/if}
       {/key}
     {:else}
-      <img
+      <div
+        id="main-image"
         bind:this={imageRef}
         use:remote={[image, true]}
-        src={getImage(image)}
-        alt="current"
-      />
+      >
+        <div
+          style={`transform: scale(${$scale}) translate3d(${$zoom_dx}px, ${$zoom_dy}px, 0);`}
+        />
+      </div>
     {/if}
     <img
       use:invisible
@@ -355,6 +450,20 @@
 <style lang="scss">
   img {
     @apply w-screen h-screen object-contain bg-black;
+  }
+
+  #main-image {
+    @apply w-screen h-screen bg-black;
+    @apply overflow-hidden;
+
+    > div {
+      @apply h-full w-full;
+
+      background-image: var(--image);
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
   }
 
   #carousel {

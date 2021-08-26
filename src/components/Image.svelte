@@ -113,7 +113,8 @@
     function updateImage() {
       if (!thumbnail && current.image !== image && !image?.video)
         return;
-      if (document.body.contains(ref)) ref.src = getImage(image);
+      if (document.body.contains(ref))
+        updateSource(ref, getImage(image));
     }
 
     const useSource = get(SETTINGS.get("useSourceQuality"));
@@ -142,9 +143,14 @@
   queue.subscribe(processQueue);
   processing.subscribe(processQueue);
 
+  function updateSource(ref, src) {
+    if (ref.tagName === "IMG") ref.src = src;
+    else ref.style.setProperty("--image", `url(${src})`);
+  }
+
   export function remote(ref, [image, full = false]) {
     if (full) current.image = image;
-    if (!image?.video) ref.src = getImage(image);
+    if (!image?.video) updateSource(ref, getImage(image));
 
     queue1.set([...get(queue1), [image, ref, true]]);
     if (full) queue2.set([[image, ref, false], ...get(queue2)]);
@@ -152,7 +158,7 @@
     return {
       update([image, full = false]) {
         if (full) current.image = image;
-        if (!image?.video) ref.src = getImage(image);
+        if (!image?.video) updateSource(ref, getImage(image));
 
         queue1.set([...get(queue1), [image, ref, true]]);
         if (full)
