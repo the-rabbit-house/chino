@@ -65,10 +65,10 @@
   resolved "https://registry.yarnpkg.com/@capacitor/clipboard/-/clipboard-1.0.2.tgz#835d42a4ce5d56232c356a20b1c28704b6644cd0"
   integrity sha512-uYed+v10UjZapn1v5pRbRAJd6od6gUW1ROuu/pO0JxMABVV3SwmwqQbu9y6K8l4ptqNH5ZmpqkFmc4Qz0lN3JA==
 
-"@capacitor/core@^3.0.0", "@capacitor/core@^3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@capacitor/core/-/core-3.2.0.tgz#1c05538c50577881fa99a98810106e94aa1e8733"
-  integrity sha512-OJJFk54QSA0r35ElIpNfVDJImGGemspn4dVlFAujfxoAFIGTYiLzVF6Sj5o4cBpm3DZKs4ai152S9qeFdFcnZA==
+"@capacitor/core@^3.0.0", "@capacitor/core@^3.2.2":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@capacitor/core/-/core-3.2.2.tgz#5926788920ba9117aa735d2941f5b2bdc4a6889a"
+  integrity sha512-xY3VyLbF0vSxQmQto6cI1PqP8idbwmfEAeaj248uuSrIYHeMc1L3RS6UN/yNBDPYPeAfNUwBhVqSTCtuZkEIcg==
   dependencies:
     tslib "^2.1.0"
 
@@ -213,10 +213,10 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
-"@sveltejs/vite-plugin-svelte@^1.0.0-next.19":
-  version "1.0.0-next.19"
-  resolved "https://registry.yarnpkg.com/@sveltejs/vite-plugin-svelte/-/vite-plugin-svelte-1.0.0-next.19.tgz#9646abc2cd1982146db4bb341aafdb5f32f19dd2"
-  integrity sha512-q9hHkMzodScwDq64pNaWhekpj97vWg3wO9T0rqd8bC2EsrBQs2uD1qMJvDqlNd63AbO2uSJMGo+TQ0Xt2xgyYg==
+"@sveltejs/vite-plugin-svelte@^1.0.0-next.23":
+  version "1.0.0-next.23"
+  resolved "https://registry.yarnpkg.com/@sveltejs/vite-plugin-svelte/-/vite-plugin-svelte-1.0.0-next.23.tgz#e08682c88e09e4faa5d1ed1adaec23be07a4e3da"
+  integrity sha512-zmguJ9OYYsvZUhzPA3ZeYana2qx/ORadI0LVjzDIuXEXcR7AKj9qJgGCWe5Wi2Z/xg9PsKMHTTCHgiiplphIYg==
   dependencies:
     "@rollup/pluginutils" "^4.1.1"
     debug "^4.3.2"
