@@ -1,4 +1,5 @@
 import App from "./App.svelte";
+import "./main.scss";
 
 import "@capacitor/core";
 

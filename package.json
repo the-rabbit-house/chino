@@ -2,7 +2,7 @@
   "name": "chino",
   "version": "0.0.0",
   "scripts": {
-    "dev": "TAILWIND_MODE=watch vite --host",
+    "dev": "vite --host",
     "build": "vite build",
     "serve": "vite preview",
     "android": "vite build && cap run android"

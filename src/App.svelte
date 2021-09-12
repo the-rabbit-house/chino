@@ -1,6 +1,4 @@
 <script>
-  import "./ui/tailwindcss.svelte";
-  import "./ui/common.scss";
   import "@fontsource/koho";
   import "remixicon/fonts/remixicon.css";
   import "simplebar/dist/simplebar.css";
