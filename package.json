@@ -34,7 +34,7 @@
     "ramda": "^0.27.1",
     "remixicon": "^2.5.0",
     "simplebar": "^5.3.5",
-    "svelte-local-storage-store": "^0.2.3",
+    "svelte-local-storage-store": "^0.2.4",
     "svelte-tags-input": "^2.7.1",
     "zingtouch": "^1.0.6"
   }
