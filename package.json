@@ -2,7 +2,7 @@
   "name": "chino",
   "version": "0.0.0",
   "scripts": {
-    "dev": "TAILWIND_MODE=watch vite --host",
+    "dev": "vite --host",
     "build": "vite build",
     "serve": "vite preview",
     "android": "vite build && cap run android"
@@ -18,7 +18,7 @@
     "prettier": "^2.3.0",
     "prettier-plugin-svelte": "^2.3.0",
     "sass": "^1.38.0",
-    "svelte": "^3.42.2",
+    "svelte": "^3.42.5",
     "svelte-preprocess": "^4.8.0",
     "tailwindcss": "^2.2.7",
     "vite": "^2.5.1"
