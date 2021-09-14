@@ -1,10 +1,10 @@
 <script context="module">
-  const DEFAULT_SOFT_SWIPE_DISTANCE = 120;
-  const DEFAULT_HARD_SWIPE_DISTANCE = 450;
+  const DEFAULT_SOFT_SWIPE_DISTANCE = 120; // px
+  const DEFAULT_HARD_SWIPE_DISTANCE = 450; // px
 
-  const BOOKMARKS_REGION_WIDTH = 0.25;
-  const BOOKMARKS_REGION_HEIGHT = 0.3;
-  const BOOKMARKS_SWIPE_DISTANCE = 150;
+  const BOOKMARKS_REGION_WIDTH = 0.25; // 25% of screen width
+  const BOOKMARKS_REGION_HEIGHT = 0.3; // 30% of screen height
+  const BOOKMARKS_SWIPE_DISTANCE = 150; // px
 
   const nonZeroOrNull = R.when(R.equals(0), () => null);
 
