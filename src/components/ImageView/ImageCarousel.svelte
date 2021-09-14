@@ -410,6 +410,11 @@
         bind:this={imageRef}
         use:remote={[image, true]}
       >
+        <img
+          src={getThumbnail(image)}
+          alt="current"
+          class:hidden={$scale > 1}
+        />
         <div
           style={`transform: scale(${$scale}) translate3d(${$zoom_dx}px, ${$zoom_dy}px, 0);`}
         />
@@ -455,10 +460,11 @@
   }
 
   #main-image {
-    @apply w-screen h-screen bg-black;
+    @apply relative w-screen h-screen bg-black;
     @apply overflow-hidden;
 
     > div {
+      @apply absolute top-0 left-0;
       @apply h-full w-full;
 
       background-image: var(--image);
