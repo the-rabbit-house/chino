@@ -327,6 +327,7 @@
 
   var showProgress = false;
   var progressTimeout = null;
+  var progressImage = writable(null);
   var progress = 0;
   var progressMax = 0;
 
@@ -337,23 +338,24 @@
     progress = 0;
     progressMax = 0;
 
-    const useSource = SETTINGS.get("useSourceQuality");
-    const getTargetUrl = get(useSource)
-      ? R.prop("file_url")
-      : R.prop("sample_url");
-
-    Http.removeAllListeners();
-    Http.addListener("progress", e => {
-      if (e.url !== getTargetUrl(image)) return;
-      progress = Math.floor(e.bytes / 1024);
-      progressMax = Math.floor(e.contentLength / 1024);
-
-      clearTimeout(progressTimeout);
-      progressTimeout = setTimeout(() => {
-        showProgress = false;
-      }, 2000);
-    });
+    $progressImage = image;
   }
+
+  const useSource = SETTINGS.get("useSourceQuality");
+  const getTargetUrl = $useSource
+    ? R.prop("file_url")
+    : R.prop("sample_url");
+
+  Http.addListener("progress", e => {
+    if (e.url !== getTargetUrl($progressImage)) return;
+    progress = Math.floor(e.bytes / 1024);
+    progressMax = Math.floor(e.contentLength / 1024);
+
+    clearTimeout(progressTimeout);
+    progressTimeout = setTimeout(() => {
+      showProgress = false;
+    }, 2000);
+  });
 
   $: image, trackProgress(image);
 </script>
@@ -451,7 +453,10 @@
         <div
           style={`transform: scale(${$scale}) translate3d(${$zoom_dx}px, ${$zoom_dy}px, 0);`}
         />
-        <p id="progress" class:hidden={!showProgress}>
+        <p
+          id="progress"
+          class:hidden={!showProgress || progress == progressMax}
+        >
           {progress}kB / {progressMax}kB
         </p>
       </div>
