@@ -25,12 +25,13 @@
 
 <script>
   import { getContext, createEventDispatcher } from "svelte";
-  import { writable } from "svelte/store";
+  import { writable, get } from "svelte/store";
   import { tweened } from "svelte/motion";
   import { fly } from "svelte/transition";
 
-  import * as R from "ramda";
+  import { Http } from "@capacitor-community/http";
   import ZingTouch from "zingtouch";
+  import * as R from "ramda";
 
   import { images } from "@Stores";
   import { SETTINGS } from "@Utils";
@@ -323,6 +324,38 @@
     );
     imageRef?.play();
   }
+
+  var showProgress = false;
+  var progressTimeout = null;
+  var progress = 0;
+  var progressMax = 0;
+
+  function trackProgress(image) {
+    showProgress = true;
+    clearTimeout(progressTimeout);
+
+    progress = 0;
+    progressMax = 0;
+
+    const useSource = SETTINGS.get("useSourceQuality");
+    const getTargetUrl = get(useSource)
+      ? R.prop("file_url")
+      : R.prop("sample_url");
+
+    Http.removeAllListeners();
+    Http.addListener("progress", e => {
+      if (e.url !== getTargetUrl(image)) return;
+      progress = Math.floor(e.bytes / 1024);
+      progressMax = Math.floor(e.contentLength / 1024);
+
+      clearTimeout(progressTimeout);
+      progressTimeout = setTimeout(() => {
+        showProgress = false;
+      }, 2000);
+    });
+  }
+
+  $: image, trackProgress(image);
 </script>
 
 <div
@@ -418,6 +451,9 @@
         <div
           style={`transform: scale(${$scale}) translate3d(${$zoom_dx}px, ${$zoom_dy}px, 0);`}
         />
+        <p id="progress" class:hidden={!showProgress}>
+          {progress}kB / {progressMax}kB
+        </p>
       </div>
     {/if}
     <img
@@ -494,5 +530,13 @@
 
   #bookmarks-menu {
     @apply fixed top-0 left-0 z-10;
+  }
+
+  #progress {
+    @apply absolute;
+
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
   }
 </style>

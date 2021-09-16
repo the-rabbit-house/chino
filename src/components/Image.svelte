@@ -42,6 +42,7 @@
         filePath: prefix + image?.["file_name"],
         fileDirectory: "CACHE",
         method: "GET",
+        progress: true,
       });
 
       let url = null;
