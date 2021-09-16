@@ -65,10 +65,10 @@
   resolved "https://registry.yarnpkg.com/@capacitor/clipboard/-/clipboard-1.0.3.tgz#1e1fa6c5a8a64a35273162ece8b5b4714bf1a93d"
   integrity sha512-Q4gZ47Fn1isbgE2R+s7MHYLHnB0FN94TM9jvyDONRmjnhEf1BBP/r7kmE0vb3+NyeFCEntv+QL8qGghl1r4Xhw==
 
-"@capacitor/core@^3.0.0", "@capacitor/core@^3.2.2":
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/@capacitor/core/-/core-3.2.2.tgz#5926788920ba9117aa735d2941f5b2bdc4a6889a"
-  integrity sha512-xY3VyLbF0vSxQmQto6cI1PqP8idbwmfEAeaj248uuSrIYHeMc1L3RS6UN/yNBDPYPeAfNUwBhVqSTCtuZkEIcg==
+"@capacitor/core@^3.0.0", "@capacitor/core@^3.2.3":
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/@capacitor/core/-/core-3.2.3.tgz#84535e0adc6f0b99fcbfb2f67578b1b8e7f379c2"
+  integrity sha512-6oIi9EXgTRI8Xg3Gg8IWSQcddshb6lNtywkQA+QWoTL/6qV/l519tBcZHV9cu6BA7GT3qm2WcX9yQjwDq5iKpw==
   dependencies:
     tslib "^2.1.0"
 
