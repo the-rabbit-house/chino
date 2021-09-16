@@ -1907,10 +1907,10 @@ svelte-preprocess@^4.9.4:
     sorcery "^0.10.0"
     strip-indent "^3.0.0"
 
-svelte-tags-input@^2.7.1:
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/svelte-tags-input/-/svelte-tags-input-2.7.1.tgz#e3599301d68597f06ebde423a35a20e617fc5837"
-  integrity sha512-chxpj/ZCnbCSI+f6Sbqd+51FAUK7MwftKsuwHQCoJf5vBhz0vbcNsDIUs5Wyf9qX35xG/amZ1Nc3CTOK14qRtA==
+svelte-tags-input@^2.8.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/svelte-tags-input/-/svelte-tags-input-2.8.0.tgz#83f62b057e70513ccee5a52877f2a7c34655de84"
+  integrity sha512-kGgvUWg0a9ieszZuY7VNphpkgp09rxRiqc4JQXmYifOBFdezkIiJwomNTtR/Kjin2YsKD7KjNDGhphAdYhLgDA==
   dependencies:
     acorn "^8.1.1"
 
