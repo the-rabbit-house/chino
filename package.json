@@ -20,7 +20,7 @@
     "sass": "^1.39.2",
     "svelte": "^3.42.6",
     "svelte-preprocess": "^4.9.4",
-    "tailwindcss": "^2.2.15",
+    "tailwindcss": "^2.2.16",
     "vite": "^2.5.7"
   },
   "dependencies": {
