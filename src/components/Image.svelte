@@ -42,7 +42,7 @@
         filePath: prefix + image?.["file_name"],
         fileDirectory: "CACHE",
         method: "GET",
-        progress: true,
+        progress: prefix !== THUMBNAIL_PREFIX,
       });
 
       let url = null;
