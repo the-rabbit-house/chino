@@ -346,9 +346,10 @@
   }
 
   const useSource = SETTINGS.get("useSourceQuality");
-  const getTargetUrl = $useSource
-    ? R.prop("file_url")
-    : R.prop("sample_url");
+  $: getTargetUrl = R.defaultTo(
+    $useSource ? R.prop("file_url") : R.prop("sample_url"),
+    image?.video ? R.prop("file_url") : null
+  );
 
   Http.addListener("progress", e => {
     if (e.url !== getTargetUrl($progressImage)) return;
@@ -445,6 +446,13 @@
             src={getThumbnail(image)}
             alt="current"
           />
+          <p
+            id="progress"
+            class:hidden={!showProgress ||
+              progress == progressMax}
+          >
+            {progress}kB / {progressMax}kB
+          </p>
         {/if}
       {/key}
     {:else}
