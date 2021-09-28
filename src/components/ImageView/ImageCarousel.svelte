@@ -24,7 +24,11 @@
 </script>
 
 <script>
-  import { getContext, createEventDispatcher } from "svelte";
+  import {
+    getContext,
+    createEventDispatcher,
+    onDestroy,
+  } from "svelte";
   import { writable, get } from "svelte/store";
   import { tweened } from "svelte/motion";
   import { fly } from "svelte/transition";
@@ -358,6 +362,10 @@
   });
 
   $: image, trackProgress(image);
+
+  onDestroy(() => {
+    Http.removeAllListeners();
+  });
 </script>
 
 <div
