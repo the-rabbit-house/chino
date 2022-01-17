@@ -31,7 +31,7 @@
     "@capacitor/filesystem": "^1.0.3",
     "@fontsource/koho": "^4.5.0",
     "events": "^3.3.0",
-    "ramda": "^0.27.1",
+    "ramda": "^0.28.0",
     "remixicon": "^2.5.0",
     "simplebar": "^5.3.6",
     "svelte-local-storage-store": "^0.2.4",
